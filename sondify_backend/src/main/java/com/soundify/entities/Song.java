@@ -41,6 +41,15 @@ public class Song extends BaseEntity {
 	@Column(name = "song_release_date")
 	private LocalDate releaseDate;
 	
+	@Column(name="song_path")
+	private String songPath;
+	
+	@Column(name="song_image_path")
+	private String songImagePath;
+	
+	
+	
+	
 }
 	
 	
