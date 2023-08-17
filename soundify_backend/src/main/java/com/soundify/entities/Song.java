@@ -34,7 +34,7 @@ import lombok.ToString;
 @ToString
 public class Song extends BaseEntity {
 	//course title(unique) , start date , end date , fees , min score
-	@Column(name = "song_name", length = 20, unique = true) // varchar(20)
+	@Column(name = "song_name", length = 50, unique = true) 
 	private String songName;
 	@Column(name = "duration")
 	private Time duration;
