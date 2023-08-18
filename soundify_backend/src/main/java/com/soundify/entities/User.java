@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -40,7 +41,11 @@ public class User extends BaseEntity {
 	@JoinColumn(name="role_id")
 	private Role role;
 	
+
 	@ManyToMany(mappedBy = "followers")
 	private Set<Artist> artistsFollowed = new HashSet<>();
+
+	@ManyToMany(mappedBy = "users" )
+	private Set<Song> songs = new HashSet<>();
 	
 }
