@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -48,4 +49,7 @@ public class User extends BaseEntity {
 	@ManyToMany(mappedBy = "users" )
 	private Set<Song> songsLiked = new HashSet<>();
 	
+	@ManyToMany
+	@JoinTable(name="user_playlist", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="playlist_id"))
+	private Set<Playlist> playlists = new HashSet<>();
 }
