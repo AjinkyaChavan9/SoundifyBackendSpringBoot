@@ -38,6 +38,10 @@ public class Artist extends BaseEntity{
 	@ManyToMany
 	@JoinTable(name="artist_song", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="song_id"))
 	private Set<Song> songs = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(name="artist_follower", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
+	private Set<User> followers = new HashSet<>();
 		
 	
 }
