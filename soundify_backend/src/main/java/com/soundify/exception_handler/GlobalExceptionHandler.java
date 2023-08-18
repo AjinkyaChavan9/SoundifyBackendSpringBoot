@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.soundify.custom_exceptions.ResourceNotFoundException;
-import com.soundify.dto.ApiResponse;
+import com.soundify.dtos.ApiResponse;
 
 //catch methods for the try blocks 
 @RestControllerAdvice // To tell SC , following class is centralized exc handler ,

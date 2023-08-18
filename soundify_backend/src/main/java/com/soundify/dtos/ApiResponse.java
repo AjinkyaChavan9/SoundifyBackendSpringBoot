@@ -1,4 +1,4 @@
-package com.soundify.dto;
+package com.soundify.dtos;
 
 import java.time.LocalDateTime;
 
