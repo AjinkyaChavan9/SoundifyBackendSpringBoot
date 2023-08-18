@@ -46,6 +46,6 @@ public class User extends BaseEntity {
 	private Set<Artist> artistsFollowed = new HashSet<>();
 
 	@ManyToMany(mappedBy = "users" )
-	private Set<Song> songs = new HashSet<>();
+	private Set<Song> songsLiked = new HashSet<>();
 	
 }
