@@ -1,9 +1,14 @@
 package com.soundify.entities;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -29,5 +34,10 @@ public class Artist {
 	private String password;
 	@Column(name="date_of_birth")
 	private LocalDate dateOfBirth;
+	
+	@ManyToMany
+	@JoinTable(name="artist_song", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="song_id"))
+	private Set<Song> songs = new HashSet<>();
 		
+	
 }
