@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.persistence.*;//all specs Java EE supplied
 
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 /*
@@ -49,6 +51,10 @@ public class Song extends BaseEntity {
 	
 	@ManyToMany(mappedBy = "songs")
 	private Set<Artist> artists = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(name="song_likes", joinColumns = @JoinColumn(name="song_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
+	private Set<User> users = new HashSet<>();
 	
 	
 	

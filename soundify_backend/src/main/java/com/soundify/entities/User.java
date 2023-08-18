@@ -1,10 +1,13 @@
 package com.soundify.entities;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -37,6 +40,8 @@ public class User extends BaseEntity {
 	@JoinColumn(name="role_id")
 	private Role role;
 	
+	@ManyToMany(mappedBy = "users" )
+	private Set<Song> songs = new HashSet<>();
 	
 	
 }
