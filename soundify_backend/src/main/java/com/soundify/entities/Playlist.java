@@ -26,5 +26,5 @@ public class Playlist extends BaseEntity {
 	private String playlistName;
 	
 	@ManyToMany(mappedBy = "playlists" )
-	private Set<Song> users = new HashSet<>();
+	private Set<User> users = new HashSet<>();
 }
