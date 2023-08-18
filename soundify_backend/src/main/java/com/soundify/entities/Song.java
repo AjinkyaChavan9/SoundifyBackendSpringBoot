@@ -63,6 +63,10 @@ public class Song extends BaseEntity {
 	@ManyToMany(mappedBy = "songs")
 	private Set<Album> albums = new HashSet<>();
 	
+	@ManyToMany(mappedBy = "songs")
+	private Set<Playlist> playlists = new HashSet<>();
+	
+	
 }
 	
 	

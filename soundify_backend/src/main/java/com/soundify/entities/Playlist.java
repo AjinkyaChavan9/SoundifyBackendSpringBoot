@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -27,4 +29,8 @@ public class Playlist extends BaseEntity {
 	
 	@ManyToMany(mappedBy = "playlists" )
 	private Set<User> users = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(name="playlist_song", joinColumns = @JoinColumn(name="playlist_id"), inverseJoinColumns = @JoinColumn(name="song_id"))
+	private Set<Song> songs = new HashSet<>();
 }
