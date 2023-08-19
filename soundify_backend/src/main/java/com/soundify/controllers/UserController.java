@@ -32,12 +32,12 @@ public class UserController {
         UserSignInResponseDTO response = userService.signInUser(request);
         return ResponseEntity.ok(response);
     }
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
 	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserSignupResponseDTO updatedUser) {
-	    
-
 	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, id);
 	    return ResponseEntity.ok(updatedResponse);
 	}
+    
+    
 }
 
