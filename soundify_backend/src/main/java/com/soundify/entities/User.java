@@ -52,4 +52,18 @@ public class User extends BaseEntity {
 	@ManyToMany
 	@JoinTable(name="user_playlist", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="playlist_id"))
 	private Set<Playlist> playlists = new HashSet<>();
+	
+	
+	public void likeSong(Song song)
+	{
+		 Set<Song> likedSongs = new HashSet<>();
+		 likedSongs.add(song);
+		 this.setSongsLiked(likedSongs);
+		 Set<User> userWhoLiked = new HashSet<>();
+		 userWhoLiked.add(this);
+		 song.setUsers(userWhoLiked);
+	}
+	
+	
+	
 }
