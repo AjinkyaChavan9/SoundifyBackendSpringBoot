@@ -34,6 +34,8 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	@Value("${song.upload.location}")
 	private String songFolderLocation;
 	
+	
+	
 	@PostConstruct
 	public void init() {
 		System.out.println("in init " + songFolderLocation);
@@ -50,7 +52,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	}
 	
 	@Override
-	public ApiResponse uploadSong( SongMetadataUploadDTO songMetadata, MultipartFile file) throws IOException {
+	public ApiResponse uploadSongOnServer( SongMetadataUploadDTO songMetadata, MultipartFile file) throws IOException {
 		// chk if song exists by id
 		
 		Song song =songDao.save(mapper.map(songMetadata, Song.class));
@@ -86,6 +88,21 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 				}
 				throw new ResourceNotFoundException("Song not yet assigned!!!!");
 		
+	}
+
+	@Override
+	public ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException {
+		Song song =songDao.save(mapper.map(songmetadata,Song.class));
+		
+		
+		return new ApiResponse("SongFile uploaded n stored on AWS S3");
+	}
+
+	@Override
+	public Song getSongById(Long songId) {
+	
+	return	songDao.findById(songId).orElseThrow(()-> new ResourceNotFoundException("Song Not found by id = "+songId));
+		 
 	}
 
 }
