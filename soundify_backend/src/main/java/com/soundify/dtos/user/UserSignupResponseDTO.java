@@ -1,14 +1,19 @@
-package com.soundify.dtos;
+package com.soundify.dtos.user;
+
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Setter
-@Getter
-@NoArgsConstructor
-public class UserSignUpRequestDTO {
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class UserSignupResponseDTO {
 	
 	private String firstName;
 
@@ -16,8 +21,6 @@ public class UserSignUpRequestDTO {
 	
 	private String email;
 
-	private String password;
-	
 	private LocalDate dateOfBirth;
 	
 }
