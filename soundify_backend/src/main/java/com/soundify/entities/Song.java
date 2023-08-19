@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.persistence.*;//all specs Java EE supplied
 
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
