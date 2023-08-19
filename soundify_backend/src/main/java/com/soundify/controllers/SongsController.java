@@ -86,7 +86,7 @@ public class SongsController {
 		// method : POST
 		// multipart file : request parameter (standard part of HTTP specifications)
 		@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
-		public ResponseEntity<?> uploadSongFile( @RequestParam MultipartFile songFile,  @RequestParam String songName,
+		public ResponseEntity<?> uploadSongFile( @RequestBody MultipartFile songFile,  @RequestParam String songName,
 		        @RequestParam String duration,
 		        @RequestParam String releaseDate)
 				throws IOException 
