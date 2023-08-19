@@ -38,11 +38,16 @@ public class UserController {
 	    return ResponseEntity.ok(updatedResponse);
 	}
     @PostMapping("/{userId}/liked-songs/{songId}")
-    public ResponseEntity<?> likeSong(){
-    	
+    public ResponseEntity<?> likeSong(@PathVariable Long userId, @PathVariable Long songId){
+    	userService.likeSong(userId, songId);
     	return ResponseEntity.ok("Song liked successfully");
     }
     
+    @DeleteMapping("/{userId}/disliked-songs/{songId}")
+    public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
+    	userService.disLikeSong(userId, songId);
+    	return ResponseEntity.ok("Song disliked successfully");
+    }
     
 }
 
