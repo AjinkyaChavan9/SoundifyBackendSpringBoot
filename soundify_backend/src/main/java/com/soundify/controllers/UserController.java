@@ -37,6 +37,11 @@ public class UserController {
 	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, id);
 	    return ResponseEntity.ok(updatedResponse);
 	}
+    @PostMapping("/{userId}/liked-songs/{songId}")
+    public ResponseEntity<?> likeSong(){
+    	
+    	return ResponseEntity.ok("Song liked successfully");
+    }
     
     
 }
