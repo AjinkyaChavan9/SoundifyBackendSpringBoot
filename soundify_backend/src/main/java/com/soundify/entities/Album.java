@@ -17,7 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "album") // to specify table name
+@Table(name = "albums") // to specify table name
 @NoArgsConstructor
 //@AllArgsConstructor
 @Getter
