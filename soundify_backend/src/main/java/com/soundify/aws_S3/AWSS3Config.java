@@ -8,16 +8,17 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 
 @Configuration
 public class AWSS3Config {
-	 @Value("${amazon.aws.access-key}")
+	 @Value("${cloud.aws.credentials.access-key}")
 	    private String accessKeyId;
 
-	    @Value("${amazon.aws.secret-key}")
+	    @Value("${cloud.aws.credentials.secret-key}")
 	    private String accessKeySecret;
 
-	    @Value("${amazon.aws.region}")
+	    @Value("${cloud.aws.region.static}")
 	    private String s3RegionName;
 
 	    @Bean
@@ -30,4 +31,5 @@ public class AWSS3Config {
 	            .withRegion(s3RegionName)
 	            .build();
 	    }
+	    
 }
