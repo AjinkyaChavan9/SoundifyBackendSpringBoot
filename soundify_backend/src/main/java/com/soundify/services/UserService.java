@@ -50,4 +50,6 @@ public interface UserService {
 
 	Set<SongDTO> getLikedSongs(Long userId);
 
+	UserSignInResponseDTO updateUserPassword(Long userId, String currentPassword, String newPassword);
+
 }
