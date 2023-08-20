@@ -75,7 +75,9 @@ public class ArtistServiceImpl implements ArtistService {
 
 	}
 
+
 	// MODIFIED to add DTO pattern
+
 	
 	 public void addSongToArtist(Long artistId, Long songId) {
 	        Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));

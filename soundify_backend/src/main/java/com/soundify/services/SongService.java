@@ -9,7 +9,8 @@ public interface SongService {
 	
 	 List<SongDTO> findSongsByGenreName(String genreName);
 	 List<SongDTO> findByArtistsName(String name);
+	 List<SongDTO> findSongsBySongName(String songName);
 
+	 List<SongDTO> findSongsByArtistName(String artistName);
 	
-
 }
