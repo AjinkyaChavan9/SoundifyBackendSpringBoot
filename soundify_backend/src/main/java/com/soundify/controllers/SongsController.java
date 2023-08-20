@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -48,170 +47,158 @@ import com.soundify.entities.Song;
 import com.soundify.services.SongFileHandlingService;
 import com.soundify.services.SongService;
 
-
-
-
 @RestController // =@Controller at cls level + @ResponseBody added over ret
 @RequestMapping("/api/songs")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SongsController {
 	@Value("${cloud.aws.credentials.access-key}")
-    private String accessKeyId;
+	private String accessKeyId;
 
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String accessKeySecret;
+	@Value("${cloud.aws.credentials.secret-key}")
+	private String accessKeySecret;
 
-    @Value("${cloud.aws.region.static}")
-    private String s3RegionName;
-    
-    @Value("${cloud.aws.bucketname}")
-    private String s3BucketName;
-    
-    @Value("${cloud.aws.upload.folder}")
+	@Value("${cloud.aws.region.static}")
+	private String s3RegionName;
+
+	@Value("${cloud.aws.bucketname}")
+	private String s3BucketName;
+
+	@Value("${cloud.aws.upload.folder}")
 	private String songFolderLocationS3;
-	
+
 	@Autowired
 	AWSS3Config awsS3;
-	
+
 	@Autowired
 	private SongFileHandlingService songService;
 
-	@PostMapping(value = "/aws",consumes = "multipart/form-data")
-	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file,@RequestParam String songName,
-	        @RequestParam String releaseDate) throws IOException,Exception{
-		if(file != null) {
-		ObjectMetadata obectMetadata = new ObjectMetadata();
-		obectMetadata.setContentType(file.getContentType());
-		
-		String path = songFolderLocationS3.concat(file.getOriginalFilename());
-		awsS3.getAmazonS3Client().putObject(new PutObjectRequest(s3BucketName,path,file.getInputStream(),obectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
-	    
-		String duration = getDuration(file);
+	@PostMapping(value = "/aws", consumes = "multipart/form-data")
+	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file, @RequestParam String songName,
+			@RequestParam String releaseDate) throws IOException, Exception {
+		if (file != null) {
+			ObjectMetadata obectMetadata = new ObjectMetadata();
+			obectMetadata.setContentType(file.getContentType());
 
-		SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
-		    songmetadata.setSongName(songName);
-		    songmetadata.setDuration(Time.valueOf(duration));
-		    songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
-		    songmetadata.setSongPath(path);
-		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnS3(songmetadata));
+			String path = songFolderLocationS3.concat(file.getOriginalFilename());
+			awsS3.getAmazonS3Client()
+					.putObject(new PutObjectRequest(s3BucketName, path, file.getInputStream(), obectMetadata)
+							.withCannedAcl(CannedAccessControlList.PublicRead));
+
+			String duration = getDuration(file);
+
+			SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
+			songmetadata.setSongName(songName);
+			songmetadata.setDuration(Time.valueOf(duration));
+			songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
+			songmetadata.setSongPath(path);
+			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnS3(songmetadata));
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
 	}
-	
 
 	@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
 	public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
 		System.out.println("in SONG download " + songId);
 		Song song = songService.getSongById(songId);
 		String key = song.getSongPath();
-		
-		S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
-		
-		 S3ObjectInputStream inputStream = s3Object.getObjectContent();
 
-	        return ResponseEntity.ok()
-	                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
-	                .header("Content-Disposition", "inline; filename=" + song.getSongName())
-	                .body(new InputStreamResource(inputStream));
+		S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
+
+		S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+		return ResponseEntity.ok().header("Content-Type", "audio/mpeg") // Set the appropriate content type
+				.header("Content-Disposition", "inline; filename=" + song.getSongName())
+				.body(new InputStreamResource(inputStream));
 
 	}
-	
 
-		
-		// http://localhost:8080/api/songs/{songId}/songfile
-		// songId : path var
-		// method : POST
-		// multipart file : request parameter (standard part of HTTP specifications)
-		@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
-		public ResponseEntity<?> uploadSongFileonServer( @RequestBody MultipartFile songFile, @RequestParam String songName, @RequestParam String releaseDate)
-				throws IOException,Exception
-		{
-			//String duration = getDuration(songFile);
-			 
-			SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
-			    songmetadata.setSongName(songName);
-			    //songmetadata.setDuration(Time.valueOf(duration));
-			    songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
-			System.out.println("in song upload " + songmetadata);
-			// invoke image service method
-			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile));
-		}
-		
-		// http://localhost:8080/api/songs/{songId}/songfile , method=GET
-		// serve(download) song
-		@GetMapping(value = "/{songId}/songfile", produces = "audio/mpeg")
-		public ResponseEntity<?> downloadSongFileFromServer(@PathVariable Long songId) throws IOException {
-			System.out.println("in SONG download " + songId);
-			return ResponseEntity.ok(songService.downloadSong(songId));
-		}
-		
-		
+	// http://localhost:8080/api/songs/{songId}/songfile
+	// songId : path var
+	// method : POST
+	// multipart file : request parameter (standard part of HTTP specifications)
+	@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> uploadSongFileonServer(@RequestBody MultipartFile songFile, @RequestParam String songName,
+			@RequestParam String releaseDate) throws IOException, Exception {
+		// String duration = getDuration(songFile);
 
-		/*Image Handling */
-		// http://localhost:8080/api/songs/{songId}/image
-		// songId : path var
-		// method : POST
-		// multipart file : request parameter (standard part of HTTP specifications)
-		@PostMapping(value = "/{songId}/image", consumes = "multipart/form-data")
-		public ResponseEntity<?> uploadEmpImage(@PathVariable Long songId, @RequestBody MultipartFile imageFile)
-				throws IOException {
-			System.out.println("in img upload " + songId);
-			// invoke image service method
-			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongCoverImage(songId, imageFile));
-		}
+		SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
+		songmetadata.setSongName(songName);
+		// songmetadata.setDuration(Time.valueOf(duration));
+		songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
+		System.out.println("in song upload " + songmetadata);
+		// invoke image service method
+		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile));
+	}
 
-		// http://localhost:8080/api/songs/{songId}/image , method=GET
-		// serve(download) image
-		@GetMapping(value = "/{songId}/image", produces = { IMAGE_GIF_VALUE, 
-				IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE })
-		public ResponseEntity<?> downloadEmpImage(@PathVariable Long songId) throws IOException {
-			System.out.println("in song img download " + songId);
-			return ResponseEntity.ok(songService.downloadSongImage(songId));
-		}
-		
-		 @DeleteMapping("value =/{songId}/aws")
-		 public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
-		         Song song =songService.getSongById(songId);
-		         String key = song.getSongPath();
-		         awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
-		         
-		         return ResponseEntity.ok(songService.deleteSong(songId));
-		    }
+	// http://localhost:8080/api/songs/{songId}/songfile , method=GET
+	// serve(download) song
+	@GetMapping(value = "/{songId}/songfile", produces = "audio/mpeg")
+	public ResponseEntity<?> downloadSongFileFromServer(@PathVariable Long songId) throws IOException {
+		System.out.println("in SONG download " + songId);
+		return ResponseEntity.ok(songService.downloadSong(songId));
+	}
 
-		private String getDuration(MultipartFile file) throws Exception {
-			File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
-			file.transferTo(tempFile);
-			
-			AudioFile audioFile = AudioFileIO.read(tempFile);
-			
-			AudioHeader audioHeader = audioFile.getAudioHeader();
-			
-	        int durationInSeconds = audioHeader.getTrackLength();
-	        int hours = durationInSeconds / 3600;
-	        int minutes = (durationInSeconds % 3600) / 60;
-	        int seconds = durationInSeconds % 60;
+	/* Image Handling */
+	// http://localhost:8080/api/songs/{songId}/image
+	// songId : path var
+	// method : POST
+	// multipart file : request parameter (standard part of HTTP specifications)
+	@PostMapping(value = "/{songId}/image", consumes = "multipart/form-data")
+	public ResponseEntity<?> uploadEmpImage(@PathVariable Long songId, @RequestBody MultipartFile imageFile)
+			throws IOException {
+		System.out.println("in img upload " + songId);
+		// invoke image service method
+		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongCoverImage(songId, imageFile));
+	}
 
-	        String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-	        
-	        tempFile.delete();
-	        audioFile.delete();
+	// http://localhost:8080/api/songs/{songId}/image , method=GET
+	// serve(download) image
+	@GetMapping(value = "/{songId}/image", produces = { IMAGE_GIF_VALUE, IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE })
+	public ResponseEntity<?> downloadEmpImage(@PathVariable Long songId) throws IOException {
+		System.out.println("in song img download " + songId);
+		return ResponseEntity.ok(songService.downloadSongImage(songId));
+	}
 
-	        
-	        return duration;
+	@DeleteMapping("value =/{songId}/aws")
+	public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
+		Song song = songService.getSongById(songId);
+		String key = song.getSongPath();
+		awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
 
-		}
+		return ResponseEntity.ok(songService.deleteSong(songId));
+	}
 
+	private String getDuration(MultipartFile file) throws Exception {
+		File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
+		file.transferTo(tempFile);
 
-		 @Autowired
-		    private SongService song1Service;
+		AudioFile audioFile = AudioFileIO.read(tempFile);
 
-		  
-		 @GetMapping("/genre")
-		 public ResponseEntity<List<SongDTO>> findSongsByGenreName(@RequestParam String genreName) {
-		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
-		     return ResponseEntity.ok(songs);
-		    }
+		AudioHeader audioHeader = audioFile.getAudioHeader();
+
+		int durationInSeconds = audioHeader.getTrackLength();
+		int hours = durationInSeconds / 3600;
+		int minutes = (durationInSeconds % 3600) / 60;
+		int seconds = durationInSeconds % 60;
+
+		String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+		tempFile.delete();
+		audioFile.delete();
+
+		return duration;
+
+	}
+
+	@Autowired
+	private SongService song1Service;
+
+	@GetMapping("/genre")
+	public ResponseEntity<List<SongDTO>> findSongsByGenreName(@RequestParam String genreName) {
+		List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
+		return ResponseEntity.ok(songs);
+	}
 
 		 @GetMapping("/artist")
 		 public ResponseEntity<List<SongDTO>> findSongsByArtistName(@RequestParam String artistName){
@@ -222,4 +209,3 @@ public class SongsController {
 
 
 }
-
