@@ -1,5 +1,6 @@
 package com.soundify.daos;
 
+import com.soundify.entities.Genre;
 import com.soundify.entities.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

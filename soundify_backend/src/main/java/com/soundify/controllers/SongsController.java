@@ -206,7 +206,7 @@ public class SongsController {
 
 		 @GetMapping("/artist")
 		 public ResponseEntity<List<SongDTO>> findSongsByArtistName(@RequestParam String name){
-			 List<SongDTO> songs = song1Service.findByArtistsName(name);
+			 List<SongDTO> songs = song1Service.findSongByArtistsName(name);
 			 return ResponseEntity.ok(songs);
 		 }
 
