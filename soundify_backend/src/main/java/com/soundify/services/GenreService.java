@@ -8,6 +8,19 @@ import com.soundify.entities.Genre;
 import com.soundify.entities.Song;
 
 public interface GenreService {
-	 Optional<Genre> findGenreByName(String genreName);
-	 List<GenreResponseDTO>getAllGenre();
+	Optional<Genre> findGenreByName(String genreName);
+
+	List<GenreResponseDTO> getAllGenre();
+
+	void addGenre(String genreName);
+
+	void updateGenreName(Long genreId, String updatedGenreName);
+
+	void deleteGenre(Long genreId);
+
+	void addSongToGenre(Long genreId, Long songId);
+
+	void removeSongFromGenre(Long genreId, Long songId);
+
+	GenreResponseDTO getGenreById(Long genreId);
 }

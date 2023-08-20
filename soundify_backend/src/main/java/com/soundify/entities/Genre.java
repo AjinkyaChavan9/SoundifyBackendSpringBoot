@@ -27,4 +27,16 @@ public class Genre extends BaseEntity{
 	
 	@ManyToMany(mappedBy = "genres")
 	private Set<Song> songs = new HashSet<>();
+	
+	public void addSong(Song song)
+	{
+		songs.add(song);
+		song.getGenres().add(this);
+		
+	}
+	
+	 public void removeSong(Song song) {
+	        songs.remove(song);
+	        song.getGenres().remove(this);
+	    }
 }
