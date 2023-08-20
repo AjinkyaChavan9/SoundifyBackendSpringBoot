@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import lombok.Data;
 import lombok.Getter;
 
-@SuppressWarnings("unused")
+
 @Data
 public class SongDTO {
      

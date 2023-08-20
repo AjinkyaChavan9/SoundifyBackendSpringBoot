@@ -21,4 +21,8 @@ public interface ArtistService {
 	public ArtistSigninResponseDTO updateArtist(ArtistSignupResponseDTO artist, Long Id);
 	
 
+	void addSongToArtist(Long artistId, Long songId);
+
+	void removeSongFromArtist(Long artistId, Long songId);
+
 }

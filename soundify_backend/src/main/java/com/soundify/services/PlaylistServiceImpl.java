@@ -79,4 +79,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 		}
 		
 		
+
+		public void updatePlaylistName(Long playlistId, String playlistName) {
+			Playlist playlist = playlistDao
+					.findById(playlistId).orElseThrow(()-> new ResourceNotFoundException("Playlist Not Found!!"));
+			playlist.setPlaylistName(playlistName);
+		
+		}
+
 }
