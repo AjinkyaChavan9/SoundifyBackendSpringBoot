@@ -11,6 +11,7 @@ import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
@@ -163,6 +164,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+
+	public UserResponseDTO getUserDetails(Long userId) {
+		User user =  userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Invalid User ID !!!!!"));
+  return mapper.map(user , UserResponseDTO.class);
+	}
+	   
 	public List<UserSignupResponseDTO> getUsers() {
 		List<User> users =userDao.findAll();
 		return users.stream()
@@ -177,9 +184,6 @@ public class UserServiceImpl implements UserService {
 		return new ApiResponse("user deleted successfully");
 	}
 	
-	
-
-
 	@Override
 	public Set<ArtistResponseDTO> getFollowedArtists(Long userId) {
 		User user = userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found!"));
