@@ -26,31 +26,28 @@ public interface UserService {
 
 	// void deleteUser(Long userId);
 
-	 UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
+	UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
 
+	void followArtist(Long userId, Long artistId);
 
-	 void followArtist(Long userId, Long artistId);
+	void unFollowArtist(Long userId, Long artistId);
 
-	 void unFollowArtist(Long userId, Long artistId);
+	void likeSong(Long userId, Long songId);
 
-	 void likeSong(Long userId, Long songId);
-	 
-	 void unLikeSong(Long userId, Long songId);
+	void unLikeSong(Long userId, Long songId);
 
-	 PlaylistResponseDTO createPlaylist(Long userId, String playlistName);
-
-	void deletePlaylist(Long userId, Long playlistId);
+	PlaylistResponseDTO createPlaylist(Long userId, String playlistName);
 
 	UserResponseDTO getUserDetails(Long userId);
 
-  List<UserSignupResponseDTO> getUsers();
-	  
-  ApiResponse deleteUserById(Long userId);
-    
-  void deletePlaylist(Long userId, Long playlistId);
-   
-  Set<ArtistResponseDTO> getFollowedArtists(Long userId);
-   
-  Set<SongDTO> getLikedSongs(Long userId);
+	List<UserSignupResponseDTO> getUsers();
+
+	ApiResponse deleteUserById(Long userId);
+
+	void deletePlaylist(Long userId, Long playlistId);
+
+	Set<ArtistResponseDTO> getFollowedArtists(Long userId);
+
+	Set<SongDTO> getLikedSongs(Long userId);
 
 }
