@@ -192,5 +192,10 @@ public class SongsController {
 		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
 		     return ResponseEntity.ok(songs);
 		    }
+		 @GetMapping("/artist")
+		 public ResponseEntity<List<SongDTO>> findSongsByArtistName(@RequestParam String artistName){
+			 List<SongDTO> songs = song1Service.findSongsByArtistName(artistName);
+			 return ResponseEntity.ok(songs);
+		 }
 }
 
