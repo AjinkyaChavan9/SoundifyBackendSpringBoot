@@ -12,11 +12,18 @@ public interface UserService {
 
 	// UserSignupResponseDTO getUserById(Long userId);
 
-	 UserSignInResponseDTO updateUser(UserSignupResponseDTO user, Long userId);
+	UserSignInResponseDTO updateUser(UserSignupResponseDTO user, Long userId);
 
 	// void deleteUser(Long userId);
 
 	UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
+
+
+	void followArtist(Long userId, Long artistId);
+
+	void unFollowArtist(Long userId, Long artistId);
+
+
 	
 	 void likeSong(Long userId, Long songId);
 	 
