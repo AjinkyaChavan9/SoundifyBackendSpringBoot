@@ -1,6 +1,7 @@
 package com.soundify.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.NotReadablePropertyException;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
 import com.soundify.daos.SongDao;
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
@@ -94,5 +96,22 @@ public class ArtistServiceImpl implements ArtistService {
 	        artist.removeSong(song);
 	        artDao.save(artist);
 	    }
+
+		@Override
+		public List<ArtistSignupResponseDTO> getArtists() {
+			List<Artist> artists = artDao.findAll();
+			return artists.stream()
+					      .map(artist -> mapper.map(artist,ArtistSignupResponseDTO.class))
+					      .collect(Collectors.toList());
+		}
+
+		@Override
+		public ApiResponse deleteArtistById(Long artistId) {
+			Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+			artDao.delete(artist);
+			return new ApiResponse("Artist deleted successfully");
+		}
+
+		
 
 }
