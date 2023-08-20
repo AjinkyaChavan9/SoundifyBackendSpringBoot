@@ -37,6 +37,9 @@ import com.soundify.services.ArtistService;
 public class ArtistController {
 	@Autowired
 	private ArtistService artistService;
+	
+	@Autowired
+    private SongsController songsController; // Inject the SongsController
 
 	public ArtistController() {
 		System.out.println("in ctor of " + getClass());
@@ -65,16 +68,34 @@ public class ArtistController {
 
 	}
 	
-	@PutMapping("/{artistId}/song/{songId}")
-    public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
-		artistService.addSongToArtist(artistId, songId);
-        return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
-    }
 
-    @DeleteMapping("/{artistId}/song/{songId}")
-    public ResponseEntity<ApiResponse> removeSongFromArtist(@PathVariable Long artistId, @PathVariable Long songId) {
-    	artistService.removeSongFromArtist(artistId, songId);
-        return ResponseEntity.ok(new ApiResponse( "Song removed from artist successfully."));
-    }
+
+//    @PostMapping("/{artistId}/upload-song")
+//    public ResponseEntity<?> uploadSongForArtist(
+//            @PathVariable Long artistId,
+//            @RequestParam("file") MultipartFile file,
+//            @RequestParam String songName,
+//            @RequestParam String releaseDate) {
+//        try {
+//            ResponseEntity<?> response = songsController.uploadSong(file, songName, releaseDate);
+//            //also add song to the artist
+//            return response;
+//        } catch (Exception e) {           
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+//        }
+//    }
+
+
+	@PutMapping("/{artistId}/song/{songId}")
+	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
+		artistService.addSongToArtist(artistId, songId);
+		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
+	}
+
+	@DeleteMapping("/{artistId}/song/{songId}")
+	public ResponseEntity<ApiResponse> removeSongFromArtist(@PathVariable Long artistId, @PathVariable Long songId) {
+		artistService.removeSongFromArtist(artistId, songId);
+		return ResponseEntity.ok(new ApiResponse("Song removed from artist successfully."));
+	}
 
 }

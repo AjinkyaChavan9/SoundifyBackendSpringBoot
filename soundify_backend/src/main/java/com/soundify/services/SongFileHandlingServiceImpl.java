@@ -25,20 +25,19 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 
 	@Autowired
 	private SongDao songDao;
-	
+
 	@Autowired
 	private ModelMapper mapper;
 	// to inject the value of a property : "upload.location" , from app property
 	// file
-	// Field level DI , for injecting the value : using SpEL (spring expression language)
+	// Field level DI , for injecting the value : using SpEL (spring expression
+	// language)
 	@Value("${song.upload.location}")
 	private String songFolderLocation;
-	
+
 	@Value("${song.image.upload.location}")
 	private String songCoverImageFolderLocation;
-	
-	
-	
+
 	@PostConstruct
 	public void init() {
 		System.out.println("in init " + songFolderLocation);
@@ -50,7 +49,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 			folder.mkdir(); // creates a new folder
 			System.out.println("created a new folder...");
 		}
-		
+
 		System.out.println("in init " + songCoverImageFolderLocation);
 		// chk if folder exists
 		File imagefolder = new File(songCoverImageFolderLocation);
@@ -62,13 +61,14 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		}
 
 	}
-	
+
 	@Override
-	public ApiResponse uploadSongOnServer( SongMetadataUploadDTO songMetadata, MultipartFile file) throws IOException {
+	public ApiResponse uploadSongOnServer(SongMetadataUploadDTO songMetadata, MultipartFile file) throws IOException {
 		// chk if song exists by id
-		
-		Song song =songDao.save(mapper.map(songMetadata, Song.class));
-		//Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
+
+		Song song = songDao.save(mapper.map(songMetadata, Song.class));
+		// Song song = songDao.findById(songId).orElseThrow(() -> new
+		// ResourceNotFoundException("Invalid song id !!!!!"));
 		// song : persistent
 		// save uploaded file contents in server side folder.
 		// create the path to store the file
@@ -81,42 +81,41 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		// file saved successfully !
 		// set image path in db
 		song.setSongPath(path);
-		
+
 		return new ApiResponse("SongFile uploaded n stored in server side folder");
-		
+
 	}
 
 	@Override
 	public byte[] downloadSong(Long songId) throws IOException {
 		// get song from DB
-				Song song = songDao.
-						findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
-				
-				// => song exists !
-				// chk if song path exists
-				if (song.getSongPath() != null) {
-					// song exists , read file contents in to byte[]
-					return FileUtils.readFileToByteArray(new File(song.getSongPath()));
-				}
-				throw new ResourceNotFoundException("Song not yet assigned!!!!");
-		
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
+
+		// => song exists !
+		// chk if song path exists
+		if (song.getSongPath() != null) {
+			// song exists , read file contents in to byte[]
+			return FileUtils.readFileToByteArray(new File(song.getSongPath()));
+		}
+		throw new ResourceNotFoundException("Song not yet assigned!!!!");
+
 	}
 
 	@Override
 	public ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException {
-		Song song =songDao.save(mapper.map(songmetadata,Song.class));
-		
-		
+		Song song = songDao.save(mapper.map(songmetadata, Song.class));
+
 		return new ApiResponse("SongFile uploaded n stored on AWS S3");
 	}
 
 	@Override
 	public Song getSongById(Long songId) {
-	
-	return	songDao.findById(songId).orElseThrow(()-> new ResourceNotFoundException("Song Not found by id = "+songId));
-		 
+
+		return songDao.findById(songId)
+				.orElseThrow(() -> new ResourceNotFoundException("Song Not found by id = " + songId));
+
 	}
-	
+
 	@Override
 	public ApiResponse uploadSongCoverImage(Long songId, MultipartFile file) throws IOException {
 		// chk if song exists by id
@@ -141,9 +140,8 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	@Override
 	public byte[] downloadSongImage(Long songId) throws IOException {
 		// get song from DB
-		Song song = songDao.
-				findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid emp id !!!!!"));
-		
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid emp id !!!!!"));
+
 		// => song exists !
 		// chk if song image path exists
 		if (song.getSongImagePath() != null) {

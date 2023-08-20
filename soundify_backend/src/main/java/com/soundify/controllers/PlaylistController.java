@@ -21,25 +21,26 @@ import com.soundify.services.PlaylistService;
 @RequestMapping("/api/playlists")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PlaylistController {
-	
+
 	@Autowired
 	private PlaylistService playlistService;
-	
-	 @PostMapping("/{playlistId}/song/{songId}")
-	 public ResponseEntity<?> addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
-	    playlistService.addSongToPlaylist(playlistId, songId);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Uploaded in Playlist"));
-	 }
-	 @DeleteMapping("/{playlistId}/song/{songId}")
-	 public ResponseEntity<?> removeSongFromPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
-	        playlistService.removeSongFromPlaylist(playlistId, songId);
-	        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Playlist"));
-	 }
-	 
-	 @PutMapping("/{playlistId}/")
-	 public ResponseEntity<?> updatePlaylistName(@PathVariable Long playlistId, @RequestBody String playlistName) {
-	        playlistService.updatePlaylistName(playlistId, playlistName);
-	        return ResponseEntity.ok(new ApiResponse("Playlist Name updated successfully!"));
-	 }
+
+	@PostMapping("/{playlistId}/song/{songId}")
+	public ResponseEntity<?> addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+		playlistService.addSongToPlaylist(playlistId, songId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Uploaded in Playlist"));
+	}
+
+	@DeleteMapping("/{playlistId}/song/{songId}")
+	public ResponseEntity<?> removeSongFromPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+		playlistService.removeSongFromPlaylist(playlistId, songId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Playlist"));
+	}
+
+	@PutMapping("/{playlistId}/")
+	public ResponseEntity<?> updatePlaylistName(@PathVariable Long playlistId, @RequestBody String playlistName) {
+		playlistService.updatePlaylistName(playlistId, playlistName);
+		return ResponseEntity.ok(new ApiResponse("Playlist Name updated successfully!"));
+	}
 
 }
