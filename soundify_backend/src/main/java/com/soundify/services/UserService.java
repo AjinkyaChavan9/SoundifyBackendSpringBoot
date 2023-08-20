@@ -45,4 +45,6 @@ public interface UserService {
     void deletePlaylist(Long userId, Long playlistId);
     Set<ArtistResponseDTO> getFollowedArtists(Long userId);
     Set<SongDTO> getLikedSongs(Long userId);
+
+	UserSignInResponseDTO updateUserPassword(Long userId, String currentPassword, String newPassword);
 }

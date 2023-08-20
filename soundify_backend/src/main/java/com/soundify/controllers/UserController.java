@@ -2,6 +2,7 @@ package com.soundify.controllers;
 
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.song.SongDTO;
+import com.soundify.dtos.user.PasswordChangeRequestDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.*;
 
 import java.util.Set;
@@ -38,10 +41,17 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
     
-    @PutMapping("/{id}")
-	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserSignupResponseDTO updatedUser) {
-	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, id);
+    @PutMapping("/{userId}")
+	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long userId, @RequestBody UserSignupResponseDTO updatedUser) {
+	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, userId);
 	    return ResponseEntity.ok(updatedResponse);
+	}
+    @PostMapping("/{userId}")
+	public ResponseEntity<?> updateUserPassword(@PathVariable Long userId, @RequestBody PasswordChangeRequestDTO dto) {
+    	System.out.println("old password"+dto.getOldPassword());
+    	System.out.println("new password"+dto.getNewPassword());
+    	userService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());//UserSignInResponseDTO updatedResponse = 
+	    return ResponseEntity.ok(new ApiResponse("Password Updated Successfully"));
 	}
     @PostMapping("/{userId}/liked-songs/{songId}")
     public ResponseEntity<?> likeSong(@PathVariable Long userId, @PathVariable Long songId){

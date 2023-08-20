@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.ResourceAccessException;
 
 @Service
 @Transactional
@@ -85,6 +86,20 @@ public class UserServiceImpl implements UserService {
 		existingUser = userDao.save(existingUser);
 
 		return mapper.map(existingUser, UserSignInResponseDTO.class);
+	}
+
+	@Override
+	public UserSignInResponseDTO updateUserPassword(Long userId, String givenPassword, String newPassword) {
+		User user = userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found!"));
+//		System.out.println("in updateuserpassword");
+//		System.out.println("current password" + user.getPassword());
+//		System.out.println("given password" + givenPassword);
+		if (!user.getPassword().equals(givenPassword)) {
+			throw new ResourceAccessException("User Password Incorrect");
+		} else {
+			user.setPassword(newPassword);
+		}
+		return mapper.map(user, UserSignInResponseDTO.class);
 	}
 
 	public void likeSong(Long userId, Long songId) {
@@ -164,10 +179,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserSignupResponseDTO> getUsers() {
-		List<User> users =userDao.findAll();
-		return users.stream()
-				    .map(user -> mapper.map(user,UserSignupResponseDTO.class))
-				    .collect(Collectors.toList());
+		List<User> users = userDao.findAll();
+		return users.stream().map(user -> mapper.map(user, UserSignupResponseDTO.class)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -176,9 +189,6 @@ public class UserServiceImpl implements UserService {
 		userDao.delete(user);
 		return new ApiResponse("user deleted successfully");
 	}
-	
-	
-
 
 	@Override
 	public Set<ArtistResponseDTO> getFollowedArtists(Long userId) {
