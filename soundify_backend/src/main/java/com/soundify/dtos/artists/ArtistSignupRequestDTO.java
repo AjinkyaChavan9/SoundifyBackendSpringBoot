@@ -36,7 +36,7 @@ public class ArtistSignupRequestDTO {
 	private String password;
 		
 	//DOB in future
-	@Future(message = "date of birth must be in future!!!")
+	//@Future(message = "date of birth must be in future!!!")
 	private LocalDate dateOfBirth;
 		
 }

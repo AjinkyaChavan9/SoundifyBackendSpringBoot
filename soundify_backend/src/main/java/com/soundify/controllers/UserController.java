@@ -45,8 +45,20 @@ public class UserController {
     
     @DeleteMapping("/{userId}/disliked-songs/{songId}")
     public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
-    	userService.disLikeSong(userId, songId);
+    	userService.unLikeSong(userId, songId);
     	return ResponseEntity.ok("Song disliked successfully");
+    }
+    
+    @PostMapping("/{userId}/followed-artist/{artistId}")
+    public ResponseEntity<?> followArtist(@PathVariable Long userId, @PathVariable Long artistId){
+    	userService.followArtist(userId, artistId);
+    	return ResponseEntity.ok("Artist followed successfully");
+    }
+    
+    @DeleteMapping("/{userId}/unfollowed-artist/{artistId}")
+    public ResponseEntity<?> unfollowArtist(@PathVariable Long userId, @PathVariable Long artistId){
+    	userService.unFollowArtist(userId, artistId);
+    	return ResponseEntity.ok("Artist Unfollowed successfully");
     }
     
 }

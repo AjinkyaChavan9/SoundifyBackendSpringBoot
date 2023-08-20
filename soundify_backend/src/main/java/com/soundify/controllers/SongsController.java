@@ -8,6 +8,7 @@ import org.springframework.core.io.InputStreamResource;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -42,8 +43,10 @@ import static org.springframework.http.MediaType.*;
 import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.entities.Song;
 import com.soundify.services.SongFileHandlingService;
+import com.soundify.services.SongService;
 
 
 
@@ -104,11 +107,11 @@ public class SongsController {
 		        @RequestParam String releaseDate)
 				throws IOException,Exception
 		{
-			String duration = getDuration(songFile);
+			//String duration = getDuration(songFile);
 			 
 			SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
 			    songmetadata.setSongName(songName);
-			    songmetadata.setDuration(Time.valueOf(duration));
+			    //songmetadata.setDuration(Time.valueOf(duration));
 			    songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
 			System.out.println("in song upload " + songmetadata);
 			// invoke image service method
@@ -195,5 +198,15 @@ public class SongsController {
 
 		}
 
-}
+
+		 @Autowired
+		    private SongService song1Service;
+
+		  
+		 @GetMapping("/genre")
+		 public ResponseEntity<List<SongDTO>> findSongsByGenreName(@RequestParam String genreName) {
+		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
+		     return ResponseEntity.ok(songs);
+		    }
+
 

@@ -1,6 +1,7 @@
 package com.soundify.services;
 import com.soundify.entities.*;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
+import com.soundify.daos.ArtistDao;
 import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private SongDao songDao;
+    
+    @Autowired
+    private ArtistDao artistDao;
 
     @Autowired
     private ModelMapper mapper;
@@ -75,24 +79,61 @@ public class UserServiceImpl implements UserService {
 	 public void likeSong(Long userId, Long songId){
 		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		 Song song = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
-		 user.likeSong(song);;
+		 Set<Song> songsLiked = user.getSongsLiked();
+		 Set<User> usersWhoLiked = song.getUsers();
+		 user.likeSong(song,songsLiked, usersWhoLiked);
 		 
 	 }
 	 
-	 public void disLikeSong(Long userId, Long songId){
+	 public void unLikeSong(Long userId, Long songId){
 		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		 Song dislikedsong = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
 		 
 		 Set<Song> songsLiked = user.getSongsLiked();
 		 Set<User> usersWhoLiked = dislikedsong.getUsers();
 		 
-		 songsLiked.remove(dislikedsong);
-		 usersWhoLiked.remove(user);
-		 
+		 if(!(songsLiked.remove(dislikedsong))) {
+			 throw new ResourceNotFoundException("Song is Not Liked By User!!");
+		 }
+		 if( !(usersWhoLiked.remove(user)))
+		 {
+			 throw new ResourceNotFoundException("Song is Not Liked By User!!");
+		 }
+		
 		 
 	 }
+
+	@Override
+	public void followArtist(Long userId, Long artistId) {
+		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
+		 Set<Artist> artistsFollowed = user.getArtistsFollowed();
+		 
+		 Artist artist = artistDao.findById(artistId).orElseThrow(()->new ResourceNotFoundException("Artist Not Found!"));
+		 Set<User> followers = artist.getFollowers();
+		 user.followArtist(artist, artistsFollowed, followers);
+		
+	}
+
+
+   	
 	    	
-	    	
+	@Override
+	public void unFollowArtist(Long userId, Long artistId) {
+	    User user = userDao.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User Not Found!"));
+
+	    Set<Artist> artistFollowed = user.getArtistsFollowed();
+	    Artist unfollowedArtist = artistDao.findById(artistId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Artist Not Found!"));
+
+	    if (!artistFollowed.contains(unfollowedArtist)) {
+	        throw new ResourceNotFoundException("Artist is not followed by the user");
+	    }
+
+	    Set<User> usersWhoFollowed = unfollowedArtist.getFollowers();
+	    usersWhoFollowed.remove(user);
+	    artistFollowed.remove(unfollowedArtist);
+	}
 
 	
 	
