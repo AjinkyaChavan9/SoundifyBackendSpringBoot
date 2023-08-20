@@ -20,5 +20,5 @@ public interface UserService {
 	
 	 void likeSong(Long userId, Long songId);
 	 
-	 void disLikeSong(Long userId, Long songId);
+	 void unLikeSong(Long userId, Long songId);
 }

@@ -54,12 +54,11 @@ public class User extends BaseEntity {
 	private Set<Playlist> playlists = new HashSet<>();
 	
 	
-	public void likeSong(Song song)
+	public void likeSong(Song song, Set<Song> likedSongs,  Set<User> userWhoLiked )
 	{
-		 Set<Song> likedSongs = new HashSet<>();
+	
 		 likedSongs.add(song);
 		 this.setSongsLiked(likedSongs);
-		 Set<User> userWhoLiked = new HashSet<>();
 		 userWhoLiked.add(this);
 		 song.setUsers(userWhoLiked);
 	}
