@@ -18,11 +18,13 @@ public abstract class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
 
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
