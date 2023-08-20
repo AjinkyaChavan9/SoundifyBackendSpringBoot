@@ -1,6 +1,7 @@
 package com.soundify.controllers;
 
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.PasswordChangeRequestDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
@@ -88,7 +89,13 @@ public class UserController {
     	userService.deletePlaylist(userId, playlistId);
     	return ResponseEntity.ok("Playlist Deleted successfully");
     }
-    
+
+	@GetMapping("/{userId}")
+	public UserResponseDTO getUserDetails(@PathVariable Long userId) {
+		System.out.println("in get user details " + userId);
+		return userService.getUserDetails(userId);
+	}
+
     @GetMapping("/{userId}/followed-artists")
     public ResponseEntity<Set<ArtistResponseDTO>> getFollowedArtists(@PathVariable Long userId) {
         Set<ArtistResponseDTO> followedArtists = userService.getFollowedArtists(userId);
@@ -100,7 +107,6 @@ public class UserController {
         Set<SongDTO> likedSongs = userService.getLikedSongs(userId);
         return ResponseEntity.ok(likedSongs);
     }
-    
     
 }
 

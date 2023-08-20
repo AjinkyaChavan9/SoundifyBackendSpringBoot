@@ -53,4 +53,12 @@ public class SongServiceImpl implements SongService {
 
 	}
 
+	@Override
+	public List<SongDTO> getAllSongs() {
+		List<Song> songs =songDao.findAll();
+		return songs.stream().map(song -> mapper.map(song, SongDTO.class)).collect(Collectors.toList());
+
+	}
+
+	
 }
