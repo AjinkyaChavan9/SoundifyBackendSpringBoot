@@ -1,8 +1,17 @@
 package com.soundify.daos;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.soundify.entities.Genre;
 import com.soundify.entities.Song;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
 public interface SongDao extends JpaRepository<Song, Long> {
-	
+	List<Song> findByGenresGenreName(String genreName);
+
+
+
+	List<Song> findByGenresContaining(Genre genre);
 }
