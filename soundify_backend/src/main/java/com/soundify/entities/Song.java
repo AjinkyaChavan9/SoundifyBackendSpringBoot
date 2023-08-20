@@ -63,6 +63,9 @@ public class Song extends BaseEntity {
 	private Set<Playlist> playlists = new HashSet<>();
 	
 	
+	
+	
+	
 }
 	
 	
