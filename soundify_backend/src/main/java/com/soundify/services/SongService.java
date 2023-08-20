@@ -8,6 +8,7 @@ import java.util.List;
 public interface SongService {
 	
 	 List<SongDTO> findSongsByGenreName(String genreName);
+	 List<SongDTO> findSongsBySongName(String songName);
 	
 
 }

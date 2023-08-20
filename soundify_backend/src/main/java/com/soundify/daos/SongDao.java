@@ -14,4 +14,8 @@ public interface SongDao extends JpaRepository<Song, Long> {
 
 
 	List<Song> findByGenresContaining(Genre genre);
+
+
+
+	List<Song> findBySongNameContainingIgnoreCase(String songName);
 }

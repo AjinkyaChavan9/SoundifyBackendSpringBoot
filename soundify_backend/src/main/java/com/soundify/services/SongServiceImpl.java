@@ -50,4 +50,31 @@ public class SongServiceImpl implements SongService {
 	    return songDTO;
 	}
 
+	
+	@Autowired
+    public SongServiceImpl(SongDao songDao) {
+        this.songDao = songDao;
+    }
+	@Override
+	public List<SongDTO> findSongsBySongName(String songName) {
+		List<Song> songs = songDao.findBySongNameContainingIgnoreCase(songName);
+        List<SongDTO> songDTOs = new ArrayList<>();
+
+        for (Song song : songs) {
+            
+        	SongDTO songDTO = new SongDTO();
+            songDTO.setId(song.getId());
+            songDTO.setSongName(song.getSongName());
+            songDTO.setDuration(song.getDuration());
+            songDTO.setReleaseDate(song.getReleaseDate());
+    	    songDTO.setSongPath(song.getSongPath());
+    	    songDTO.setSongImagePath(song.getSongImagePath());
+    	  
+            songDTOs.add(songDTO);
+            
+        }
+
+        return songDTOs;
+	}
+
 }
