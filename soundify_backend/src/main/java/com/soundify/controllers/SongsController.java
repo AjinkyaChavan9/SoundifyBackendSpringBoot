@@ -164,7 +164,7 @@ public class SongsController {
 		}
 		
 		 @DeleteMapping("value =/{songId}/aws")
-		    public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
+		 public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
 		         Song song =songService.getSongById(songId);
 		         String key = song.getSongPath();
 		         awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
