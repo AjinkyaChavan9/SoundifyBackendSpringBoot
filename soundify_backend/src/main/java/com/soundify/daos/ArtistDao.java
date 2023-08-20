@@ -7,7 +7,6 @@ import com.soundify.entities.Artist;
 public interface ArtistDao extends JpaRepository<Artist, Long>  {
 	//add a finder method for artist's signin
 		Optional<Artist> findByEmailAndPassword(String ar,String pass);
-		Optional<Artist> findByFirstName(String firstName);
-		Optional<Artist> findByLastName(String lastName);
+		
 		
 }

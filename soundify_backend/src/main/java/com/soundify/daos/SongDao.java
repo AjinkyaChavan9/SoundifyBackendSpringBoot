@@ -10,7 +10,8 @@ import java.util.List;
 public interface SongDao extends JpaRepository<Song, Long> {
 	List<Song> findByGenresGenreName(String genreName);
 
-	  List<Song> findByArtistsFirstNameOrArtistsLastName(String firstName, String lastName);
+	List<Song> findByArtistsName(String artistName);
+
 
 
 
