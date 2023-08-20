@@ -8,6 +8,7 @@ import org.springframework.core.io.InputStreamResource;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +41,12 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import static org.springframework.http.MediaType.*;
 
 import com.soundify.aws_S3.AWSS3Config;
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.entities.Song;
 import com.soundify.services.SongFileHandlingService;
+import com.soundify.services.SongService;
 
 
 
@@ -164,9 +169,18 @@ public class SongsController {
 			System.out.println("in song img download " + songId);
 			return ResponseEntity.ok(songService.downloadSongImage(songId));
 		}
+		
+		 @DeleteMapping("value =/{songId}/aws")
+		 public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
+		         Song song =songService.getSongById(songId);
+		         String key = song.getSongPath();
+		         awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
+		         
+		         return ResponseEntity.ok(songService.deleteSong(songId));
+		    }
 
 		private String getDuration(MultipartFile file) throws Exception {
-			File tempFile = File.createTempFile("temp", file.getOriginalFilename());
+			File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
 			file.transferTo(tempFile);
 			
 			AudioFile audioFile = AudioFileIO.read(tempFile);
@@ -179,10 +193,25 @@ public class SongsController {
 	        int seconds = durationInSeconds % 60;
 
 	        String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            
+	        
+	        tempFile.delete();
+	        audioFile.delete();
+
+	        
 	        return duration;
 
 		}
-		
+
+
+		 @Autowired
+		    private SongService song1Service;
+
+		  
+		 @GetMapping("/genre")
+		 public ResponseEntity<List<SongDTO>> findSongsByGenreName(@RequestParam String genreName) {
+		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
+		     return ResponseEntity.ok(songs);
+		    }
+
 }
 
