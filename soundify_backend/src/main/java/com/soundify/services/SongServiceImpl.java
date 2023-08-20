@@ -47,33 +47,6 @@ public class SongServiceImpl implements SongService {
 	}
 
 	
-	/*
-	 * @Override public List<SongDTO> findSongsByArtistName(String artistName) {
-	 * List<Song> songs =
-	 * songDao.findByArtistsFirstNameOrArtistsLastName(artistName, artistName);
-	 * List<SongDTO> songDTOs = new ArrayList<>();
-	 * 
-	 * for (Song song : songs) { songDTOs.add(convertToDto1(song)); }
-	 * 
-	 * return songDTOs; } private SongDTO convertToDto1(Song song) { SongDTO songDTO
-	 * = new SongDTO(); songDTO.setId(song.getId());
-	 * songDTO.setSongName(song.getSongName());
-	 * songDTO.setDuration(song.getDuration());
-	 * songDTO.setReleaseDate(song.getReleaseDate());
-	 * songDTO.setSongPath(song.getSongPath());
-	 * songDTO.setSongImagePath(song.getSongImagePath());
-	 * 
-	 * return songDTO; }
-	 */
-	
-	
-	  
-
-	   @Autowired
-	    public SongServiceImpl(SongDao songDao) {
-	        this.songDao = songDao;
-	    }
-
 	   @Override
 	    public List<SongDTO> findSongsByArtistName(String artistName) {
 	        List<Song> songs = songDao.findByArtistsFirstNameOrArtistsLastName(artistName, artistName);
