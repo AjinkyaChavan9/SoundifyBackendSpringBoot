@@ -45,7 +45,7 @@ public class UserController {
     
     @DeleteMapping("/{userId}/disliked-songs/{songId}")
     public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
-    	userService.disLikeSong(userId, songId);
+    	userService.unLikeSong(userId, songId);
     	return ResponseEntity.ok("Song disliked successfully");
     }
     

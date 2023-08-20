@@ -18,12 +18,14 @@ public interface UserService {
 
 	UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
 
-	void likeSong(Long userId, Long songId);
-
-	void disLikeSong(Long userId, Long songId);
 
 	void followArtist(Long userId, Long artistId);
 
 	void unFollowArtist(Long userId, Long artistId);
 
+
+	
+	 void likeSong(Long userId, Long songId);
+	 
+	 void unLikeSong(Long userId, Long songId);
 }

@@ -79,20 +79,27 @@ public class UserServiceImpl implements UserService {
 	 public void likeSong(Long userId, Long songId){
 		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		 Song song = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
-		 user.likeSong(song);;
+		 Set<Song> songsLiked = user.getSongsLiked();
+		 Set<User> usersWhoLiked = song.getUsers();
+		 user.likeSong(song,songsLiked, usersWhoLiked);
 		 
 	 }
 	 
-	 public void disLikeSong(Long userId, Long songId){
+	 public void unLikeSong(Long userId, Long songId){
 		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
 		 Song dislikedsong = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
 		 
 		 Set<Song> songsLiked = user.getSongsLiked();
 		 Set<User> usersWhoLiked = dislikedsong.getUsers();
 		 
-		 songsLiked.remove(dislikedsong);
-		 usersWhoLiked.remove(user);
-		 
+		 if(!(songsLiked.remove(dislikedsong))) {
+			 throw new ResourceNotFoundException("Song is Not Liked By User!!");
+		 }
+		 if( !(usersWhoLiked.remove(user)))
+		 {
+			 throw new ResourceNotFoundException("Song is Not Liked By User!!");
+		 }
+		
 		 
 	 }
 

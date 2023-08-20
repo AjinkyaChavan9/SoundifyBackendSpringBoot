@@ -34,6 +34,9 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	@Value("${song.upload.location}")
 	private String songFolderLocation;
 	
+	@Value("${song.image.upload.location}")
+	private String songCoverImageFolderLocation;
+	
 	
 	
 	@PostConstruct
@@ -48,6 +51,15 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 			System.out.println("created a new folder...");
 		}
 		
+		System.out.println("in init " + songCoverImageFolderLocation);
+		// chk if folder exists
+		File imagefolder = new File(songCoverImageFolderLocation);
+		if (imagefolder.exists())
+			System.out.println("folder alrdy exists !");
+		else {
+			imagefolder.mkdir(); // creates a new folder
+			System.out.println("created a new folder...");
+		}
 
 	}
 	
@@ -103,6 +115,42 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	
 	return	songDao.findById(songId).orElseThrow(()-> new ResourceNotFoundException("Song Not found by id = "+songId));
 		 
+	}
+	
+	@Override
+	public ApiResponse uploadSongCoverImage(Long songId, MultipartFile file) throws IOException {
+		// chk if song exists by id
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
+		// song : persistent
+		// save uploaded file contents in server side folder.
+		// create the path to store the file
+		String path = songCoverImageFolderLocation.concat(file.getOriginalFilename());
+		System.out.println("path " + path);
+		// FileUtils class : to read byte[] from multpart file ---> server side folder
+		// API : public void writeByteArrayToFile(File file, byte[] data) throws
+		// IOException
+		FileUtils.writeByteArrayToFile(new File(path), file.getBytes());
+		// file saved successfully !
+		// set image path in db
+		song.setSongImagePath(path);
+		// In case of storing the uploaded file contents in DB :
+		// song.setImage(file.getBytes());
+		return new ApiResponse("Song Image File uploaded n stored in server side folder");
+	}// update
+
+	@Override
+	public byte[] downloadSongImage(Long songId) throws IOException {
+		// get song from DB
+		Song song = songDao.
+				findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid emp id !!!!!"));
+		
+		// => song exists !
+		// chk if song image path exists
+		if (song.getSongImagePath() != null) {
+			// song img exists , read file contents in to byte[]
+			return FileUtils.readFileToByteArray(new File(song.getSongImagePath()));
+		}
+		throw new ResourceNotFoundException("Image not yet assigned!!!!");
 	}
 
 }
