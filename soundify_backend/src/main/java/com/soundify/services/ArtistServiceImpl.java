@@ -1,6 +1,7 @@
 package com.soundify.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.NotReadablePropertyException;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
 import com.soundify.daos.SongDao;
+
 import com.soundify.dtos.artists.ArtistResponseDTO;
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
@@ -77,10 +80,6 @@ public class ArtistServiceImpl implements ArtistService {
 		return mapper.map(existingArtist, ArtistSigninResponseDTO.class);
 
 	}
-
-
-	// MODIFIED to add DTO pattern
-
 	
 	 public void addSongToArtist(Long artistId, Long songId) {
 	        Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
@@ -99,9 +98,23 @@ public class ArtistServiceImpl implements ArtistService {
 	    }
 
 		@Override
-		public ArtistResponseDTO getArtistDetails(Long artistId) {
+   	public ArtistResponseDTO getArtistDetails(Long artistId) {
 			Artist artist =  artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Invalid Artist ID !!!!!"));
 			  return mapper.map(artist , ArtistResponseDTO.class);
+		}
+
+		public List<ArtistSignupResponseDTO> getArtists() {
+			List<Artist> artists = artDao.findAll();
+			return artists.stream()
+					      .map(artist -> mapper.map(artist,ArtistSignupResponseDTO.class))
+					      .collect(Collectors.toList());
+		}
+
+		@Override
+		public ApiResponse deleteArtistById(Long artistId) {
+			Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+			artDao.delete(artist);
+			return new ApiResponse("Artist deleted successfully");
 		}
 
 }

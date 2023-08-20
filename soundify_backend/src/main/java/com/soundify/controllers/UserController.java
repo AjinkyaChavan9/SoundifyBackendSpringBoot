@@ -2,6 +2,7 @@ package com.soundify.controllers;
 
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.user.UserResponseDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.soundify.dtos.artists.*;
+
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -75,14 +79,24 @@ public class UserController {
     	userService.deletePlaylist(userId, playlistId);
     	return ResponseEntity.ok("Playlist Deleted successfully");
     }
-    
 
 	@GetMapping("/{userId}")
 	public UserResponseDTO getUserDetails(@PathVariable Long userId) {
 		System.out.println("in get user details " + userId);
 		return userService.getUserDetails(userId);
 	}
+
+    @GetMapping("/{userId}/followed-artists")
+    public ResponseEntity<Set<ArtistResponseDTO>> getFollowedArtists(@PathVariable Long userId) {
+        Set<ArtistResponseDTO> followedArtists = userService.getFollowedArtists(userId);
+        return ResponseEntity.ok(followedArtists);
+    }
     
+    @GetMapping("/{userId}/liked-songs")
+    public ResponseEntity<Set<SongDTO>> getLikedSongs(@PathVariable Long userId) {
+        Set<SongDTO> likedSongs = userService.getLikedSongs(userId);
+        return ResponseEntity.ok(likedSongs);
+    }
     
 }
 

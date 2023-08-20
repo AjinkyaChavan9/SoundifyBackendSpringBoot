@@ -1,3 +1,4 @@
+
 package com.soundify.dtos.artists;
 
 import java.time.LocalDate;
@@ -11,7 +12,8 @@ import lombok.ToString;
 @ToString
 public class ArtistResponseDTO {
 	private String firstName;
-
+  private Long id;
+  private String name;
 	private String lastName;
 
 	private String email;
@@ -19,3 +21,4 @@ public class ArtistResponseDTO {
 	private LocalDate dateOfBirth;
 
 }
+
