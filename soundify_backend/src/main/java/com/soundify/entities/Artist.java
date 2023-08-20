@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString
 public class Artist extends BaseEntity{
 	@Column(name = "artist_name", length=50)
-	private String artistName;
+	private String name;
 	@Column(name = "artist_first_name", length=50)
 	private String firstName;
 	@Column(name = "artist_last_name", length=50)
