@@ -10,6 +10,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ArtistSignupResponseDTO {
+	private String name;
+	
 	private String firstName;
 
 	private String lastName;

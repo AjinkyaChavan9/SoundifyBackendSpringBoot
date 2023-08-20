@@ -3,6 +3,7 @@ package com.soundify.services;
 
 import java.util.List;
 
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
@@ -24,5 +25,9 @@ public interface ArtistService {
 	void addSongToArtist(Long artistId, Long songId);
 
 	void removeSongFromArtist(Long artistId, Long songId);
+	
+	List<ArtistSignupResponseDTO> getArtists();
+
+	ApiResponse deleteArtistById(Long artistId);
 
 }

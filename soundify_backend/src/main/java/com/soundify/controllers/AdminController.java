@@ -12,20 +12,53 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.soundify.services.ArtistService;
+import com.soundify.services.UserService;
 
 import com.soundify.dtos.ApiResponse;
 import com.soundify.services.GenreService;
+
 
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AdminController {
-	
-	
+
 	@Autowired
+	private ArtistService artistService;
+
+	@Autowired
+	private UserService userService;
+  
+  @Autowired
 	GenreService genreService;
+
+	@GetMapping("/artists")
+	public ResponseEntity<?> getAllAtrists() {
+
+		return ResponseEntity.ok(artistService.getArtists());
+	}
+
+	@GetMapping("/users")
+	public ResponseEntity<?> getAllUsers() {
+
+		return ResponseEntity.ok(userService.getUsers());
+	}
+
+	@DeleteMapping("/user/{userId}")
+	public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+
+		return ResponseEntity.ok(userService.deleteUserById(userId));
+	}
 	
-	
+
+	@DeleteMapping("/artist/{artistId}")
+	public ResponseEntity<?> deleteArtist(@PathVariable Long artistId) {
+
+		return ResponseEntity.ok(artistService.deleteArtistById(artistId));
+	}
+
+
 	//GENRE CRUD
 	@GetMapping("/genre")
 	 public ResponseEntity<?> getAllGenre(){
@@ -68,5 +101,6 @@ public class AdminController {
 		genreService.removeSongFromGenre(genreId, songId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Genre"));
 	}
+
 
 }

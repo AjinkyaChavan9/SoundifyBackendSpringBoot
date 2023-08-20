@@ -7,6 +7,7 @@ import com.soundify.daos.PlaylistDao;
 import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
@@ -17,6 +18,7 @@ import com.soundify.dtos.user.UserSignUpRequestDTO;
 import com.soundify.dtos.user.UserSignupResponseDTO;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -159,6 +161,24 @@ public class UserServiceImpl implements UserService {
 		user.deletePlaylist(removePlaylist);
 
 	}
+
+	@Override
+	public List<UserSignupResponseDTO> getUsers() {
+		List<User> users =userDao.findAll();
+		return users.stream()
+				    .map(user -> mapper.map(user,UserSignupResponseDTO.class))
+				    .collect(Collectors.toList());
+	}
+
+	@Override
+	public ApiResponse deleteUserById(Long userId) {
+		User user = userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not found"));
+		userDao.delete(user);
+		return new ApiResponse("user deleted successfully");
+	}
+	
+	
+
 
 	@Override
 	public Set<ArtistResponseDTO> getFollowedArtists(Long userId) {

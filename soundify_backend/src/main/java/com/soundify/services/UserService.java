@@ -1,5 +1,8 @@
 package com.soundify.services;
 
+import java.util.List;
+
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
@@ -22,12 +25,12 @@ public interface UserService {
 
 	// void deleteUser(Long userId);
 
-	UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
+	 UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
 
 
-	void followArtist(Long userId, Long artistId);
+	 void followArtist(Long userId, Long artistId);
 
-	void unFollowArtist(Long userId, Long artistId);
+	 void unFollowArtist(Long userId, Long artistId);
 
 
 	
@@ -37,7 +40,9 @@ public interface UserService {
 
 	 PlaylistResponseDTO createPlaylist(Long userId, String playlistName);
 
-	void deletePlaylist(Long userId, Long playlistId);
-	Set<ArtistResponseDTO> getFollowedArtists(Long userId);
-	Set<SongDTO> getLikedSongs(Long userId);
+    List<UserSignupResponseDTO> getUsers();
+	  ApiResponse deleteUserById(Long userId);
+    void deletePlaylist(Long userId, Long playlistId);
+    Set<ArtistResponseDTO> getFollowedArtists(Long userId);
+    Set<SongDTO> getLikedSongs(Long userId);
 }
