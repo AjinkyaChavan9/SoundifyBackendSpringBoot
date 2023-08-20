@@ -1,5 +1,6 @@
 package com.soundify.controllers;
 
+import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -44,7 +45,7 @@ public class UserController {
     	return ResponseEntity.ok("Song liked successfully");
     }
     
-    @DeleteMapping("/{userId}/disliked-songs/{songId}")
+    @DeleteMapping("/{userId}/unliked-songs/{songId}")
     public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
     	userService.unLikeSong(userId, songId);
     	return ResponseEntity.ok("Song disliked successfully");
@@ -61,6 +62,21 @@ public class UserController {
     	userService.unFollowArtist(userId, artistId);
     	return ResponseEntity.ok("Artist Unfollowed successfully");
     }
+    
+    @PostMapping("/{userId}/playlist/")
+    public ResponseEntity<?> createPlaylist(@PathVariable Long userId, @RequestBody String playlistName){
+    	PlaylistResponseDTO response = userService.createPlaylist(userId, playlistName);
+    	return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    
+    @DeleteMapping("/{userId}/playlist/{playlistId}")
+    public ResponseEntity<?> deletePlaylist(@PathVariable Long userId, @PathVariable Long playlistId){
+    	userService.deletePlaylist(userId, playlistId);
+    	return ResponseEntity.ok("Playlist Deleted successfully");
+    }
+    
+    
+    
     
 }
 

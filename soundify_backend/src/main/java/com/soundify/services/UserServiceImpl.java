@@ -2,9 +2,11 @@ package com.soundify.services;
 import com.soundify.entities.*;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
+import com.soundify.daos.PlaylistDao;
 import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
+import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -35,6 +37,9 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private ArtistDao artistDao;
+    
+    @Autowired
+    private PlaylistDao playlistDao;
 
     @Autowired
     private ModelMapper mapper;
@@ -135,6 +140,26 @@ public class UserServiceImpl implements UserService {
 	    artistFollowed.remove(unfollowedArtist);
 	}
 
+	@Override
+	public PlaylistResponseDTO createPlaylist(Long userId, String playlistName) {
+		 User user = userDao.findById(userId)
+		            .orElseThrow(() -> new ResourceNotFoundException("User Not Found!"));
+		 Playlist newPlaylist = new Playlist();
+		 newPlaylist.setPlaylistName(playlistName);
+		 Playlist savedPlaylist = playlistDao.save(newPlaylist);
+		 savedPlaylist.setUser(user);
+		return mapper.map(savedPlaylist, PlaylistResponseDTO.class);
+	}
+	@Override
+	public void deletePlaylist(Long userId, Long playlistId) {
+		User user = userDao.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User Not Found!"));
+		Playlist removePlaylist = playlistDao.findById(playlistId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Playlist Not Found!"));
+		
+		user.deletePlaylist(removePlaylist);
+
+	}
 	
 	
 
