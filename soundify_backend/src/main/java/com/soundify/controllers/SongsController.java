@@ -159,6 +159,7 @@ public class SongsController {
 		public ResponseEntity<?> downloadEmpImage(@PathVariable Long songId) throws IOException {
 			System.out.println("in song img download " + songId);
 			return ResponseEntity.ok(songService.downloadSongImage(songId));
+		}
 
 		private String getDuration(MultipartFile file) throws Exception {
 			File tempFile = File.createTempFile("temp", file.getOriginalFilename());
