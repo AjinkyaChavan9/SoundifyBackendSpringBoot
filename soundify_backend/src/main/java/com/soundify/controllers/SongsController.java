@@ -138,6 +138,28 @@ public class SongsController {
 
 		}
 		
+
+		/*Image Handling */
+		// http://localhost:8080/api/songs/{songId}/image
+		// songId : path var
+		// method : POST
+		// multipart file : request parameter (standard part of HTTP specifications)
+		@PostMapping(value = "/{songId}/image", consumes = "multipart/form-data")
+		public ResponseEntity<?> uploadEmpImage(@PathVariable Long songId, @RequestBody MultipartFile imageFile)
+				throws IOException {
+			System.out.println("in img upload " + songId);
+			// invoke image service method
+			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongCoverImage(songId, imageFile));
+		}
+
+		// http://localhost:8080/api/songs/{songId}/image , method=GET
+		// serve(download) image
+		@GetMapping(value = "/{songId}/image", produces = { IMAGE_GIF_VALUE, 
+				IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE })
+		public ResponseEntity<?> downloadEmpImage(@PathVariable Long songId) throws IOException {
+			System.out.println("in song img download " + songId);
+			return ResponseEntity.ok(songService.downloadSongImage(songId));
+
 		private String getDuration(MultipartFile file) throws Exception {
 			File tempFile = File.createTempFile("temp", file.getOriginalFilename());
 			file.transferTo(tempFile);
@@ -154,6 +176,7 @@ public class SongsController {
 	        String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
             
 	        return duration;
+
 		}
 		
 }
