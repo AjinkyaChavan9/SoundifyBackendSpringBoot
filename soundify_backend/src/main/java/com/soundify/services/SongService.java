@@ -10,6 +10,6 @@ public interface SongService {
 	 List<SongDTO> findSongsByGenreName(String genreName);
 	 List<SongDTO> findSongByArtistsName(String name);
 	 List<SongDTO> findSongsBySongName(String songName);
-
+	 List<SongDTO> getAllSongs();
 	
 }

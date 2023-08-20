@@ -1,6 +1,7 @@
 package com.soundify.services;
 
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -33,4 +34,9 @@ public interface UserService {
 	 PlaylistResponseDTO createPlaylist(Long userId, String playlistName);
 
 	void deletePlaylist(Long userId, Long playlistId);
+	
+
+
+	UserResponseDTO getUserDetails(Long userId);
+	
 }

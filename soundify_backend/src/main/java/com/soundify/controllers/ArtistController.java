@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.dtos.ApiResponse;
+import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
 
@@ -98,4 +100,11 @@ public class ArtistController {
 		return ResponseEntity.ok(new ApiResponse("Song removed from artist successfully."));
 	}
 
+	@GetMapping("/{artistId}")
+	public ArtistResponseDTO getArtistDetails(@PathVariable Long artistId) {
+		System.out.println("in get artist details " + artistId);
+		return artistService.getArtistDetails(artistId);
+	}
+    
+	
 }

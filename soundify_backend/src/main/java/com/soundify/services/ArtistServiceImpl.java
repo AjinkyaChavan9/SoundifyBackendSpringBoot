@@ -11,12 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
 import com.soundify.daos.SongDao;
+import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.entities.Song;
+import com.soundify.entities.User;
 
 @Service
 @Transactional
@@ -94,5 +97,11 @@ public class ArtistServiceImpl implements ArtistService {
 	        artist.removeSong(song);
 	        artDao.save(artist);
 	    }
+
+		@Override
+		public ArtistResponseDTO getArtistDetails(Long artistId) {
+			Artist artist =  artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Invalid Artist ID !!!!!"));
+			  return mapper.map(artist , ArtistResponseDTO.class);
+		}
 
 }

@@ -1,6 +1,7 @@
 package com.soundify.controllers;
 
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -75,7 +76,12 @@ public class UserController {
     	return ResponseEntity.ok("Playlist Deleted successfully");
     }
     
-    
+
+	@GetMapping("/{userId}")
+	public UserResponseDTO getUserDetails(@PathVariable Long userId) {
+		System.out.println("in get user details " + userId);
+		return userService.getUserDetails(userId);
+	}
     
     
 }

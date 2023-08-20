@@ -7,6 +7,7 @@ import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
@@ -160,7 +161,13 @@ public class UserServiceImpl implements UserService {
 		user.deletePlaylist(removePlaylist);
 
 	}
-	
+
+	@Override
+	public UserResponseDTO getUserDetails(Long userId) {
+		User user =  userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Invalid User ID !!!!!"));
+  return mapper.map(user , UserResponseDTO.class);
+	}
+	   
 	
 
 	}
