@@ -72,6 +72,9 @@ public class SongsController {
 	
 	@Autowired
 	AWSS3Config awsS3;
+	
+	@Autowired
+	private SongFileHandlingService songService;
 
 	@PostMapping(value = "/aws",consumes = "multipart/form-data")
 	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file,@RequestParam String songName,
@@ -95,16 +98,33 @@ public class SongsController {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
 	}
+	
 
-		@Autowired
-		private SongFileHandlingService songService;
+	@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
+	public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
+		System.out.println("in SONG download " + songId);
+		Song song = songService.getSongById(songId);
+		String key = song.getSongPath();
+		
+		S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
+		
+		 S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+	        return ResponseEntity.ok()
+	                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
+	                .header("Content-Disposition", "inline; filename=" + song.getSongName())
+	                .body(new InputStreamResource(inputStream));
+
+	}
+	
+
+		
 		// http://localhost:8080/api/songs/{songId}/songfile
 		// songId : path var
 		// method : POST
 		// multipart file : request parameter (standard part of HTTP specifications)
 		@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
-		public ResponseEntity<?> uploadSongFile( @RequestBody MultipartFile songFile,  @RequestParam String songName,
-		        @RequestParam String releaseDate)
+		public ResponseEntity<?> uploadSongFileonServer( @RequestBody MultipartFile songFile, @RequestParam String songName, @RequestParam String releaseDate)
 				throws IOException,Exception
 		{
 			//String duration = getDuration(songFile);
@@ -126,22 +146,6 @@ public class SongsController {
 			return ResponseEntity.ok(songService.downloadSong(songId));
 		}
 		
-		@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
-		public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
-			System.out.println("in SONG download " + songId);
-			Song song = songService.getSongById(songId);
-			String key = song.getSongPath();
-			
-			S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
-			
-			 S3ObjectInputStream inputStream = s3Object.getObjectContent();
-
-		        return ResponseEntity.ok()
-		                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
-		                .header("Content-Disposition", "inline; filename=" + song.getSongName())
-		                .body(new InputStreamResource(inputStream));
-
-		}
 		
 
 		/*Image Handling */
