@@ -153,4 +153,10 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		throw new ResourceNotFoundException("Image not yet assigned!!!!");
 	}
 
+	@Override
+	public ApiResponse deleteSong(Long Id) {
+		songDao.deleteById(Id);
+		return new ApiResponse("Song deleted successfully");
+	}
+
 }

@@ -23,4 +23,6 @@ public interface SongFileHandlingService {
 		public ApiResponse uploadSongCoverImage(Long songId, MultipartFile file) throws IOException;
 		
 		public byte[] downloadSongImage(Long songId) throws IOException;
+		
+		ApiResponse deleteSong(Long Id);
 }
