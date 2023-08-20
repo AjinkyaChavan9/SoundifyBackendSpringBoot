@@ -4,10 +4,15 @@ import java.util.List;
 
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
 import com.soundify.dtos.user.UserSignupResponseDTO;
+
+import java.util.Set;
+
+import com.soundify.dtos.artists.*;
 
 public interface UserService {
 	// List<UserSignupResponseDTO> getAllUsers();
@@ -35,9 +40,9 @@ public interface UserService {
 
 	 PlaylistResponseDTO createPlaylist(Long userId, String playlistName);
 
-	 void deletePlaylist(Long userId, Long playlistId);
-
-     List<UserSignupResponseDTO> getUsers();
-
-	ApiResponse deleteUserById(Long userId);
+    List<UserSignupResponseDTO> getUsers();
+	  ApiResponse deleteUserById(Long userId);
+    void deletePlaylist(Long userId, Long playlistId);
+    Set<ArtistResponseDTO> getFollowedArtists(Long userId);
+    Set<SongDTO> getLikedSongs(Long userId);
 }
