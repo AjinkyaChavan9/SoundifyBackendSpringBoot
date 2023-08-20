@@ -170,7 +170,6 @@ public class SongsController {
 		         awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
 		         
 		         return ResponseEntity.ok(songService.deleteSong(songId));
-		        
 		    }
 
 		private String getDuration(MultipartFile file) throws Exception {
