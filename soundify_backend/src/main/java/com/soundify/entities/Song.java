@@ -35,7 +35,7 @@ import lombok.ToString;
 @ToString
 public class Song extends BaseEntity {
 	//course title(unique) , start date , end date , fees , min score
-	@Column(name = "song_name", length = 50, unique = true) 
+	@Column(name = "song_name", length = 50) 
 	private String songName;
 	@Column(name = "duration")
 	private Time duration;
@@ -58,9 +58,6 @@ public class Song extends BaseEntity {
 	@ManyToMany
 	@JoinTable(name="song_genre", joinColumns = @JoinColumn(name="song_id"), inverseJoinColumns = @JoinColumn(name="genre_id"))
 	private Set<Genre> genres = new HashSet<>();
-	
-	@ManyToMany(mappedBy = "songs")
-	private Set<Album> albums = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "songs")
 	private Set<Playlist> playlists = new HashSet<>();
