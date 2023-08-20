@@ -170,7 +170,7 @@ public class SongsController {
 			return ResponseEntity.ok(songService.downloadSongImage(songId));
 		}
 		
-		 @DeleteMapping("value =/{songId}/aws")
+		 @DeleteMapping("/{songId}/aws")
 		 public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
 		         Song song =songService.getSongById(songId);
 		         String key = song.getSongPath();
@@ -204,7 +204,7 @@ public class SongsController {
 
 
 		 @Autowired
-		    private SongService song1Service;
+		 private SongService song1Service;
 
 		  
 		 @GetMapping("/genre")

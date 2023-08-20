@@ -70,6 +70,9 @@ public class ArtistServiceImpl implements ArtistService {
 		    return mapper.map(existingArtist, ArtistSigninResponseDTO.class);
 	
 	}
+
+
+	
 	
 	//MODIFIED to add DTO pattern
 	
