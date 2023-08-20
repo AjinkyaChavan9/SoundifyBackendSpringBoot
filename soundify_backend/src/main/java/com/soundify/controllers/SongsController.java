@@ -182,14 +182,11 @@ public class SongsController {
 	        return duration;
 
 		}
-		 
+
 		 @Autowired
 		    private SongService song1Service;
 
-		   /* @GetMapping("/by-genre/{genreName}")
-		    public ResponseEntity<List<SongDTO>> findSongsByGenreName(@PathVariable String genreName) {
-		        List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
-		        return ResponseEntity.ok(songs);*/
+		  
 		 @GetMapping("/genre")
 		 public ResponseEntity<List<SongDTO>> findSongsByGenreName(@RequestParam String genreName) {
 		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
