@@ -2,15 +2,20 @@ package com.soundify.services;
 import com.soundify.entities.*;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.RoleDao;
+import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
 import com.soundify.dtos.user.UserSignInRequestDTO;
 import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
 import com.soundify.dtos.user.UserSignupResponseDTO;
-import com.soundify.entities.User;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleDao roleDao; // Inject RoleDao
+    
+    @Autowired
+    private SongDao songDao;
 
     @Autowired
     private ModelMapper mapper;
@@ -63,6 +71,28 @@ public class UserServiceImpl implements UserService {
 
 		    return mapper.map(existingUser, UserSignInResponseDTO.class);
 	}
+	
+	 public void likeSong(Long userId, Long songId){
+		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
+		 Song song = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
+		 user.likeSong(song);;
+		 
+	 }
+	 
+	 public void disLikeSong(Long userId, Long songId){
+		 User user = userDao.findById(userId).orElseThrow(()->new ResourceNotFoundException("User Not Found!"));
+		 Song dislikedsong = songDao.findById(songId).orElseThrow(()->new ResourceNotFoundException("Song Not Found!"));
+		 
+		 Set<Song> songsLiked = user.getSongsLiked();
+		 Set<User> usersWhoLiked = dislikedsong.getUsers();
+		 
+		 songsLiked.remove(dislikedsong);
+		 usersWhoLiked.remove(user);
+		 
+		 
+	 }
+	    	
+	    	
 
 	
 	

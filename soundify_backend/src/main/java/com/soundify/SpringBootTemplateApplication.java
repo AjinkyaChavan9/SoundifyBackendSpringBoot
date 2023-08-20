@@ -16,16 +16,19 @@ public class SpringBootTemplateApplication {
 
 
 	public static void main(String[] args) {
-		//SpringApplication.run(SpringBootTemplateApplication.class, args);
-		
-	ApplicationContext context = SpringApplication.run(SpringBootTemplateApplication.class, args);
+
+	SpringApplication.run(SpringBootTemplateApplication.class, args);
 	
-	AWSS3Service aws =context.getBean(AWSS3Service.class);
+//	ApplicationContext context = SpringApplication.run(SpringBootTemplateApplication.class, args);
+//	
+//	AWSS3Service aws =context.getBean(AWSS3Service.class);
+
 	
-		aws.getSongFileNames();
+	//	aws.getSongFileNames();
+
 	}
 	
-	// Configure ModelMapper(any 3rd party object) Bean in Spring boot application class(since this class
+	//Configure ModelMapper(any 3rd party object) Bean in Spring boot application class(since this class
 		// is
 		// implicitly annotated with @Configuration)
 		// Meaning -You can add @Bean methods ONLY in such config classes

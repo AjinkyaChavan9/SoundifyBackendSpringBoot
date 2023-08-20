@@ -3,8 +3,7 @@ package com.soundify.controllers;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
-
-
+import org.springframework.core.io.InputStreamResource;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -29,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.soundify.aws_S3.AWSS3Config;
 
 
@@ -56,28 +57,34 @@ public class SongsController {
     
     @Value("${cloud.aws.bucketname}")
     private String s3BucketName;
+    
+    @Value("${cloud.aws.upload.folder}")
+	private String songFolderLocationS3;
 	
 	@Autowired
 	AWSS3Config awsS3;
-	
-	
-	
-	
-	
-	@PostMapping(value = "/api/songs/aws",consumes = "multipart/form-data")
-	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file) throws IOException{
+
+	@PostMapping(value = "/aws",consumes = "multipart/form-data")
+	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file,@RequestParam String songName,
+	        @RequestParam String duration,
+	        @RequestParam String releaseDate) throws IOException{
 		if(file != null) {
 		ObjectMetadata obectMetadata = new ObjectMetadata();
 		obectMetadata.setContentType(file.getContentType());
-		awsS3.getAmazonS3Client().putObject(new PutObjectRequest(s3BucketName,file.getOriginalFilename(),file.getInputStream(),obectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body("Song uploaded");
+		String path = songFolderLocationS3.concat(file.getOriginalFilename());
+		awsS3.getAmazonS3Client().putObject(new PutObjectRequest(s3BucketName,path,file.getInputStream(),obectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+	
+		SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
+		    songmetadata.setSongName(songName);
+		    songmetadata.setDuration(Time.valueOf(duration));
+		    songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
+		    songmetadata.setSongPath(path);
+		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnS3(songmetadata));
 		}
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
 	}
-	
-
 
 		@Autowired
 		private SongFileHandlingService songService;
@@ -97,15 +104,32 @@ public class SongsController {
 			    songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
 			System.out.println("in song upload " + songmetadata);
 			// invoke image service method
-			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSong(songmetadata, songFile));
+			return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile));
 		}
 		
 		// http://localhost:8080/api/songs/{songId}/songfile , method=GET
 		// serve(download) song
 		@GetMapping(value = "/{songId}/songfile", produces = "audio/mpeg")
-		public ResponseEntity<?> downloadSongFile(@PathVariable Long songId) throws IOException {
+		public ResponseEntity<?> downloadSongFileFromServer(@PathVariable Long songId) throws IOException {
 			System.out.println("in SONG download " + songId);
 			return ResponseEntity.ok(songService.downloadSong(songId));
+		}
+		
+		@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
+		public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
+			System.out.println("in SONG download " + songId);
+			Song song = songService.getSongById(songId);
+			String key = song.getSongPath();
+			
+			S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
+			
+			 S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+		        return ResponseEntity.ok()
+		                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
+		                .header("Content-Disposition", "inline; filename=" + song.getSongName())
+		                .body(new InputStreamResource(inputStream));
+
 		}
 		
 }

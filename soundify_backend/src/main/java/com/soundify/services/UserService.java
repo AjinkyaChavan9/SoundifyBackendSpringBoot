@@ -17,4 +17,8 @@ public interface UserService {
 	// void deleteUser(Long userId);
 
 	UserSignInResponseDTO signInUser(UserSignInRequestDTO request);
+	
+	 void likeSong(Long userId, Long songId);
+	 
+	 void disLikeSong(Long userId, Long songId);
 }

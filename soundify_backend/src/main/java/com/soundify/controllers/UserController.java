@@ -32,12 +32,22 @@ public class UserController {
         UserSignInResponseDTO response = userService.signInUser(request);
         return ResponseEntity.ok(response);
     }
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
 	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserSignupResponseDTO updatedUser) {
-	    
-
 	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, id);
 	    return ResponseEntity.ok(updatedResponse);
 	}
+    @PostMapping("/{userId}/liked-songs/{songId}")
+    public ResponseEntity<?> likeSong(@PathVariable Long userId, @PathVariable Long songId){
+    	userService.likeSong(userId, songId);
+    	return ResponseEntity.ok("Song liked successfully");
+    }
+    
+    @DeleteMapping("/{userId}/disliked-songs/{songId}")
+    public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
+    	userService.disLikeSong(userId, songId);
+    	return ResponseEntity.ok("Song disliked successfully");
+    }
+    
 }
 

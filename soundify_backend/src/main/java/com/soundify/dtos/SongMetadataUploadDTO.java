@@ -21,5 +21,6 @@ public class SongMetadataUploadDTO {
 
 	private LocalDate releaseDate;
 	
+	private String songPath;
 
 }
