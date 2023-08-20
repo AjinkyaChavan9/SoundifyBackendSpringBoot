@@ -23,7 +23,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Artist extends BaseEntity{
-	
+	@Column(name = "artist_name", length=50)
+	private String artistName;
 	@Column(name = "artist_first_name", length=50)
 	private String firstName;
 	@Column(name = "artist_last_name", length=50)
@@ -43,5 +44,13 @@ public class Artist extends BaseEntity{
 	@JoinTable(name="artist_follower", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
 	private Set<User> followers = new HashSet<>();
 		
-	
+	public void addSong(Song song) {
+        songs.add(song);
+        song.getArtists().add(this);
+    }
+
+    public void removeSong(Song song) {
+        songs.remove(song);
+        song.getArtists().remove(this);
+    }
 }

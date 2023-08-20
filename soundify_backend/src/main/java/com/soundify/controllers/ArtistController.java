@@ -1,4 +1,5 @@
 package com.soundify.controllers;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,49 +30,72 @@ import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
 
-
-
-
 @RestController
 @RequestMapping("/api/artists")
 @CrossOrigin(origins = "http://localhost:3000")
 
 public class ArtistController {
 	@Autowired
-	private ArtistService arService;
+	private ArtistService artistService;
 	
+	@Autowired
+    private SongsController songsController; // Inject the SongsController
+
 	public ArtistController() {
 		System.out.println("in ctor of " + getClass());
 	}
 
-	
-	 @PutMapping("/{id}")
-		public ResponseEntity<ArtistSigninResponseDTO> updateArtist(@PathVariable Long id, @RequestBody ArtistSignupResponseDTO updatedArtist) {
-		    
+	@PutMapping("/{id}")
+	public ResponseEntity<ArtistSigninResponseDTO> updateArtist(@PathVariable Long id,
+			@RequestBody ArtistSignupResponseDTO updatedArtist) {
 
-		    ArtistSigninResponseDTO updatedResponse = arService.updateArtist(updatedArtist, id);
-		    return ResponseEntity.ok(updatedResponse);
-		}
-	
-		@PostMapping("/signup")
-		public ResponseEntity<?> addNewArt(@RequestBody @Valid ArtistSignupRequestDTO requestDTO) {
-			System.out.println("in add new artist " + requestDTO);
-			return ResponseEntity.status(HttpStatus.CREATED).body(arService.addArtDetails(requestDTO));
-		}
-	
+		ArtistSigninResponseDTO updatedResponse = artistService.updateArtist(updatedArtist, id);
+		return ResponseEntity.ok(updatedResponse);
+	}
+
+	@PostMapping("/signup")
+	public ResponseEntity<?> addNewArt(@RequestBody @Valid ArtistSignupRequestDTO requestDTO) {
+		System.out.println("in add new artist " + requestDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.addArtDetails(requestDTO));
+	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> signInArtist(@RequestBody @Valid ArtistSigninRequestDTO request) {
 		System.out.println("auth req " + request);
 		// try {
-		ArtistSigninResponseDTO resp = arService.signInArtist(request);
+		ArtistSigninResponseDTO resp = artistService.signInArtist(request);
 		return ResponseEntity.ok(resp);
-
 
 	}
 	
-	 
-	
-	
+
+
+//    @PostMapping("/{artistId}/upload-song")
+//    public ResponseEntity<?> uploadSongForArtist(
+//            @PathVariable Long artistId,
+//            @RequestParam("file") MultipartFile file,
+//            @RequestParam String songName,
+//            @RequestParam String releaseDate) {
+//        try {
+//            ResponseEntity<?> response = songsController.uploadSong(file, songName, releaseDate);
+//            //also add song to the artist
+//            return response;
+//        } catch (Exception e) {           
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+//        }
+//    }
+
+
+	@PutMapping("/{artistId}/song/{songId}")
+	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
+		artistService.addSongToArtist(artistId, songId);
+		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
+	}
+
+	@DeleteMapping("/{artistId}/song/{songId}")
+	public ResponseEntity<ApiResponse> removeSongFromArtist(@PathVariable Long artistId, @PathVariable Long songId) {
+		artistService.removeSongFromArtist(artistId, songId);
+		return ResponseEntity.ok(new ApiResponse("Song removed from artist successfully."));
+	}
 
 }

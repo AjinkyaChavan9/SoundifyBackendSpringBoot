@@ -13,13 +13,16 @@ import com.soundify.entities.Artist;
 public interface ArtistService {
 	
 	// add a method to add new emp details (MODIFIED)
-		ArtistSignupResponseDTO addArtDetails(ArtistSignupRequestDTO art);// i/p : dto , with no id field 
+    ArtistSignupResponseDTO addArtDetails(ArtistSignupRequestDTO art);// i/p : dto , with no id field 
 	
 	//add a method for signin
 	ArtistSigninResponseDTO signInArtist(ArtistSigninRequestDTO request);
+
+	public ArtistSigninResponseDTO updateArtist(ArtistSignupResponseDTO artist, Long Id);
 	
-	
-	
-	public ArtistSigninResponseDTO updateArtist(ArtistSignupResponseDTO artist, Long Id) ;
+
+	void addSongToArtist(Long artistId, Long songId);
+
+	void removeSongFromArtist(Long artistId, Long songId);
 
 }

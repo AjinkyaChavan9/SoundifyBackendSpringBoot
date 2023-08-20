@@ -1,17 +1,13 @@
 package com.soundify.services;
 
-import com.soundify.entities.Genre;
 import com.soundify.entities.Song;
 import com.soundify.daos.SongDao;
 import com.soundify.dtos.song.SongDTO;
-import com.soundify.daos.GenreDao;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,7 +55,7 @@ public class SongServiceImpl implements SongService {
 	public List<SongDTO> findSongsBySongName(String songName) {
 		List<Song> songs = songDao.findBySongNameContainingIgnoreCase(songName);
         List<SongDTO> songDTOs = new ArrayList<>();
-
+//mapper map
         for (Song song : songs) {
             
         	SongDTO songDTO = new SongDTO();
@@ -78,3 +74,21 @@ public class SongServiceImpl implements SongService {
 	}
 
 }
+	   @Override
+	    public List<SongDTO> findSongsByArtistName(String artistName) {
+	        List<Song> songs = songDao.findByArtistsFirstNameOrArtistsLastName(artistName, artistName);
+	        List<SongDTO> songDTOs = new ArrayList<>();
+//mapper map
+	        for (Song song : songs) {
+	            SongDTO songDTO = new SongDTO();
+	            songDTO.setId(song.getId());
+	            songDTO.setSongName(song.getSongName());
+	            songDTO.setDuration(song.getDuration());
+	            songDTOs.add(songDTO);
+	        }
+
+	        return songDTOs;
+	    }
+	}
+
+
