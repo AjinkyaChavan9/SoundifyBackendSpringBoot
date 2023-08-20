@@ -19,4 +19,8 @@ public interface SongFileHandlingService {
 		ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException;
 		
 		Song getSongById(Long songId);
+
+		public ApiResponse uploadSongCoverImage(Long songId, MultipartFile file) throws IOException;
+		
+		public byte[] downloadSongImage(Long songId) throws IOException;
 }
