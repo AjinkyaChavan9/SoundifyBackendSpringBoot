@@ -43,5 +43,13 @@ public class Artist extends BaseEntity{
 	@JoinTable(name="artist_follower", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
 	private Set<User> followers = new HashSet<>();
 		
-	
+	public void addSong(Song song) {
+        songs.add(song);
+        song.getArtists().add(this);
+    }
+
+    public void removeSong(Song song) {
+        songs.remove(song);
+        song.getArtists().remove(this);
+    }
 }

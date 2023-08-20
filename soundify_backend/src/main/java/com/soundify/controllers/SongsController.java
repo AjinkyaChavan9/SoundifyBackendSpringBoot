@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import static org.springframework.http.MediaType.*;
 
 import com.soundify.aws_S3.AWSS3Config;
+import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.entities.Song;
@@ -70,6 +72,9 @@ public class SongsController {
 	
 	@Autowired
 	AWSS3Config awsS3;
+	
+	@Autowired
+	private SongFileHandlingService songService;
 
 	@PostMapping(value = "/aws",consumes = "multipart/form-data")
 	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file,@RequestParam String songName,
@@ -93,16 +98,33 @@ public class SongsController {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
 	}
+	
 
-		@Autowired
-		private SongFileHandlingService songService;
+	@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
+	public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
+		System.out.println("in SONG download " + songId);
+		Song song = songService.getSongById(songId);
+		String key = song.getSongPath();
+		
+		S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
+		
+		 S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+	        return ResponseEntity.ok()
+	                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
+	                .header("Content-Disposition", "inline; filename=" + song.getSongName())
+	                .body(new InputStreamResource(inputStream));
+
+	}
+	
+
+		
 		// http://localhost:8080/api/songs/{songId}/songfile
 		// songId : path var
 		// method : POST
 		// multipart file : request parameter (standard part of HTTP specifications)
 		@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
-		public ResponseEntity<?> uploadSongFile( @RequestBody MultipartFile songFile,  @RequestParam String songName,
-		        @RequestParam String releaseDate)
+		public ResponseEntity<?> uploadSongFileonServer( @RequestBody MultipartFile songFile, @RequestParam String songName, @RequestParam String releaseDate)
 				throws IOException,Exception
 		{
 			//String duration = getDuration(songFile);
@@ -124,22 +146,6 @@ public class SongsController {
 			return ResponseEntity.ok(songService.downloadSong(songId));
 		}
 		
-		@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
-		public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
-			System.out.println("in SONG download " + songId);
-			Song song = songService.getSongById(songId);
-			String key = song.getSongPath();
-			
-			S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
-			
-			 S3ObjectInputStream inputStream = s3Object.getObjectContent();
-
-		        return ResponseEntity.ok()
-		                .header("Content-Type", "audio/mpeg") // Set the appropriate content type
-		                .header("Content-Disposition", "inline; filename=" + song.getSongName())
-		                .body(new InputStreamResource(inputStream));
-
-		}
 		
 
 		/*Image Handling */
@@ -163,9 +169,18 @@ public class SongsController {
 			System.out.println("in song img download " + songId);
 			return ResponseEntity.ok(songService.downloadSongImage(songId));
 		}
+		
+		 @DeleteMapping("value =/{songId}/aws")
+		 public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
+		         Song song =songService.getSongById(songId);
+		         String key = song.getSongPath();
+		         awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
+		         
+		         return ResponseEntity.ok(songService.deleteSong(songId));
+		    }
 
 		private String getDuration(MultipartFile file) throws Exception {
-			File tempFile = File.createTempFile("temp", file.getOriginalFilename());
+			File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
 			file.transferTo(tempFile);
 			
 			AudioFile audioFile = AudioFileIO.read(tempFile);
@@ -178,10 +193,15 @@ public class SongsController {
 	        int seconds = durationInSeconds % 60;
 
 	        String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            
+	        
+	        tempFile.delete();
+	        audioFile.delete();
+
+	        
 	        return duration;
 
 		}
+
 
 		 @Autowired
 		    private SongService song1Service;
@@ -192,10 +212,14 @@ public class SongsController {
 		     List<SongDTO> songs = song1Service.findSongsByGenreName(genreName);
 		     return ResponseEntity.ok(songs);
 		    }
+
 		 @GetMapping("/artist")
 		 public ResponseEntity<List<SongDTO>> findSongsByArtistName(@RequestParam String artistName){
 			 List<SongDTO> songs = song1Service.findSongsByArtistName(artistName);
 			 return ResponseEntity.ok(songs);
 		 }
+
+
+
 }
 
