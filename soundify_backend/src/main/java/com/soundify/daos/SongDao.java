@@ -11,7 +11,8 @@ import java.util.List;
 public interface SongDao extends JpaRepository<Song, Long> {
 	List<Song> findByGenresGenreName(String genreName);
 
-	List<Song> findByArtistsName(String artistName);
+	List<Song> findByArtistsNameContainingIgnoreCase(String artistName);
+	
 
 	List<Song> findByArtistsFirstNameOrArtistsLastName(String firstName, String lastName);
 
