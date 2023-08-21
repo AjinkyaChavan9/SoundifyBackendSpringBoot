@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.dtos.ApiResponse;
+import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
@@ -33,6 +34,7 @@ import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
+import com.soundify.dtos.song.SongUpdateMetadataDTO;
 
 @RestController
 @RequestMapping("/api/artists")
@@ -100,6 +102,13 @@ public class ArtistController {
 	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
 		artistService.addSongToArtist(artistId, songId);
 		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
+	}
+	
+	@PutMapping("/{artistId}/song/{songId}")
+	public ResponseEntity<ApiResponse> updateSongMetadata(@PathVariable Long artistId, @PathVariable Long songId,
+			@RequestBody SongUpdateMetadataDTO  songUpdateMetadataDTO  ) {
+		artistService.updateSongMetadata(artistId, songId, songUpdateMetadataDTO );
+		return ResponseEntity.ok(new ApiResponse("Song Metadata updated successfully."));
 	}
 
 	@DeleteMapping("/{artistId}/song/{songId}")
