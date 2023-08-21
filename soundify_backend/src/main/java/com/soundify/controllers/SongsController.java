@@ -148,12 +148,13 @@ public class SongsController {
 
 	@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> uploadSongFileOnServer(@RequestBody MultipartFile songFile, @RequestParam String songName,
-			@RequestParam String releaseDate) throws IOException, Exception {
+			@RequestParam String releaseDate, 
+			@RequestParam String duration) throws IOException, Exception {
 		// String duration = getDuration(songFile);
 
 		SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
 		songmetadata.setSongName(songName);
-		// songmetadata.setDuration(Time.valueOf(duration));
+		songmetadata.setDuration(Time.valueOf(duration));
 		songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
 		System.out.println("in song upload " + songmetadata);
 		// invoke image service method
