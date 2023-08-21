@@ -96,7 +96,7 @@ public class ArtistController {
 		return ResponseEntity.ok(allSongOfArtist);
 	}
 	
-	@PutMapping("/{artistId}/song/{songId}")
+	@PostMapping("/{artistId}/song/{songId}")
 	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
 		artistService.addSongToArtist(artistId, songId);
 		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
