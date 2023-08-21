@@ -28,6 +28,7 @@ import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
@@ -69,7 +70,6 @@ public class ArtistController {
 		return ResponseEntity.ok(resp);
 
 	}
-	
 
 
 //    @PostMapping("/{artistId}/upload-song")
@@ -88,6 +88,13 @@ public class ArtistController {
 //    }
 
 
+	@GetMapping("/{artistId}/song")
+	public ResponseEntity<?> getAllSongsOfArtist(@PathVariable Long artistId) {
+		
+		List<SongDTO> allSongOfArtist = artistService.getAllSongsOfArtist(artistId);
+		return ResponseEntity.ok(allSongOfArtist);
+	}
+	
 	@PutMapping("/{artistId}/song/{songId}")
 	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
 		artistService.addSongToArtist(artistId, songId);

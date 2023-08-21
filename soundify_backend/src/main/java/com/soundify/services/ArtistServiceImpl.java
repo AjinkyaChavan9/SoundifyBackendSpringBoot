@@ -19,6 +19,7 @@ import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.entities.Song;
@@ -29,7 +30,7 @@ import com.soundify.entities.User;
 public class ArtistServiceImpl implements ArtistService {
 	@Autowired
 	private ArtistDao artDao;
-	
+
 	@Autowired
 	private SongDao songDao;
 
@@ -64,14 +65,16 @@ public class ArtistServiceImpl implements ArtistService {
 	}
 
 	@Override
-	public ArtistSigninResponseDTO updateArtist(ArtistSignupResponseDTO artist, Long Id) {
+	public ArtistSigninResponseDTO updateArtist(ArtistSignupResponseDTO updatedArtist, Long Id) {
 		Artist existingArtist = artDao.findById(Id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		// Update user properties based on the updatedUser DTO
-		existingArtist.setFirstName(artist.getFirstName());
-		existingArtist.setLastName(artist.getLastName());
-		existingArtist.setEmail(artist.getEmail());
-		existingArtist.setDateOfBirth(artist.getDateOfBirth());
+		existingArtist.setName(updatedArtist.getName());
+		existingArtist.setFirstName(updatedArtist.getFirstName());
+		existingArtist.setLastName(updatedArtist.getLastName());
+		existingArtist.setEmail(updatedArtist.getEmail());
+		existingArtist.setDateOfBirth(updatedArtist.getDateOfBirth());
+
 		// Update other properties as needed
 
 		// Save the updated user
@@ -80,41 +83,49 @@ public class ArtistServiceImpl implements ArtistService {
 		return mapper.map(existingArtist, ArtistSigninResponseDTO.class);
 
 	}
-	
-	 public void addSongToArtist(Long artistId, Long songId) {
-	        Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-	        Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song not found"));
 
-	        artist.addSong(song);
-	        artDao.save(artist);
-	    }
+	@Override
+	public List<SongDTO> getAllSongsOfArtist(Long artistId) {
+		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		List<Song> allArtistSongs = songDao.findAll();
+		return allArtistSongs.stream()
+				.map(song->mapper.map(song, SongDTO.class)).collect(Collectors.toList());
+	}
 
-	    public void removeSongFromArtist(Long artistId, Long songId) {
-	        Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-	        Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song not found"));
+	public void addSongToArtist(Long artistId, Long songId) {
+		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song not found"));
 
-	        artist.removeSong(song);
-	        artDao.save(artist);
-	    }
+		artist.addSong(song);
+		artDao.save(artist);
+	}
 
-		@Override
-   	public ArtistResponseDTO getArtistDetails(Long artistId) {
-			Artist artist =  artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Invalid Artist ID !!!!!"));
-			  return mapper.map(artist , ArtistResponseDTO.class);
-		}
+	public void removeSongFromArtist(Long artistId, Long songId) {
+		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song not found"));
 
-		public List<ArtistSignupResponseDTO> getArtists() {
-			List<Artist> artists = artDao.findAll();
-			return artists.stream()
-					      .map(artist -> mapper.map(artist,ArtistSignupResponseDTO.class))
-					      .collect(Collectors.toList());
-		}
+		artist.removeSong(song);
+		artDao.save(artist);
+	}
 
-		@Override
-		public ApiResponse deleteArtistById(Long artistId) {
-			Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-			artDao.delete(artist);
-			return new ApiResponse("Artist deleted successfully");
-		}
+	@Override
+	public ArtistResponseDTO getArtistDetails(Long artistId) {
+		Artist artist = artDao.findById(artistId)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid Artist ID !!!!!"));
+		return mapper.map(artist, ArtistResponseDTO.class);
+	}
+
+	public List<ArtistSignupResponseDTO> getArtists() {
+		List<Artist> artists = artDao.findAll();
+		return artists.stream().map(artist -> mapper.map(artist, ArtistSignupResponseDTO.class))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public ApiResponse deleteArtistById(Long artistId) {
+		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		artDao.delete(artist);
+		return new ApiResponse("Artist deleted successfully");
+	}
 
 }

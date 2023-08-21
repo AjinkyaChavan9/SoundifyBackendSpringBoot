@@ -23,8 +23,9 @@ public class ArtistSignupRequestDTO {
 //	@JsonProperty(access = Access.READ_ONLY)
 //	private Long id;
 
+	private String name;
 	//firstName can't be blank ,length 4--20(@Length), 
-	@Length(min=4,max=20,message = "Invalid email length!!!")
+	//@Length(min=4,max=20,message = "Invalid email length!!!")
 	private String firstName;
 	
 	private String lastName;

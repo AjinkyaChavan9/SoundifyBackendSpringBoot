@@ -10,6 +10,7 @@ import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
+import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 
@@ -33,6 +34,8 @@ public interface ArtistService {
 	List<ArtistSignupResponseDTO> getArtists();
 
 	ApiResponse deleteArtistById(Long artistId);
+
+	List<SongDTO> getAllSongsOfArtist(Long artistId);
 
 
 }
