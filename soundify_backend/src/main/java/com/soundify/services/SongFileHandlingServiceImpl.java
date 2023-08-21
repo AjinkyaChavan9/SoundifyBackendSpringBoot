@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,11 @@ import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.SongDao;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
+import com.soundify.entities.Artist;
+import com.soundify.entities.Genre;
+import com.soundify.entities.Playlist;
 import com.soundify.entities.Song;
+import com.soundify.entities.User;
 
 @Service
 @Transactional
@@ -152,9 +157,36 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	}
 
 	@Override
-	public ApiResponse deleteSong(Long Id) {
-		songDao.deleteById(Id);
+	public ApiResponse deleteSong(Long songId) {
+//		songDao.deleteById(Id);
+//		return new ApiResponse("Song deleted successfully");
+		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
+
+		if (songToDelete == null) {
+			return new ApiResponse("Song not found");
+		}
+
+		// Remove references from related entities (e.g., artists, playlists, genres)
+		for (Artist artist : songToDelete.getArtists()) {
+			artist.removeSong(songToDelete);
+		}
+
+		for (Playlist playlist : songToDelete.getPlaylists()) {
+			playlist.removeSong(songToDelete);
+		}
+
+		for (Genre genre : songToDelete.getGenres()) {
+			genre.removeSong(songToDelete);
+		}
+
+		for (User user : songToDelete.getUsers()) {
+			user.removeLikedSong(songToDelete);
+		}
+
+		songDao.deleteById(songId);
+
 		return new ApiResponse("Song deleted successfully");
+
 	}
 
 }

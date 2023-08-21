@@ -65,6 +65,11 @@ public class User extends BaseEntity {
 		 song.setUsers(userWhoLiked);
 	}
 	
+	public void removeLikedSong(Song song) {
+	    songsLiked.remove(song);
+	    song.getUsers().remove(this);
+	}
+	
 	public void followArtist(Artist artist, Set<Artist> artistsFollowed, Set<User> followers)
 	{
 		 
