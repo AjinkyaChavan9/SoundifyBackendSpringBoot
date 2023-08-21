@@ -1,6 +1,7 @@
 package com.soundify.services;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -85,11 +86,11 @@ public class ArtistServiceImpl implements ArtistService {
 	}
 
 	@Override
-	public List<SongDTO> getAllSongsOfArtist(Long artistId) {
+	public Set<SongDTO> getAllSongsOfArtist(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-		List<Song> allArtistSongs = songDao.findAll();
+		Set<Song> allArtistSongs = artist.getSongs();
 		return allArtistSongs.stream()
-				.map(song->mapper.map(song, SongDTO.class)).collect(Collectors.toList());
+				.map(song->mapper.map(song, SongDTO.class)).collect(Collectors.toSet());
 	}
 
 	public void addSongToArtist(Long artistId, Long songId) {

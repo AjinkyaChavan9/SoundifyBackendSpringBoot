@@ -2,7 +2,7 @@ package com.soundify.services;
 
 
 import java.util.List;
-
+import java.util.Set;
 
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.ApiResponse;
@@ -35,7 +35,7 @@ public interface ArtistService {
 
 	ApiResponse deleteArtistById(Long artistId);
 
-	List<SongDTO> getAllSongsOfArtist(Long artistId);
+	Set<SongDTO> getAllSongsOfArtist(Long artistId);
 
 
 }

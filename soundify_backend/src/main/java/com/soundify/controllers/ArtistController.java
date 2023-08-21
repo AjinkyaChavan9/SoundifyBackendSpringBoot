@@ -2,6 +2,7 @@ package com.soundify.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -91,7 +92,7 @@ public class ArtistController {
 	@GetMapping("/{artistId}/song")
 	public ResponseEntity<?> getAllSongsOfArtist(@PathVariable Long artistId) {
 		
-		List<SongDTO> allSongOfArtist = artistService.getAllSongsOfArtist(artistId);
+		Set<SongDTO> allSongOfArtist = artistService.getAllSongsOfArtist(artistId);
 		return ResponseEntity.ok(allSongOfArtist);
 	}
 	
