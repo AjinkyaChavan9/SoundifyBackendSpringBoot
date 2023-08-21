@@ -76,8 +76,8 @@ public class SongsController {
 	private SongService song1Service;
 
 	@PostMapping(value = "/aws", consumes = "multipart/form-data")
-	public ResponseEntity<?> uploadSong(@RequestBody MultipartFile file, @RequestParam String songName,
-			@RequestParam String releaseDate) throws IOException, Exception {
+	public ResponseEntity<?> uploadSongAWS(@RequestBody MultipartFile file, @RequestParam String songName,
+			@RequestParam String releaseDate, @RequestParam String duration) throws IOException, Exception {
 		if (file != null) {
 			ObjectMetadata obectMetadata = new ObjectMetadata();
 			obectMetadata.setContentType(file.getContentType());
@@ -87,7 +87,7 @@ public class SongsController {
 					.putObject(new PutObjectRequest(s3BucketName, path, file.getInputStream(), obectMetadata)
 							.withCannedAcl(CannedAccessControlList.PublicRead));
 
-			String duration = getDuration(file);
+			//String duration = getDuration(file);
 
 			SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
 			songmetadata.setSongName(songName);
