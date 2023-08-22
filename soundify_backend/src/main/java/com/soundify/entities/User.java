@@ -40,7 +40,7 @@ public class User extends BaseEntity {
 	@Column(name="date_of_birth")
 	private LocalDate dateOfBirth;
 	
-	
+
 	@ManyToOne
 	@JoinColumn(name="role_id")
 	private Role role;

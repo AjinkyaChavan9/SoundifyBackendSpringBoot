@@ -1,14 +1,21 @@
 package com.soundify.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
@@ -39,6 +46,24 @@ public class ArtistServiceImpl implements ArtistService {
 
 	@Autowired
 	private ModelMapper mapper;
+
+	@Value("${artist.image.upload.location}")
+	private String artistImageFolderLocation;
+
+	@PostConstruct
+	public void init() {
+
+		System.out.println("in init " + artistImageFolderLocation);
+		// chk if folder exists
+		File imagefolder = new File(artistImageFolderLocation);
+		if (imagefolder.exists())
+			System.out.println("folder alrdy exists !");
+		else {
+			imagefolder.mkdir(); // creates a new folder
+			System.out.println("created a new folder...");
+		}
+
+	}
 
 	@Override
 	public ArtistSignupResponseDTO addArtDetails(ArtistSignupRequestDTO artDTO) {
@@ -156,6 +181,28 @@ public class ArtistServiceImpl implements ArtistService {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
 		artDao.delete(artist);
 		return new ApiResponse("Artist deleted successfully");
+	}
+
+	@Override
+	public ApiResponse uploadArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
+		// chk if song exists by id
+		Artist artist = artDao.findById(artistId)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
+		// song : persistent
+		// save uploaded file contents in server side folder.
+		// create the path to store the file
+		String path = artistImageFolderLocation.concat(imageFile.getOriginalFilename());
+		System.out.println("path " + path);
+		// FileUtils class : to read byte[] from multpart file ---> server side folder
+		// API : public void writeByteArrayToFile(File file, byte[] data) throws
+		// IOException
+		FileUtils.writeByteArrayToFile(new File(path), imageFile.getBytes());
+		// file saved successfully !
+		// set image path in db
+		artist.setArtistImagePath(path);
+		// In case of storing the uploaded file contents in DB :
+		// song.setImage(file.getBytes());
+		return new ApiResponse("artist Image File uploaded n stored in server side folder");
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.soundify.services;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.ApiResponse;
@@ -40,6 +43,8 @@ public interface ArtistService {
 	Set<SongDTO> getAllSongsOfArtist(Long artistId);
 
 	void updateSongMetadata(Long artistId, Long songId, SongUpdateMetadataDTO  songMetadataUpdateDTO);
+
+	public ApiResponse uploadArtistImage(Long artistId, MultipartFile imageFile) throws IOException;
 
 
 }

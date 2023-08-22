@@ -122,6 +122,14 @@ public class ArtistController {
 		System.out.println("in get artist details " + artistId);
 		return artistService.getArtistDetails(artistId);
 	}
+	
+	@PostMapping(value = "/{artistId}/image", consumes = "multipart/form-data")
+	public ResponseEntity<?> uploadArtistProfileImage(@PathVariable Long artistId, @RequestBody MultipartFile imageFile)
+			throws IOException {
+		System.out.println("in img upload " + artistId);
+		// invoke image service method
+		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.uploadArtistImage(artistId, imageFile));
+	}
     
 	
 }

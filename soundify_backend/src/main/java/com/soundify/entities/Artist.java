@@ -36,6 +36,9 @@ public class Artist extends BaseEntity{
 	@Column(name="date_of_birth")
 	private LocalDate dateOfBirth;
 	
+	@Column(name="aritst_image_path")
+	private String artistImagePath;
+	
 	@ManyToMany
 	@JoinTable(name="artist_song", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="song_id"))
 	private Set<Song> songs = new HashSet<>();
