@@ -20,23 +20,22 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Genre extends BaseEntity{
+public class Genre extends BaseEntity {
 
 	@Column(name = "genre_name", length = 35)
 	private String genreName;
-	
+
 	@ManyToMany(mappedBy = "genres")
 	private Set<Song> songs = new HashSet<>();
-	
-	public void addSong(Song song)
-	{
+
+	public void addSong(Song song) {
 		songs.add(song);
 		song.getGenres().add(this);
-		
+
 	}
-	
-	 public void removeSong(Song song) {
-	        songs.remove(song);
-	        song.getGenres().remove(this);
-	    }
+
+	public void removeSong(Song song) {
+		songs.remove(song);
+		song.getGenres().remove(this);
+	}
 }

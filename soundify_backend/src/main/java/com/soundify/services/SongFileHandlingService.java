@@ -18,12 +18,16 @@ public interface SongFileHandlingService {
 
 	ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException;
 
+	ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata, Long artistId) throws IOException;
+
 	Song getSongById(Long songId);
 
 	public ApiResponse uploadSongCoverImage(Long songId, MultipartFile file) throws IOException;
 
 	public byte[] downloadSongImage(Long songId) throws IOException;
 
-	ApiResponse deleteSong(Long Id);
+	ApiResponse deleteSongOnServer(Long Id);
+
+	ApiResponse deleteSongOnS3(Long songId);
 
 }

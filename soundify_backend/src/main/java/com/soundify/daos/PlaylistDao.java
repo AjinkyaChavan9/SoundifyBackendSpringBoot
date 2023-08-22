@@ -6,7 +6,6 @@ import com.soundify.entities.Playlist;
 import java.util.List;
 import java.util.Optional;
 
-
-public interface PlaylistDao extends JpaRepository<Playlist, Long>{
-	 //Optional<Playlist> findByPlaylistName(String playlistName);
+public interface PlaylistDao extends JpaRepository<Playlist, Long> {
+	// Optional<Playlist> findByPlaylistName(String playlistName);
 }

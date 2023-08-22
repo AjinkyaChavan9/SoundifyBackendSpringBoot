@@ -6,10 +6,13 @@ import com.soundify.entities.Song;
 import java.util.List;
 
 public interface SongService {
-	
-	 List<SongDTO> findSongsByGenreName(String genreName);
-	 List<SongDTO> findSongByArtistsName(String name);
-	 List<SongDTO> findSongsBySongName(String songName);
-	 List<SongDTO> getAllSongs();
-	
+
+	List<SongDTO> findSongsByGenreName(String genreName);
+
+	List<SongDTO> findSongByArtistsName(String name);
+
+	List<SongDTO> findSongsBySongName(String songName);
+
+	List<SongDTO> getAllSongs();
+
 }

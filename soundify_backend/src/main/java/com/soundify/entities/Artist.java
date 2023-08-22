@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 @Entity
 @Table(name = "artists") // to specify table name
 @NoArgsConstructor
@@ -26,36 +27,36 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Artist extends BaseEntity{
-	@Column(name = "artist_name", length=50)
+public class Artist extends BaseEntity {
+	@Column(name = "artist_name", length = 50)
 	private String name;
-	@Column(name = "artist_first_name", length=50)
+	@Column(name = "artist_first_name", length = 50)
 	private String firstName;
-	@Column(name = "artist_last_name", length=50)
+	@Column(name = "artist_last_name", length = 50)
 	private String lastName;
-	@Column(length=60, unique = true)
+	@Column(length = 60, unique = true)
 	private String email;
-	@Column(length=50)
+	@Column(length = 50)
 	private String password;
-	@Column(name="date_of_birth")
+	@Column(name = "date_of_birth")
 	private LocalDate dateOfBirth;
-	
-	@Column(name="aritst_image_path")
+
+	@Column(name = "aritst_image_path")
 	private String artistImagePath;
-	
+
 	@OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Song> songs = new ArrayList<>();
-	
-	@ManyToMany
-	@JoinTable(name="artist_follower", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
-	private Set<User> followers = new HashSet<>();
-		
-	public void addSong(Song song) {
-        songs.add(song);
-        song.setArtist(this);
-    }
 
-    public void removeSong(Song song) {
-        songs.remove(song);
-    }
+	@ManyToMany
+	@JoinTable(name = "artist_follower", joinColumns = @JoinColumn(name = "artist_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private Set<User> followers = new HashSet<>();
+
+	public void addSong(Song song) {
+		songs.add(song);
+		song.setArtist(this);
+	}
+
+	public void removeSong(Song song) {
+		songs.remove(song);
+	}
 }

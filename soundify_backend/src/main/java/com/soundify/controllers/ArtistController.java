@@ -1,6 +1,8 @@
 package com.soundify.controllers;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +10,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.artists.ArtistResponseDTO;
@@ -34,6 +41,7 @@ import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
+import com.soundify.services.SongFileHandlingService;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
 
 @RestController
@@ -41,11 +49,30 @@ import com.soundify.dtos.song.SongUpdateMetadataDTO;
 @CrossOrigin(origins = "http://localhost:3000")
 
 public class ArtistController {
+
+	@Value("${cloud.aws.credentials.access-key}")
+	private String accessKeyId;
+
+	@Value("${cloud.aws.credentials.secret-key}")
+	private String accessKeySecret;
+
+	@Value("${cloud.aws.region.static}")
+	private String s3RegionName;
+
+	@Value("${cloud.aws.bucketname}")
+	private String s3BucketName;
+
+	@Value("${cloud.aws.upload.folder}")
+	private String songFolderLocationS3;
+
+	@Autowired
+	AWSS3Config awsS3;
+
+	@Autowired
+	private SongFileHandlingService songFileService;
+
 	@Autowired
 	private ArtistService artistService;
-	
-	@Autowired
-    private SongsController songsController; // Inject the SongsController
 
 	public ArtistController() {
 		System.out.println("in ctor of " + getClass());
@@ -74,40 +101,51 @@ public class ArtistController {
 
 	}
 
+	@PostMapping(value = "/aws/{artistId}/song", consumes = "multipart/form-data")
+	public ResponseEntity<?> uploadSongAWS(@PathVariable Long artistId, @RequestBody MultipartFile file,
+			@RequestParam String songName, @RequestParam String releaseDate, @RequestParam String duration)
+			throws IOException, Exception {
+		if (file != null) {
+			ObjectMetadata obectMetadata = new ObjectMetadata();
+			obectMetadata.setContentType(file.getContentType());
 
-//    @PostMapping("/{artistId}/upload-song")
-//    public ResponseEntity<?> uploadSongForArtist(
-//            @PathVariable Long artistId,
-//            @RequestParam("file") MultipartFile file,
-//            @RequestParam String songName,
-//            @RequestParam String releaseDate) {
-//        try {
-//            ResponseEntity<?> response = songsController.uploadSong(file, songName, releaseDate);
-//            //also add song to the artist
-//            return response;
-//        } catch (Exception e) {           
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
-//        }
-//    }
+			String path = songFolderLocationS3.concat(file.getOriginalFilename());
+			awsS3.getAmazonS3Client()
+					.putObject(new PutObjectRequest(s3BucketName, path, file.getInputStream(), obectMetadata)
+							.withCannedAcl(CannedAccessControlList.PublicRead));
 
+			// String duration = getDuration(file);
+
+			SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
+			songmetadata.setSongName(songName);
+			songmetadata.setDuration(Time.valueOf(duration));
+			songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
+			songmetadata.setSongPath(path);
+
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(songFileService.uploadSongOnS3(songmetadata, artistId));
+		}
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
+	}
 
 	@GetMapping("/{artistId}/song")
 	public ResponseEntity<?> getAllSongsOfArtist(@PathVariable Long artistId) {
-		
+
 		Set<SongDTO> allSongOfArtist = artistService.getAllSongsOfArtist(artistId);
 		return ResponseEntity.ok(allSongOfArtist);
 	}
-	
-	@PostMapping("/{artistId}/song/{songId}")
-	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
-		artistService.addSongToArtist(artistId, songId);
-		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
-	}
-	
+
+//	@PostMapping("/{artistId}/song/{songId}")
+//	public ResponseEntity<ApiResponse> addSongToArtist(@PathVariable Long artistId, @PathVariable Long songId) {
+//		artistService.addSongToArtist(artistId, songId);
+//		return ResponseEntity.ok(new ApiResponse("Song added to artist successfully."));
+//	}
+
 	@PutMapping("/{artistId}/song/{songId}")
 	public ResponseEntity<ApiResponse> updateSongMetadata(@PathVariable Long artistId, @PathVariable Long songId,
-			@RequestBody SongUpdateMetadataDTO  songUpdateMetadataDTO  ) {
-		artistService.updateSongMetadata(artistId, songId, songUpdateMetadataDTO );
+			@RequestBody SongUpdateMetadataDTO songUpdateMetadataDTO) {
+		artistService.updateSongMetadata(artistId, songId, songUpdateMetadataDTO);
 		return ResponseEntity.ok(new ApiResponse("Song Metadata updated successfully."));
 	}
 
@@ -122,7 +160,7 @@ public class ArtistController {
 		System.out.println("in get artist details " + artistId);
 		return artistService.getArtistDetails(artistId);
 	}
-	
+
 	@PostMapping(value = "/{artistId}/image", consumes = "multipart/form-data")
 	public ResponseEntity<?> uploadArtistProfileImage(@PathVariable Long artistId, @RequestBody MultipartFile imageFile)
 			throws IOException {
@@ -130,7 +168,7 @@ public class ArtistController {
 		// invoke image service method
 		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.uploadArtistImage(artistId, imageFile));
 	}
-    
+
 	@PutMapping(value = "/{artistId}/image", consumes = "multipart/form-data")
 	public ResponseEntity<?> editArtistProfileImage(@PathVariable Long artistId, @RequestBody MultipartFile imageFile)
 			throws IOException {
@@ -138,8 +176,5 @@ public class ArtistController {
 		// invoke image service method
 		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.editArtistImage(artistId, imageFile));
 	}
-	
-	
-    
-	
+
 }

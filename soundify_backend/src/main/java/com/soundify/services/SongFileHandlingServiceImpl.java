@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
+import com.soundify.daos.ArtistDao;
 import com.soundify.daos.SongDao;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
@@ -31,6 +33,8 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	private SongDao songDao;
 
 	@Autowired
+	private ArtistDao artistdao;
+	@Autowired
 	private ModelMapper mapper;
 	// to inject the value of a property : "upload.location" , from app property
 	// file
@@ -41,6 +45,12 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 
 	@Value("${song.image.upload.location}")
 	private String songCoverImageFolderLocation;
+
+	@Value("${cloud.aws.bucketname}")
+	private String s3BucketName;
+
+	@Autowired
+	AWSS3Config awsS3;
 
 	@PostConstruct
 	public void init() {
@@ -109,7 +119,15 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	public ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException {
 		Song song = songDao.save(mapper.map(songmetadata, Song.class));
 
-		return new ApiResponse("SongFile uploaded n stored on AWS S3");
+		return new ApiResponse("SongFile uploaded n stored on AWS S3 ");
+	}
+
+	@Override
+	public ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata, Long artistId) throws IOException {
+		Song song = songDao.save(mapper.map(songmetadata, Song.class));
+		song.setArtist(
+				artistdao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist Not Found!!")));
+		return new ApiResponse("SongFile uploaded n stored on AWS S3 ");
 	}
 
 	@Override
@@ -127,7 +145,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		// song : persistent
 		// save uploaded file contents in server side folder.
 		// create the path to store the file
-		String path = songCoverImageFolderLocation.concat(file.getOriginalFilename());
+		String path = songCoverImageFolderLocation.concat(songId + file.getOriginalFilename());
 		System.out.println("path " + path);
 		// FileUtils class : to read byte[] from multpart file ---> server side folder
 		// API : public void writeByteArrayToFile(File file, byte[] data) throws
@@ -156,14 +174,53 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	}
 
 	@Override
-	public ApiResponse deleteSong(Long songId) {
+	public ApiResponse deleteSongOnS3(Long songId) {
 //		songDao.deleteById(Id);
 //		return new ApiResponse("Song deleted successfully");
 		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
-		
+
 		if (songToDelete == null) {
 			return new ApiResponse("Song not found");
 		}
+
+		String key = songToDelete.getSongPath();
+		awsS3.getAmazonS3Client().deleteObject(s3BucketName, key);
+
+		deleteFile(songToDelete.getSongImagePath());
+		// deleteFile(songToDelete.getSongPath());
+
+		// Remove references from related entities (e.g., artists, playlists, genres)
+		Artist artist = songToDelete.getArtist();
+		artist.removeSong(songToDelete);
+
+		for (Playlist playlist : songToDelete.getPlaylists()) {
+			playlist.removeSong(songToDelete);
+		}
+
+		for (Genre genre : songToDelete.getGenres()) {
+			genre.removeSong(songToDelete);
+		}
+
+		for (User user : songToDelete.getUsers()) {
+			user.removeLikedSong(songToDelete);
+		}
+
+		songDao.deleteById(songId);
+
+		return new ApiResponse("Song deleted successfully");
+
+	}
+
+	@Override
+	public ApiResponse deleteSongOnServer(Long songId) {
+//		songDao.deleteById(Id);
+//		return new ApiResponse("Song deleted successfully");
+		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
+
+		if (songToDelete == null) {
+			return new ApiResponse("Song not found");
+		}
+
 		deleteFile(songToDelete.getSongImagePath());
 		deleteFile(songToDelete.getSongPath());
 
@@ -182,25 +239,29 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		for (User user : songToDelete.getUsers()) {
 			user.removeLikedSong(songToDelete);
 		}
-		
+
 		songDao.deleteById(songId);
 
 		return new ApiResponse("Song deleted successfully");
 
 	}
-	
+
 	public static void deleteFile(String filePath) {
-        File fileToDelete = new File(filePath);
-        
-        if (fileToDelete.exists()) {
-            if (fileToDelete.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("File doesn't exist.");
-        }
-    }
+		if (filePath == null) {
+			System.out.println("File doesn't exist.");
+			return;
+		}
+		File fileToDelete = new File(filePath);
+
+		if (fileToDelete.exists()) {
+			if (fileToDelete.delete()) {
+				System.out.println("File deleted successfully.");
+			} else {
+				System.out.println("Failed to delete the file.");
+			}
+		} else {
+			System.out.println("File doesn't exist.");
+		}
+	}
 
 }

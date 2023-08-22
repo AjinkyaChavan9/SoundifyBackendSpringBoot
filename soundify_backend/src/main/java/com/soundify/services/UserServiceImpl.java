@@ -181,10 +181,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 
 	public UserResponseDTO getUserDetails(Long userId) {
-		User user =  userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Invalid User ID !!!!!"));
-  return mapper.map(user , UserResponseDTO.class);
+		User user = userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Invalid User ID !!!!!"));
+		return mapper.map(user, UserResponseDTO.class);
 	}
-	   
+
 	public List<UserSignupResponseDTO> getUsers() {
 		List<User> users = userDao.findAll();
 		return users.stream().map(user -> mapper.map(user, UserSignupResponseDTO.class)).collect(Collectors.toList());

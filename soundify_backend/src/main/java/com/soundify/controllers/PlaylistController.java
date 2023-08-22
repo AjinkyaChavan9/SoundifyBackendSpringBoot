@@ -26,19 +26,17 @@ public class PlaylistController {
 	@Autowired
 	private PlaylistService playlistService;
 
-  
-	 @GetMapping("/user/{userId}")
-	 public ResponseEntity<?> allPlaylistsByUser(@PathVariable Long userId){
-		 
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<?> allPlaylistsByUser(@PathVariable Long userId) {
+
 		return ResponseEntity.ok(playlistService.getAllplaylistsByUserId(userId));
-	 }
-	 
-	 @GetMapping("/songs/{playlistId}")
-	 public ResponseEntity<?> allSongsInPlaylist(@PathVariable Long playlistId){
-		 
+	}
+
+	@GetMapping("/songs/{playlistId}")
+	public ResponseEntity<?> allSongsInPlaylist(@PathVariable Long playlistId) {
+
 		return ResponseEntity.ok(playlistService.getAllSongsByPlaylistId(playlistId));
-	 }
-	 
+	}
 
 	@PostMapping("/{playlistId}/song/{songId}")
 	public ResponseEntity<?> addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
@@ -57,6 +55,5 @@ public class PlaylistController {
 		playlistService.updatePlaylistName(playlistId, playlistName);
 		return ResponseEntity.ok(new ApiResponse("Playlist Name updated successfully!"));
 	}
-
 
 }

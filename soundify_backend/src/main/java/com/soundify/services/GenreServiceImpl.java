@@ -49,7 +49,7 @@ public class GenreServiceImpl implements GenreService {
 		genreDao.save(genre);
 
 	}
-	
+
 	@Override
 	public GenreResponseDTO getGenreById(Long genreId) {
 		Genre genre = genreDao.findById(genreId).orElseThrow(() -> new ResourceNotFoundException("Genre Not Found!"));

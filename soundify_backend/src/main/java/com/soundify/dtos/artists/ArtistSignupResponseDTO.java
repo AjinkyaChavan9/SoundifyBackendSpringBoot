@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class ArtistSignupResponseDTO {
 	private String name;
-	
+
 	private String firstName;
 
 	private String lastName;

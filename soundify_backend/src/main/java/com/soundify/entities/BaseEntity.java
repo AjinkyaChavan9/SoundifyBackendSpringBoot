@@ -11,20 +11,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @MappedSuperclass
-@Getter //adds all getters
-@Setter //adds all setters
+@Getter // adds all getters
+@Setter // adds all setters
 public abstract class BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
 
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -36,6 +34,5 @@ public abstract class BaseEntity {
 		BaseEntity other = (BaseEntity) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
 }

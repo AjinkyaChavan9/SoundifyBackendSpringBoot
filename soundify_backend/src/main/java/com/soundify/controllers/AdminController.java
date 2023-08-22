@@ -18,7 +18,6 @@ import com.soundify.services.UserService;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.services.GenreService;
 
-
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -29,8 +28,8 @@ public class AdminController {
 
 	@Autowired
 	private UserService userService;
-  
-  @Autowired
+
+	@Autowired
 	GenreService genreService;
 
 	@GetMapping("/artists")
@@ -50,7 +49,6 @@ public class AdminController {
 
 		return ResponseEntity.ok(userService.deleteUserById(userId));
 	}
-	
 
 	@DeleteMapping("/artist/{artistId}")
 	public ResponseEntity<?> deleteArtist(@PathVariable Long artistId) {
@@ -58,49 +56,30 @@ public class AdminController {
 		return ResponseEntity.ok(artistService.deleteArtistById(artistId));
 	}
 
+	// GENRE CRUD
 
-	//GENRE CRUD
-	@GetMapping("/genre")
-	 public ResponseEntity<?> getAllGenre(){
-		 
-		return ResponseEntity.ok(genreService.getAllGenre());
-	 }
-	
 	@GetMapping("/genre/{genreId}")
-	 public ResponseEntity<?> getGenreById(@PathVariable Long genreId){
-		 
+	public ResponseEntity<?> getGenreById(@PathVariable Long genreId) {
+
 		return ResponseEntity.ok(genreService.getGenreById(genreId));
-	 }
-	
+	}
+
 	@PostMapping("/genre")
 	public ResponseEntity<?> addGenre(@RequestParam String genreName) {
 		genreService.addGenre(genreName);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Genre Added Successfully"));
 	}
-	
+
 	@PutMapping("/genre/{genreId}")
 	public ResponseEntity<?> updateGenreName(@PathVariable Long genreId, @RequestParam String updatedGenreName) {
-		genreService.updateGenreName(genreId,updatedGenreName);
+		genreService.updateGenreName(genreId, updatedGenreName);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("GenreName Updated Successfully"));
 	}
-	
+
 	@DeleteMapping("/genre/{genreId}")
 	public ResponseEntity<?> deleteGenre(@PathVariable Long genreId) {
 		genreService.deleteGenre(genreId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Genre Deleted Successfully"));
 	}
-	
-	@PutMapping("/genre/{genreId}/song/{songId}")
-	public ResponseEntity<?> addSongToPlaylist(@PathVariable Long genreId, @PathVariable Long songId) {
-		genreService.addSongToGenre(genreId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Added To Genre"));
-	}
-
-	@DeleteMapping("/genre/{genreId}/song/{songId}")
-	public ResponseEntity<?> removeSongFromPlaylist(@PathVariable Long genreId, @PathVariable Long songId) {
-		genreService.removeSongFromGenre(genreId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Genre"));
-	}
-
 
 }

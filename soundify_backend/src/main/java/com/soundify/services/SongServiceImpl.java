@@ -35,7 +35,7 @@ public class SongServiceImpl implements SongService {
 
 	@Override
 	public List<SongDTO> findSongByArtistsName(String name) {
-		List<Song> songs = songDao.findByArtistsNameContainingIgnoreCase(name);
+		List<Song> songs = songDao.findByArtistNameContainingIgnoreCase(name);
 		if (songs.isEmpty()) {
 			throw new ResourceNotFoundException("Songs not found for Artist : " + name);
 		}

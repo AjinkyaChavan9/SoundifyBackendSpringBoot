@@ -26,69 +26,73 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> addUser(@RequestBody @Valid UserSignUpRequestDTO user) {
-        UserSignupResponseDTO response = userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PostMapping("/signin")
-    public ResponseEntity<?> signInUser(@RequestBody @Valid UserSignInRequestDTO request) {
-    	System.out.println("auth req " + request);
-        UserSignInResponseDTO response = userService.signInUser(request);
-        return ResponseEntity.ok(response);
-    }
-    
-    @PutMapping("/{userId}")
-	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long userId, @RequestBody UserSignupResponseDTO updatedUser) {
-	    UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, userId);
-	    return ResponseEntity.ok(updatedResponse);
+	@PostMapping("/signup")
+	public ResponseEntity<?> addUser(@RequestBody @Valid UserSignUpRequestDTO user) {
+		UserSignupResponseDTO response = userService.addUser(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-    @PostMapping("/{userId}")
+
+	@PostMapping("/signin")
+	public ResponseEntity<?> signInUser(@RequestBody @Valid UserSignInRequestDTO request) {
+		System.out.println("auth req " + request);
+		UserSignInResponseDTO response = userService.signInUser(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("/{userId}")
+	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long userId,
+			@RequestBody UserSignupResponseDTO updatedUser) {
+		UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, userId);
+		return ResponseEntity.ok(updatedResponse);
+	}
+
+	@PostMapping("/{userId}")
 	public ResponseEntity<?> updateUserPassword(@PathVariable Long userId, @RequestBody PasswordChangeRequestDTO dto) {
-    	System.out.println("old password"+dto.getOldPassword());
-    	System.out.println("new password"+dto.getNewPassword());
-    	userService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());//UserSignInResponseDTO updatedResponse = 
-	    return ResponseEntity.ok(new ApiResponse("Password Updated Successfully"));
+		System.out.println("old password" + dto.getOldPassword());
+		System.out.println("new password" + dto.getNewPassword());
+		userService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());// UserSignInResponseDTO
+																							// updatedResponse =
+		return ResponseEntity.ok(new ApiResponse("Password Updated Successfully"));
 	}
-    @PostMapping("/{userId}/liked-songs/{songId}")
-    public ResponseEntity<?> likeSong(@PathVariable Long userId, @PathVariable Long songId){
-    	userService.likeSong(userId, songId);
-    	return ResponseEntity.ok("Song liked successfully");
-    }
-    
-    @DeleteMapping("/{userId}/unliked-songs/{songId}")
-    public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId){
-    	userService.unLikeSong(userId, songId);
-    	return ResponseEntity.ok("Song disliked successfully");
-    }
-    
-    @PostMapping("/{userId}/followed-artist/{artistId}")
-    public ResponseEntity<?> followArtist(@PathVariable Long userId, @PathVariable Long artistId){
-    	userService.followArtist(userId, artistId);
-    	return ResponseEntity.ok("Artist followed successfully");
-    }
-    
-    @DeleteMapping("/{userId}/unfollowed-artist/{artistId}")
-    public ResponseEntity<?> unfollowArtist(@PathVariable Long userId, @PathVariable Long artistId){
-    	userService.unFollowArtist(userId, artistId);
-    	return ResponseEntity.ok("Artist Unfollowed successfully");
-    }
-    
-    @PostMapping("/{userId}/playlist/")
-    public ResponseEntity<?> createPlaylist(@PathVariable Long userId, @RequestBody String playlistName){
-    	PlaylistResponseDTO response = userService.createPlaylist(userId, playlistName);
-    	return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-    
-    @DeleteMapping("/{userId}/playlist/{playlistId}")
-    public ResponseEntity<?> deletePlaylist(@PathVariable Long userId, @PathVariable Long playlistId){
-    	userService.deletePlaylist(userId, playlistId);
-    	return ResponseEntity.ok("Playlist Deleted successfully");
-    }
+
+	@PostMapping("/{userId}/liked-songs/{songId}")
+	public ResponseEntity<?> likeSong(@PathVariable Long userId, @PathVariable Long songId) {
+		userService.likeSong(userId, songId);
+		return ResponseEntity.ok("Song liked successfully");
+	}
+
+	@DeleteMapping("/{userId}/unliked-songs/{songId}")
+	public ResponseEntity<?> disLikeSong(@PathVariable Long userId, @PathVariable Long songId) {
+		userService.unLikeSong(userId, songId);
+		return ResponseEntity.ok("Song disliked successfully");
+	}
+
+	@PostMapping("/{userId}/followed-artist/{artistId}")
+	public ResponseEntity<?> followArtist(@PathVariable Long userId, @PathVariable Long artistId) {
+		userService.followArtist(userId, artistId);
+		return ResponseEntity.ok("Artist followed successfully");
+	}
+
+	@DeleteMapping("/{userId}/unfollowed-artist/{artistId}")
+	public ResponseEntity<?> unfollowArtist(@PathVariable Long userId, @PathVariable Long artistId) {
+		userService.unFollowArtist(userId, artistId);
+		return ResponseEntity.ok("Artist Unfollowed successfully");
+	}
+
+	@PostMapping("/{userId}/playlist/")
+	public ResponseEntity<?> createPlaylist(@PathVariable Long userId, @RequestBody String playlistName) {
+		PlaylistResponseDTO response = userService.createPlaylist(userId, playlistName);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@DeleteMapping("/{userId}/playlist/{playlistId}")
+	public ResponseEntity<?> deletePlaylist(@PathVariable Long userId, @PathVariable Long playlistId) {
+		userService.deletePlaylist(userId, playlistId);
+		return ResponseEntity.ok("Playlist Deleted successfully");
+	}
 
 	@GetMapping("/{userId}")
 	public UserResponseDTO getUserDetails(@PathVariable Long userId) {
@@ -96,17 +100,16 @@ public class UserController {
 		return userService.getUserDetails(userId);
 	}
 
-    @GetMapping("/{userId}/followed-artists")
-    public ResponseEntity<Set<ArtistResponseDTO>> getFollowedArtists(@PathVariable Long userId) {
-        Set<ArtistResponseDTO> followedArtists = userService.getFollowedArtists(userId);
-        return ResponseEntity.ok(followedArtists);
-    }
-    
-    @GetMapping("/{userId}/liked-songs")
-    public ResponseEntity<Set<SongDTO>> getLikedSongs(@PathVariable Long userId) {
-        Set<SongDTO> likedSongs = userService.getLikedSongs(userId);
-        return ResponseEntity.ok(likedSongs);
-    }
-    
-}
+	@GetMapping("/{userId}/followed-artists")
+	public ResponseEntity<Set<ArtistResponseDTO>> getFollowedArtists(@PathVariable Long userId) {
+		Set<ArtistResponseDTO> followedArtists = userService.getFollowedArtists(userId);
+		return ResponseEntity.ok(followedArtists);
+	}
 
+	@GetMapping("/{userId}/liked-songs")
+	public ResponseEntity<Set<SongDTO>> getLikedSongs(@PathVariable Long userId) {
+		Set<SongDTO> likedSongs = userService.getLikedSongs(userId);
+		return ResponseEntity.ok(likedSongs);
+	}
+
+}

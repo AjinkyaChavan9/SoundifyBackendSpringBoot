@@ -12,24 +12,21 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 
 @Configuration
 public class AWSS3Config {
-	 @Value("${cloud.aws.credentials.access-key}")
-	    private String accessKeyId;
+	@Value("${cloud.aws.credentials.access-key}")
+	private String accessKeyId;
 
-	    @Value("${cloud.aws.credentials.secret-key}")
-	    private String accessKeySecret;
+	@Value("${cloud.aws.credentials.secret-key}")
+	private String accessKeySecret;
 
-	    @Value("${cloud.aws.region.static}")
-	    private String s3RegionName;
+	@Value("${cloud.aws.region.static}")
+	private String s3RegionName;
 
-	    @Bean
-	    public AmazonS3 getAmazonS3Client() {
-	        final BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(accessKeyId, accessKeySecret);
-	        // Get Amazon S3 client and return the S3 client object
-	        return AmazonS3ClientBuilder
-	            .standard()
-	            .withCredentials(new AWSStaticCredentialsProvider(basicAwsCredentials))
-	            .withRegion(s3RegionName)
-	            .build();
-	    }
-	    
+	@Bean
+	public AmazonS3 getAmazonS3Client() {
+		final BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(accessKeyId, accessKeySecret);
+		// Get Amazon S3 client and return the S3 client object
+		return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(basicAwsCredentials))
+				.withRegion(s3RegionName).build();
+	}
+
 }

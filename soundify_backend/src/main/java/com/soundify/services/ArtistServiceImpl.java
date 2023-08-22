@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -12,10 +13,15 @@ import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
 import com.soundify.daos.SongDao;
@@ -40,6 +46,11 @@ public class ArtistServiceImpl implements ArtistService {
 	@Autowired
 	private SongDao songDao;
 
+	@Autowired
+	private SongFileHandlingService songFileHandlingService;
+
+	@Value("${cloud.aws.upload.folder}")
+	private String songFolderLocationS3;
 	@Autowired
 	private ModelMapper mapper;
 
@@ -175,6 +186,13 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public ApiResponse deleteArtistById(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		List<Song> songs = artist.getSongs();
+		songs.forEach((song) -> {
+			if (song.getSongPath().contains(songFolderLocationS3))
+				songFileHandlingService.deleteSongOnS3(song.getId());
+			else
+				songFileHandlingService.deleteSongOnServer(song.getId());
+		});
 		artDao.delete(artist);
 		return new ApiResponse("Artist deleted successfully");
 	}
@@ -187,7 +205,7 @@ public class ArtistServiceImpl implements ArtistService {
 		// song : persistent
 		// save uploaded file contents in server side folder.
 		// create the path to store the file
-		String path = artistImageFolderLocation.concat(artist.getId()+imageFile.getOriginalFilename());
+		String path = artistImageFolderLocation.concat(artist.getId() + imageFile.getOriginalFilename());
 		System.out.println("path " + path);
 		// FileUtils class : to read byte[] from multpart file ---> server side folder
 		// API : public void writeByteArrayToFile(File file, byte[] data) throws
@@ -203,34 +221,38 @@ public class ArtistServiceImpl implements ArtistService {
 
 	@Override
 	public ApiResponse editArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
-		
+
 		Artist artist = artDao.findById(artistId)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
-		
+
 		deleteFile(artist.getArtistImagePath());
-		
+
 		String path = artistImageFolderLocation.concat(imageFile.getOriginalFilename());
 		System.out.println("path " + path);
-		
+
 		FileUtils.writeByteArrayToFile(new File(path), imageFile.getBytes());
-		
+
 		artist.setArtistImagePath(path);
-		
+
 		return new ApiResponse("artist Image File edited n stored in server side folder");
 	}
-	
+
 	public static void deleteFile(String filePath) {
-        File fileToDelete = new File(filePath);
-        
-        if (fileToDelete.exists()) {
-            if (fileToDelete.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("File doesn't exist.");
-        }
-    }
+		if (filePath == null) {
+			System.out.println("File doesn't exist.");
+			return;
+		}
+		File fileToDelete = new File(filePath);
+
+		if (fileToDelete.exists()) {
+			if (fileToDelete.delete()) {
+				System.out.println("File deleted successfully.");
+			} else {
+				System.out.println("Failed to delete the file.");
+			}
+		} else {
+			System.out.println("File doesn't exist.");
+		}
+	}
 
 }

@@ -1,4 +1,5 @@
 package com.soundify.dtos.artists;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,11 +15,12 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ArtistSigninRequestDTO {
-	//@NotBlank(message = "Email must be supplied")
+	// @NotBlank(message = "Email must be supplied")
 //	@Length(min=4,max=20,message = "")
-	//	@Email(message = "Invalid Email")
-	
+	// @Email(message = "Invalid Email")
+
 	private String email;
-	//@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,20})", message = "Blank or Invalid password format")
+	// @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,20})", message =
+	// "Blank or Invalid password format")
 	private String password;
 }
