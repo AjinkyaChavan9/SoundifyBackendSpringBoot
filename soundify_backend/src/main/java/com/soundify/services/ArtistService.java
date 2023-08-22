@@ -46,5 +46,7 @@ public interface ArtistService {
 
 	public ApiResponse uploadArtistImage(Long artistId, MultipartFile imageFile) throws IOException;
 
+	public ApiResponse editArtistImage(Long artistId, MultipartFile imageFile) throws IOException;
+
 
 }

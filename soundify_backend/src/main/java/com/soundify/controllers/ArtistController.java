@@ -131,5 +131,15 @@ public class ArtistController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.uploadArtistImage(artistId, imageFile));
 	}
     
+	@PutMapping(value = "/{artistId}/image", consumes = "multipart/form-data")
+	public ResponseEntity<?> editArtistProfileImage(@PathVariable Long artistId, @RequestBody MultipartFile imageFile)
+			throws IOException {
+		System.out.println("in img upload " + artistId);
+		// invoke image service method
+		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.editArtistImage(artistId, imageFile));
+	}
+	
+	
+    
 	
 }

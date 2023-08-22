@@ -191,7 +191,7 @@ public class ArtistServiceImpl implements ArtistService {
 		// song : persistent
 		// save uploaded file contents in server side folder.
 		// create the path to store the file
-		String path = artistImageFolderLocation.concat(imageFile.getOriginalFilename());
+		String path = artistImageFolderLocation.concat(artist.getId()+imageFile.getOriginalFilename());
 		System.out.println("path " + path);
 		// FileUtils class : to read byte[] from multpart file ---> server side folder
 		// API : public void writeByteArrayToFile(File file, byte[] data) throws
@@ -204,5 +204,37 @@ public class ArtistServiceImpl implements ArtistService {
 		// song.setImage(file.getBytes());
 		return new ApiResponse("artist Image File uploaded n stored in server side folder");
 	}
+
+	@Override
+	public ApiResponse editArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
+		
+		Artist artist = artDao.findById(artistId)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
+		
+		deleteFile(artist.getArtistImagePath());
+		
+		String path = artistImageFolderLocation.concat(imageFile.getOriginalFilename());
+		System.out.println("path " + path);
+		
+		FileUtils.writeByteArrayToFile(new File(path), imageFile.getBytes());
+		
+		artist.setArtistImagePath(path);
+		
+		return new ApiResponse("artist Image File edited n stored in server side folder");
+	}
+	
+	public static void deleteFile(String filePath) {
+        File fileToDelete = new File(filePath);
+        
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                System.out.println("File deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        } else {
+            System.out.println("File doesn't exist.");
+        }
+    }
 
 }
