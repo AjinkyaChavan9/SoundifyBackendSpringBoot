@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,17 +22,14 @@ import com.soundify.daos.SongDao;
 
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.ApiResponse;
-import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
-import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.entities.Artist;
 import com.soundify.entities.Song;
-import com.soundify.entities.User;
 
 @Service
 @Transactional
@@ -116,7 +112,7 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public void updateSongMetadata(Long artistId, Long songId, SongUpdateMetadataDTO songUpdateMetadataDTO) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-		Set<Song> artistSongs = artist.getSongs();
+		List<Song> artistSongs = artist.getSongs();
 
 		Song songToUpdate = null;
 		for (Song song : artistSongs) {
@@ -143,7 +139,7 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public Set<SongDTO> getAllSongsOfArtist(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-		Set<Song> allArtistSongs = artist.getSongs();
+		List<Song> allArtistSongs = artist.getSongs();
 		return allArtistSongs.stream().map(song -> mapper.map(song, SongDTO.class)).collect(Collectors.toSet());
 	}
 

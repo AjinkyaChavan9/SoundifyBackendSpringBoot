@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -167,9 +166,8 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		}
 
 		// Remove references from related entities (e.g., artists, playlists, genres)
-		for (Artist artist : songToDelete.getArtists()) {
-			artist.removeSong(songToDelete);
-		}
+		Artist artist = songToDelete.getArtist();
+		artist.removeSong(songToDelete);
 
 		for (Playlist playlist : songToDelete.getPlaylists()) {
 			playlist.removeSong(songToDelete);

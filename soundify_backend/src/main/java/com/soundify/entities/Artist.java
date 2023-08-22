@@ -1,14 +1,18 @@
 package com.soundify.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -39,9 +43,8 @@ public class Artist extends BaseEntity{
 	@Column(name="aritst_image_path")
 	private String artistImagePath;
 	
-	@ManyToMany
-	@JoinTable(name="artist_song", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="song_id"))
-	private Set<Song> songs = new HashSet<>();
+	@OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Song> songs = new ArrayList<>();
 	
 	@ManyToMany
 	@JoinTable(name="artist_follower", joinColumns = @JoinColumn(name="artist_id"), inverseJoinColumns = @JoinColumn(name="user_id"))
@@ -49,11 +52,10 @@ public class Artist extends BaseEntity{
 		
 	public void addSong(Song song) {
         songs.add(song);
-        song.getArtists().add(this);
+        song.setArtist(this);
     }
 
     public void removeSong(Song song) {
         songs.remove(song);
-        song.getArtists().remove(this);
     }
 }

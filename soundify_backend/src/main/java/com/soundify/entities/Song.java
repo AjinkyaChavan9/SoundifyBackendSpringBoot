@@ -48,8 +48,9 @@ public class Song extends BaseEntity {
 	@Column(name="song_image_path")
 	private String songImagePath;
 	
-	@ManyToMany(mappedBy = "songs")
-	private Set<Artist> artists = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "artist_id")
+	private Artist artist;
 	
 	@ManyToMany
 	@JoinTable(name="song_likes", joinColumns = @JoinColumn(name="song_id"), inverseJoinColumns = @JoinColumn(name="user_id"))

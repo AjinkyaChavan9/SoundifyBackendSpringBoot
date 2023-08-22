@@ -9,15 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.ApiResponse;
-import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
 import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
-import com.soundify.dtos.user.UserResponseDTO;
-import com.soundify.entities.Artist;
 
 
 public interface ArtistService {
