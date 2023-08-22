@@ -161,6 +161,15 @@ public class SongsController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile));
 	}
 
+	@DeleteMapping(value = "/songfile")
+	public ResponseEntity<?> deleteSongFileOnServer(Long songId) throws IOException, Exception {
+		// String duration = getDuration(songFile);
+		
+		
+		// invoke image service method
+		return ResponseEntity.ok(songService.deleteSong(songId));
+	}
+
 	@GetMapping(value = "/{songId}/songfile", produces = "audio/mpeg")
 	public ResponseEntity<?> downloadSongFileFromServer(@PathVariable Long songId) throws IOException {
 		System.out.println("in SONG download " + songId);

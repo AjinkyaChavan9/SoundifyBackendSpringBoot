@@ -160,10 +160,12 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 //		songDao.deleteById(Id);
 //		return new ApiResponse("Song deleted successfully");
 		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
-
+		
 		if (songToDelete == null) {
 			return new ApiResponse("Song not found");
 		}
+		deleteFile(songToDelete.getSongImagePath());
+		deleteFile(songToDelete.getSongPath());
 
 		// Remove references from related entities (e.g., artists, playlists, genres)
 		Artist artist = songToDelete.getArtist();
@@ -180,11 +182,25 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		for (User user : songToDelete.getUsers()) {
 			user.removeLikedSong(songToDelete);
 		}
-
+		
 		songDao.deleteById(songId);
 
 		return new ApiResponse("Song deleted successfully");
 
 	}
+	
+	public static void deleteFile(String filePath) {
+        File fileToDelete = new File(filePath);
+        
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                System.out.println("File deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        } else {
+            System.out.println("File doesn't exist.");
+        }
+    }
 
 }
