@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.soundify.dtos.ApiResponse;
+import com.soundify.dtos.ApiResponseWithBody;
 import com.soundify.dtos.artists.*;
 
 import java.util.Set;
@@ -36,17 +37,17 @@ public class UserController {
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> signInUser(@RequestBody @Valid UserSignInRequestDTO request) {
+	public ResponseEntity<?> signInUser(@RequestBody UserSignInRequestDTO request) {
 		System.out.println("auth req " + request);
 		UserSignInResponseDTO response = userService.signInUser(request);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(new ApiResponseWithBody("success", response));
 	}
 
 	@PutMapping("/{userId}")
-	public ResponseEntity<UserSignInResponseDTO> updateUser(@PathVariable Long userId,
+	public ResponseEntity<?> updateUser(@PathVariable Long userId,
 			@RequestBody UserSignupResponseDTO updatedUser) {
 		UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, userId);
-		return ResponseEntity.ok(updatedResponse);
+		return ResponseEntity.ok(new ApiResponseWithBody("success", updatedResponse));
 	}
 
 	@PostMapping("/{userId}")
