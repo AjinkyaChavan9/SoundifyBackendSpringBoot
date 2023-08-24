@@ -20,19 +20,12 @@ function Landing() {
 		navigate("/artist");
 	}
 
-	const renderComponent = () => {
-        if (selectedRole === "user") {
-            return <UserLandingComponent />;
-        } else if (selectedRole === "artist") {
-            return <ArtistLandingComponent />;
-        }
-        return null;
-    };
+	
 
 	return (
 
 		<div className='container'>
-			<Header></Header>
+			{/* <Header></Header> */}
 			<hr></hr>
 			<div style={{ fontSize: "x-large", textAlign: "center" }}>
                 <button
@@ -62,7 +55,7 @@ function Landing() {
 				<Route path="/" element={<Outlet />}>
 					<Route path="/user" element={<UserLandingComponent />} />
 					<Route path="/artist" element={<ArtistLandingComponent />} />
-					<Route path="*" element={<NotFound />} />
+					{/* <Route path="*" element={<NotFound />} /> */}
 				</Route>
 			</Routes>
 
