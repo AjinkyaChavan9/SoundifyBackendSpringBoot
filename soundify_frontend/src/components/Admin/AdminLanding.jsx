@@ -13,6 +13,8 @@ import ProtectedRoute from '../ProtectedRoute';
 
 import Login from './AdminLogin';
 import { AdminProfile } from './AdminProfile';
+import AllUsers from './AllUsers';
+import AllArtists from './AllArtists';
 
 function AdminLanding() {
     //debugger;
@@ -25,7 +27,7 @@ function AdminLanding() {
 
     var LogIn = () => {
         // debugger;  
-        navigate("/login");
+        navigate("/adminlogin");
     }
     var changeUserIsLoggedInLanding = () => {
         setUserIsLoggedInLanding(window.sessionStorage.getItem("userIsLoggedIn"))
@@ -46,7 +48,7 @@ function AdminLanding() {
 
         changeUserIsLoggedInLanding();
 
-        navigate("/login");
+        navigate("/adminlogin");
 
 
     }
@@ -62,8 +64,8 @@ function AdminLanding() {
                             onClick={LogIn}>Login</button> </>)
                     : (
                         <><Link to="/" >Home</Link>|
-                            <Link to="/dashboard">All Songs</Link>|
-                            <Link to="/profile">Profile</Link>|
+                            <Link to="/admindashboard">Admin DashBoard</Link>|
+                            <Link to="/adminprofile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
             </div>
@@ -72,9 +74,11 @@ function AdminLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="dashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="profile" element={<AdminProfile />} />
-                    <Route path="login" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
+                    <Route path="admindashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
+                    <Route path="adminprofile" element={<AdminProfile />} />
+                    <Route path="adminlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
+                    <Route path="admindashboard/users" element={<AllUsers />} />
+                    <Route path="admindashboard/artists" element={<AllArtists />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

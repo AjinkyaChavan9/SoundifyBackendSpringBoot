@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException e) {
 		System.out.println("method arg invalid " + e);
 
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(e.getMessage()));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse("error",e.getMessage()));
 	}
 
 	// As a project tip: handle important exceptions separately
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleException(Exception e) {
 		System.out.println("in catch-all");
 		//e.printStackTrace();// added only for debugging
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage()));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error",e.getMessage()));
 	}
 
 }

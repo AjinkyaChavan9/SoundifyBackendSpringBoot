@@ -41,19 +41,19 @@ public class PlaylistController {
 	@PostMapping("/{playlistId}/song/{songId}")
 	public ResponseEntity<?> addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
 		playlistService.addSongToPlaylist(playlistId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Uploaded in Playlist"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","Song Uploaded in Playlist"));
 	}
 
 	@DeleteMapping("/{playlistId}/song/{songId}")
 	public ResponseEntity<?> removeSongFromPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
 		playlistService.removeSongFromPlaylist(playlistId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Playlist"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","Song Removed from Playlist"));
 	}
 
 	@PutMapping("/{playlistId}/")
 	public ResponseEntity<?> updatePlaylistName(@PathVariable Long playlistId, @RequestBody String playlistName) {
 		playlistService.updatePlaylistName(playlistId, playlistName);
-		return ResponseEntity.ok(new ApiResponse("Playlist Name updated successfully!"));
+		return ResponseEntity.ok(new ApiResponse("success","Playlist Name updated successfully!"));
 	}
 
 }

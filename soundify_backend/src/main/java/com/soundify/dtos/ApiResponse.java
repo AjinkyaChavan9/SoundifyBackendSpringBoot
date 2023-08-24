@@ -10,11 +10,13 @@ import lombok.Setter;
 @Getter // to be used during ser.
 @Setter // to be used during de-ser
 public class ApiResponse {
+	private String status;
 	private String message;
 	private LocalDateTime timeStamp;
 
-	public ApiResponse(String message) {
+	public ApiResponse(String status, String message) {
 		super();
+		this.status = status;
 		this.message = message;
 		this.timeStamp = LocalDateTime.now();
 	}

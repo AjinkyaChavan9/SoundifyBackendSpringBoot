@@ -67,19 +67,19 @@ public class AdminController {
 	@PostMapping("/genre")
 	public ResponseEntity<?> addGenre(@RequestParam String genreName) {
 		genreService.addGenre(genreName);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Genre Added Successfully"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success", "Genre Added Successfully"));
 	}
 
 	@PutMapping("/genre/{genreId}")
 	public ResponseEntity<?> updateGenreName(@PathVariable Long genreId, @RequestParam String updatedGenreName) {
 		genreService.updateGenreName(genreId, updatedGenreName);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("GenreName Updated Successfully"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","GenreName Updated Successfully"));
 	}
 
 	@DeleteMapping("/genre/{genreId}")
 	public ResponseEntity<?> deleteGenre(@PathVariable Long genreId) {
 		genreService.deleteGenre(genreId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Genre Deleted Successfully"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","Genre Deleted Successfully"));
 	}
 
 }

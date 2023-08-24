@@ -7,6 +7,7 @@ import axios from 'axios';
 export const UpdateProfile = () => {
     const [credentials, setCredentials] = useState({
         id: "",
+        name: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -22,8 +23,8 @@ export const UpdateProfile = () => {
     }, []);
 
     const fetchUserDetails = () => {
-        const userId = sessionStorage.getItem('id');
-        axios.get(`http://127.0.0.1:8080/api/users/${userId}`)
+        const artistId = sessionStorage.getItem('id');
+        axios.get(`http://127.0.0.1:8080/api/artists/${artistId}`)
             .then((response) => {
                 // console.log(response.data)
                 console.log(response)
@@ -39,7 +40,7 @@ export const UpdateProfile = () => {
 
     const handleInputChange = (args) => {
         // debugger;
-        var copyOfCredentials = {...credentials}
+        var copyOfCredentials = { ...credentials }
         copyOfCredentials[args.target.name] = args.target.value;
         setCredentials(copyOfCredentials);
     };
@@ -53,10 +54,10 @@ export const UpdateProfile = () => {
     };
     const handleUpdateProfile = () => {
         console.log(credentials)
-        axios.put(`http://127.0.0.1:8080/api/users/${credentials.id}`,credentials)
+        axios.put(`http://127.0.0.1:8080/api/artists/${credentials.id}`, credentials)
             .then((response) => {
                 showMessage('Profile updated successfully', false);
-                navigate('/userprofile');
+                navigate('/artistprofile');
             })
             .catch((error) => {
                 showMessage('Failed to update profile', true);
@@ -69,6 +70,22 @@ export const UpdateProfile = () => {
                 <div className="form-group">
                     {/* <h1></h1> */}
                 </div>
+
+
+                <div className="row">
+                    <div className="input-field col s6">
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            className="validate"
+                            value={credentials.name}
+                            onChange={handleInputChange}
+                        />
+                        <label htmlFor="name">Artist Name</label>
+                    </div>
+                </div>
+
 
                 <div className="row">
                     <div className="input-field col s6">
@@ -141,3 +158,4 @@ export const UpdateProfile = () => {
         </div>
     );
 };
+export default UpdateProfile;

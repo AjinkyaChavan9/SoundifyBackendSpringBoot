@@ -40,7 +40,7 @@ public interface UserService {
 
 	UserResponseDTO getUserDetails(Long userId);
 
-	List<UserSignupResponseDTO> getUsers();
+	List<UserResponseDTO> getUsers();
 
 	ApiResponse deleteUserById(Long userId);
 
