@@ -5,6 +5,7 @@ import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NotFound from "./NotFound";
 import { useState } from "react";
+import AdminLanding from "./Admin/AdminLanding";
 
 function Landing() {
 
@@ -54,7 +55,7 @@ function Landing() {
             <div>
                 {selectedRole === "user" && <UserLandingComponent />}
                 {selectedRole === "artist" && <ArtistLandingComponent />}
-				{selectedRole === "admin" && <ArtistLandingComponent />}
+				{selectedRole === "admin" && <AdminLanding />}
             </div>
 
 			<hr></hr>

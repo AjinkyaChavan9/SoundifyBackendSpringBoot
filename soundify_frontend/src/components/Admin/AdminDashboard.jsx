@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import UsersSection from './UsersSection';
-import ArtistsSection from './ArtistsSection';
-import GenresSection from './GenresSection';
+// import UsersSection from './UsersSection';
+// import ArtistsSection from './ArtistsSection';
+// import GenresSection from './GenresSection';
 
 function AdminDashboard({ adminName }) {
   const [activeSection, setActiveSection] = useState('users');
