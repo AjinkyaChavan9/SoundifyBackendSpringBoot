@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
+import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 
 import com.soundify.dtos.artists.ArtistResponseDTO;
@@ -29,6 +30,7 @@ import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
 import com.soundify.entities.Artist;
+import com.soundify.entities.Role;
 import com.soundify.entities.Song;
 
 @Service
@@ -40,6 +42,9 @@ public class ArtistServiceImpl implements ArtistService {
 	@Autowired
 	private SongDao songDao;
 
+	@Autowired
+	private RoleDao roleDao;
+	
 	@Autowired
 	private SongFileHandlingService songFileHandlingService;
 
@@ -71,7 +76,13 @@ public class ArtistServiceImpl implements ArtistService {
 		System.out.println("request  " + artDTO);
 		// Since we need entity for persistence , map , dto ----> Entity --> then invoke
 		// save
+		
+
+		
 		Artist persistentArt = artDao.save(mapper.map(artDTO, Artist.class));
+		Role artistRole = roleDao.findById((long) 2)
+				.orElseThrow(() -> new ResourceNotFoundException("Role with id 3 not found"));
+		persistentArt.setRole(artistRole);
 		// If we send directly entity to REST clnt , it will contain ,
 		// un necessary fields(eg : password , dept , address, projects...) ,
 		// so as a standard suggestion , map entity --> dto

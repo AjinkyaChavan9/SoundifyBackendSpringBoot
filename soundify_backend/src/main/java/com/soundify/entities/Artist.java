@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -43,6 +44,10 @@ public class Artist extends BaseEntity {
 
 	@Column(name = "aritst_image_path")
 	private String artistImagePath;
+	
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
 	@OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Song> songs = new ArrayList<>();
