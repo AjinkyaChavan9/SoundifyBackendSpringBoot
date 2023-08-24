@@ -11,9 +11,9 @@ import Dashboard from './Dashboard';
 import NotFound from './NotFound';
 import ProtectedRoute from './ProtectedRoute';
 
-import { SignUp } from './SignUp';
-import { UpdateProfile } from './Profile';
-import Login from './Login';
+import { SignUp } from './UserSignUp';
+import { UpdateProfile } from './UserProfile';
+import Login from './User/UserLogin';
 
 function Landing() {
     //debugger;
