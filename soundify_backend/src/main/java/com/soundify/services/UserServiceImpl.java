@@ -9,7 +9,6 @@ import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistResponseDTO;
-import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.playlists.PlaylistResponseDTO;
 import com.soundify.dtos.user.UserResponseDTO;
 import com.soundify.dtos.song.SongDTO;
@@ -18,9 +17,7 @@ import com.soundify.dtos.user.UserSignInResponseDTO;
 import com.soundify.dtos.user.UserSignUpRequestDTO;
 import com.soundify.dtos.user.UserSignupResponseDTO;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -3,16 +3,14 @@ package com.soundify.controllers;
 import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+//import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,8 +37,8 @@ import com.soundify.dtos.artists.ArtistSigninResponseDTO;
 import com.soundify.dtos.artists.ArtistSignupRequestDTO;
 import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.dtos.song.SongDTO;
-import com.soundify.dtos.user.UserResponseDTO;
-import com.soundify.entities.Artist;
+//import com.soundify.dtos.user.UserResponseDTO;
+//import com.soundify.entities.Artist;
 import com.soundify.services.ArtistService;
 import com.soundify.services.SongFileHandlingService;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
