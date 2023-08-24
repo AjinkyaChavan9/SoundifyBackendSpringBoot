@@ -37,12 +37,12 @@ public class GenreController {
 	@PutMapping("/{genreId}/song/{songId}")
 	public ResponseEntity<?> addSongToPlaylist(@PathVariable Long genreId, @PathVariable Long songId) {
 		genreService.addSongToGenre(genreId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Added To Genre"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","Song Added To Genre"));
 	}
 
 	@DeleteMapping("/{genreId}/song/{songId}")
 	public ResponseEntity<?> removeSongFromPlaylist(@PathVariable Long genreId, @PathVariable Long songId) {
 		genreService.removeSongFromGenre(genreId, songId);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Song Removed from Genre"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","Song Removed from Genre"));
 	}
 }

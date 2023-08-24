@@ -7,17 +7,17 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import About from '../About';
 import Home from '../Home';
 // import Contact from './Contact';
-//import Dashboard from '../Artist/ArtistDashboard';
+import Dashboard from './ArtistDashboard';
 import NotFound from '../NotFound';
 import ProtectedRoute from '../ProtectedRoute';
 
-//import { SignUp } from './ArtistSignUp';
-//import { UpdateProfile } from './UserProfile';
-//import Login from './UserLogin';
+import { SignUp } from './ArtistSignUp';
+import { UpdateProfile } from './ArtistProfile';
+import Login from './ArtistLogin';
 
 function ArtistLanding() {
     //debugger;
-    const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
+    const [artistIsLoggedInLanding, setArtistIsLoggedInLanding] = useState("false");
     // useState(window.sessionStorage.getItem("userIsLoggedIn"))
 
 
@@ -25,52 +25,53 @@ function ArtistLanding() {
 
     var Signup = () => {
         // debugger;
-        navigate("/register");
+        navigate("/artistregister");
     }
 
     var LogIn = () => {
         // debugger;  
-        navigate("/login");
+        navigate("/artistlogin");
     }
-    var changeUserIsLoggedInLanding = () => {
-        setUserIsLoggedInLanding(window.sessionStorage.getItem("userIsLoggedIn"))
+    var changeArtistIsLoggedInLanding = () => {
+        setArtistIsLoggedInLanding(window.sessionStorage.getItem("artistIsLoggedIn"))
 
     }
 
     useEffect(() => {
-        changeUserIsLoggedInLanding();
-    }, [userIsLoggedInLanding])
+        changeArtistIsLoggedInLanding();
+    }, [artistIsLoggedInLanding])
 
     var LogOut = () => {
-       // debugger;
+        // debugger;
 
-        window.sessionStorage.setItem("userIsLoggedIn", "false");
+        window.sessionStorage.setItem("artistIsLoggedIn", "false");
         // var isLogged =  window.sessionStorage.getItem("userIsLoggedIn")
         window.sessionStorage.setItem("firstName", "")
         window.sessionStorage.setItem("id", "");
+        window.sessionStorage.setItem("email", "");
 
-        changeUserIsLoggedInLanding();
+        changeArtistIsLoggedInLanding();
 
-        navigate("/login");
+        navigate("/artistlogin");
 
 
     }
     return (
         <div className='container'>
-            <Header></Header>
+            {/* <Header></Header> */}
             <hr></hr>
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
 
 
-                {userIsLoggedInLanding == "false" ?
+                {artistIsLoggedInLanding == "false" ?
                     (<><button className='btn waves-effect waves-light #e53935 light-blue darken-1 '
                         onClick={Signup}>Register</button>|
                         <button className='btn waves-effect waves-light '
                             onClick={LogIn}>Login</button> </>)
                     : (
                         <><Link to="/" >Home</Link>|
-                            <Link to="/dashboard">All Songs</Link>|
-                            <Link to="/profile">Profile</Link>|
+                            <Link to="/artistdashboard">All Songs</Link>|
+                            <Link to="/artistprofile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
             </div>
@@ -79,10 +80,10 @@ function ArtistLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="dashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="profile" element={<UpdateProfile />} />
-                    <Route path="login" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="register" element={<SignUp />} />
+                    <Route path="artistdashboard" element={<Dashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
+                    <Route path="artistprofile" element={<UpdateProfile />} />
+                    <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
+                    <Route path="artistregister" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

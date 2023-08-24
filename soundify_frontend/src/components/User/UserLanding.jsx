@@ -25,12 +25,12 @@ function UserLanding() {
 
     var Signup = () => {
         // debugger;
-        navigate("/register");
+        navigate("/userregister");
     }
 
     var LogIn = () => {
         // debugger;  
-        navigate("/login");
+        navigate("/userlogin");
     }
     var changeUserIsLoggedInLanding = () => {
         setUserIsLoggedInLanding(window.sessionStorage.getItem("userIsLoggedIn"))
@@ -42,16 +42,18 @@ function UserLanding() {
     }, [userIsLoggedInLanding])
 
     var LogOut = () => {
-       // debugger;
+        // debugger;
 
         window.sessionStorage.setItem("userIsLoggedIn", "false");
         // var isLogged =  window.sessionStorage.getItem("userIsLoggedIn")
         window.sessionStorage.setItem("firstName", "")
         window.sessionStorage.setItem("id", "");
+        window.sessionStorage.setItem("email", "");
+
 
         changeUserIsLoggedInLanding();
 
-        navigate("/login");
+        navigate("/userlogin");
 
 
     }
@@ -69,8 +71,8 @@ function UserLanding() {
                             onClick={LogIn}>Login</button> </>)
                     : (
                         <><Link to="/" >Home</Link>|
-                            <Link to="/dashboard">All Songs</Link>|
-                            <Link to="/profile">Profile</Link>|
+                            <Link to="/userdashboard">All Songs</Link>|
+                            <Link to="/userprofile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
             </div>
@@ -79,10 +81,10 @@ function UserLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="dashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="profile" element={<UpdateProfile />} />
-                    <Route path="login" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="register" element={<SignUp />} />
+                    <Route path="userdashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
+                    <Route path="userprofile" element={<UpdateProfile />} />
+                    <Route path="userlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
+                    <Route path="userregister" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
