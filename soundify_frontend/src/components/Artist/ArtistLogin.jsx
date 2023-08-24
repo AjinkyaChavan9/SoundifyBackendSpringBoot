@@ -99,7 +99,7 @@ function ArtistLogin(props) {
                         <input id="email" name="email" type="email" className="validate"
                             value={credentials.email}
                             onChange={OnTextChange} />
-                        <label for="email">Email</label>
+                        <label htmlFor="email">Email</label>
                     </div>
                 </div>
                 <div className="row">

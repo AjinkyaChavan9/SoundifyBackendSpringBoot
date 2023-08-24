@@ -99,7 +99,7 @@ function Login(props) {
                         <input id="email" name="email" type="email" className="validate"
                             value={credentials.email}
                             onChange={OnTextChange} />
-                        <label for="email">Email</label>
+                        <label htmlFor="email">Email</label>
                     </div>
                 </div>
                 <div className="row">
@@ -107,7 +107,7 @@ function Login(props) {
                         <input id="password" name="password" type="password" className="validate"
                             value={credentials.password}
                             onChange={OnTextChange} />
-                        <label for="password">Password</label>
+                        <label htmlFor="password">Password</label>
                     </div>
                 </div>
                 <div className="row">
