@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 export const SignUp = () => {
   
   const[credentials, setCredentials] = useState({
-                firstName: "",lastName: "", email:"", mobile:"", password:"", confirmPassword: ''});
+                firstName: "",lastName: "", email:"", dateOfBirth:"", password:"", confirmPassword: ''});
     const[message, setMessage] = useState("");
 
     
@@ -28,32 +29,54 @@ export const SignUp = () => {
         ShowMessage('Passwords do not match');
         return;
       }
-      var helper = new XMLHttpRequest();
-        helper.onreadystatechange = () => {
-            if (helper.readyState == 4 && helper.status == 200) {
-                debugger;
-                var result = JSON.parse(helper.responseText);
 
-                if ( result.message == 'success' ) {
+      axios
+      .post('http://127.0.0.1:8080/api/users/signup', credentials, {
+        headers: { 'content-type': 'application/json' },
+      })
+      .then((response) => {
+        const result = response.data;
 
-                    ShowMessage("Login successfully");
-                    console.log("success");
-                    setTimeout(()=>{navigate('/login')}, 3000)
-                    
-                }
-                else{
-                  ShowMessage("Error, Register Again!! ")
-                }
-
-            }
+        if (result.message == 'success') {
+          ShowMessage('Signup successful');
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+        } else {
+          ShowMessage('Error, please register again');
         }
-       console.log(credentials)
-        helper.open("POST", "http://127.0.0.1:8080/api/users/signup");
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error);
+        ShowMessage('An error occurred while signing up');
+      });
+  };
+      // var helper = new XMLHttpRequest();
+      //   helper.onreadystatechange = () => {
+      //       if (helper.readyState == 4 && helper.status == 200) {
+      //           debugger;
+      //           var result = JSON.parse(helper.responseText);
 
-        helper.setRequestHeader("content-type", "application/json")
-        helper.send(JSON.stringify(credentials));
+      //           if ( result.message == 'success' ) {
 
-    }
+      //               ShowMessage("Login successfully");
+      //               console.log("success");
+      //               setTimeout(()=>{navigate('/login')}, 3000)
+                    
+      //           }
+      //           else{
+      //             ShowMessage("Error, Register Again!! ")
+      //           }
+
+      //       }
+      //   }
+      //  console.log(credentials)
+      //   helper.open("POST", "http://127.0.0.1:8080/api/users/signup");
+
+      //   helper.setRequestHeader("content-type", "application/json")
+      //   helper.send(JSON.stringify(credentials));
+
+    
 
 
   return <div className="container">
@@ -87,11 +110,17 @@ export const SignUp = () => {
                         <label htmlFor="email">Email</label>
                     </div>
                     <div className="input-field col s6">
+                        <input id="dateOfBirth" name="dateOfBirth" type="date" className="validate"
+                        value={credentials.dateOfBirth}
+                        onChange={OnTextChange} />
+                        <label htmlFor="dateOfBirth">Date Of Birth</label>
+                    </div>
+                    {/* <div className="input-field col s6">
                         <input id="mobile" name="mobile" type="number" className="validate"
                         value={credentials.mobile}
                         onChange={OnTextChange} />
                         <label for="mobile">Mobile</label>
-                    </div>
+                    </div> */}
                     
           </div>
           <div>
@@ -102,14 +131,14 @@ export const SignUp = () => {
                             onChange={OnTextChange}/>
                             <label htmlFor="password">Password</label>
                         </div>
-                        <div className="row">
+                       
                         <div className="input-field col s6">
                             <input id="confirmPassword" name="confirmPassword" type="password" class="validate" 
                             value={credentials.confirmPassword}
                             onChange={OnTextChange}/>
                             <label htmlFor="password">Confirm Password</label>
                         </div>
-                    </div>
+                   
            </div>
 
           </div>

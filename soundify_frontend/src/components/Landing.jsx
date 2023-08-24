@@ -16,7 +16,7 @@ import { UpdateProfile } from './Profile';
 import Login from './Login';
 
 function Landing() {
-    debugger;
+    //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
     // useState(window.sessionStorage.getItem("userIsLoggedIn"))
 
@@ -42,7 +42,7 @@ function Landing() {
     }, [userIsLoggedInLanding])
 
     var LogOut = () => {
-        debugger;
+       // debugger;
 
         window.sessionStorage.setItem("userIsLoggedIn", "false");
         // var isLogged =  window.sessionStorage.getItem("userIsLoggedIn")

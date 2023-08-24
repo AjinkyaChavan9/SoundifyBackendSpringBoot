@@ -33,7 +33,7 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> addUser(@RequestBody @Valid UserSignUpRequestDTO user) {
 		UserSignupResponseDTO response = userService.addUser(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseWithBody("success", response));
 	}
 
 	@PostMapping("/signin")

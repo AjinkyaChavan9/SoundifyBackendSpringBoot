@@ -7,10 +7,10 @@ import axios from 'axios';
 export const UpdateProfile = () => {
     const [credentials, setCredentials] = useState({
         id: "",
-        first_name: "",
-        last_name: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        mobile: "",
+        dateOfBirth: "",
     });
 
     const [message, setMessage] = useState({ text: '', isError: false });
@@ -26,11 +26,13 @@ export const UpdateProfile = () => {
         axios.get(`http://127.0.0.1:8080/api/users/${userId}`)
             .then((response) => {
                 // console.log(response.data)
-                console.log(response.data.data)
+                console.log(response)
+                console.log(response.data);
                 // debugger;
-                setCredentials(response.data.data[0]);
+                setCredentials(response.data);
             })
             .catch((error) => {
+                console.log(error)
                 showMessage('Failed to fetch user details', true);
             });
     };
@@ -51,7 +53,7 @@ export const UpdateProfile = () => {
     };
     const handleUpdateProfile = () => {
         console.log(credentials)
-        axios.put(`http://127.0.0.1:9898/user/${credentials.id}`,credentials)
+        axios.put(`http://127.0.0.1:8080/api/users/${credentials.id}`,credentials)
             .then((response) => {
                 showMessage('Profile updated successfully', false);
                 navigate('/profile');
@@ -71,25 +73,25 @@ export const UpdateProfile = () => {
                 <div className="row">
                     <div className="input-field col s6">
                         <input
-                            id="first_name"
-                            name="first_name"
+                            id="lastName"
+                            name="firstName"
                             type="text"
                             className="validate"
-                            value={credentials.first_name}
+                            value={credentials.firstName}
                             onChange={handleInputChange}
                         />
-                        <label htmlFor="first_name">First Name</label>
+                        <label htmlFor="firstName">First Name</label>
                     </div>
                     <div className="input-field col s6">
                         <input
-                            id="last_name"
-                            name="last_name"
+                            id="lastName"
+                            name="lastName"
                             type="text"
                             className="validate"
-                            value={credentials.last_name}
+                            value={credentials.lastName}
                             onChange={handleInputChange}
                         />
-                        <label htmlFor="last_name">Last Name</label>
+                        <label htmlFor="lastName">Last Name</label>
                     </div>
                 </div>
 
@@ -107,14 +109,14 @@ export const UpdateProfile = () => {
                     </div>
                     <div className="input-field col s6">
                         <input
-                            id="mobile"
-                            name="mobile"
-                            type="number"
+                            id="dateOfBirth"
+                            name="dateOfBirth"
+                            type="date"
                             className="validate"
-                            value={credentials.mobile}
+                            value={credentials.dateOfBirth}
                             onChange={handleInputChange}
                         />
-                        <label htmlFor="mobile">Mobile</label>
+                        <label htmlFor="dateOfBirth">Date of Birth</label>
                     </div>
                 </div>
 
