@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import ArtistLandingComponent from './Artist/ArtistLanding';
 import UserLandingComponent from './User/UserLanding';
 
