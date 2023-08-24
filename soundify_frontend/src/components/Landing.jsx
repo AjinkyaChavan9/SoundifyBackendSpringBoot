@@ -4,19 +4,30 @@ import Header from "./Header";
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NotFound from "./NotFound";
+import { useState } from "react";
 
 function Landing() {
 
 	var navigate = useNavigate();
+	const [selectedRole, setSelectedRole] = useState(null);
 
-    var UserLanding = () => {
-        // debugger;
-        navigate("/user");
-    }
+	var UserLanding = () => {
+		// debugger;
+		navigate("/user");
+	}
 	var ArtistLanding = () => {
-        // debugger;
-        navigate("/artist");
-    }
+		// debugger;
+		navigate("/artist");
+	}
+
+	const renderComponent = () => {
+        if (selectedRole === "user") {
+            return <UserLandingComponent />;
+        } else if (selectedRole === "artist") {
+            return <ArtistLandingComponent />;
+        }
+        return null;
+    };
 
 	return (
 
@@ -24,17 +35,29 @@ function Landing() {
 			<Header></Header>
 			<hr></hr>
 			<div style={{ fontSize: "x-large", textAlign: "center" }}>
+                <button
+                    className='btn waves-effect waves-light #e53935 light-blue darken-1'
+                    onClick={() => setSelectedRole("user")}
+                >
+                    User
+                </button>
+                |
+                <button
+                    className='btn waves-effect waves-light'
+                    onClick={() => setSelectedRole("artist")}
+                >
+                    Artist
+                </button>
+            </div>
 
-
-				<><button className='btn waves-effect waves-light #e53935 light-blue darken-1 '
-					onClick={UserLanding}>User</button>|
-					<button className='btn waves-effect waves-light '
-						onClick={ArtistLanding}>Artist</button> </>
-
-
-			</div>
+            <hr></hr>
+            <div>
+                {selectedRole === "user" && <UserLandingComponent />}
+                {selectedRole === "artist" && <ArtistLandingComponent />}
+            </div>
 
 			<hr></hr>
+			{/* {renderComponent()} */}
 			<Routes>
 				<Route path="/" element={<Outlet />}>
 					<Route path="/user" element={<UserLandingComponent />} />

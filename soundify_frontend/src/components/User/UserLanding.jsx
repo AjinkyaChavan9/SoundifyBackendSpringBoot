@@ -57,7 +57,7 @@ function UserLanding() {
     }
     return (
         <div className='container'>
-            <Header></Header>
+            {/* <Header></Header> */}
             <hr></hr>
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
 
