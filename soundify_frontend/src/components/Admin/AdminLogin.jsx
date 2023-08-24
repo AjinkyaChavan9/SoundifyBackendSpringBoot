@@ -72,7 +72,7 @@ function Login(props) {
               window.sessionStorage.setItem("id", result.responseObj.id);
               console.log(result.responseObj.id);
     
-              navigate("/dashboard");
+              navigate("/admindashboard");
             } else {
               ShowMessage("Credentials Invalid");
             }
