@@ -31,6 +31,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.dtos.ApiResponse;
+import com.soundify.dtos.ApiResponseWithBody;
 import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
@@ -79,17 +80,18 @@ public class ArtistController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ArtistSigninResponseDTO> updateArtist(@PathVariable Long id,
+	public ResponseEntity<?> updateArtist(@PathVariable Long id,
 			@RequestBody ArtistSignupResponseDTO updatedArtist) {
 
 		ArtistSigninResponseDTO updatedResponse = artistService.updateArtist(updatedArtist, id);
-		return ResponseEntity.ok(updatedResponse);
+		return ResponseEntity.ok(new ApiResponseWithBody("success", "artist updated successfully",updatedResponse));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> addNewArt(@RequestBody @Valid ArtistSignupRequestDTO requestDTO) {
 		System.out.println("in add new artist " + requestDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.addArtDetails(requestDTO));
+		ArtistSignupResponseDTO response = artistService.addArtDetails(requestDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseWithBody("success", "artist Sign Up successfull",response));
 	}
 
 	@PostMapping("/signin")
@@ -97,7 +99,7 @@ public class ArtistController {
 		System.out.println("auth req " + request);
 		// try {
 		ArtistSigninResponseDTO resp = artistService.signInArtist(request);
-		return ResponseEntity.ok(resp);
+		return ResponseEntity.ok(new ApiResponseWithBody("success", "artist Sign In successful",resp));
 
 	}
 
@@ -146,13 +148,13 @@ public class ArtistController {
 	public ResponseEntity<ApiResponse> updateSongMetadata(@PathVariable Long artistId, @PathVariable Long songId,
 			@RequestBody SongUpdateMetadataDTO songUpdateMetadataDTO) {
 		artistService.updateSongMetadata(artistId, songId, songUpdateMetadataDTO);
-		return ResponseEntity.ok(new ApiResponse("Song Metadata updated successfully."));
+		return ResponseEntity.ok(new ApiResponse("success","Song Metadata updated successfully."));
 	}
 
 	@DeleteMapping("/{artistId}/song/{songId}")
 	public ResponseEntity<ApiResponse> removeSongFromArtist(@PathVariable Long artistId, @PathVariable Long songId) {
 		artistService.removeSongFromArtist(artistId, songId);
-		return ResponseEntity.ok(new ApiResponse("Song removed from artist successfully."));
+		return ResponseEntity.ok(new ApiResponse("success","Song removed from artist successfully."));
 	}
 
 	@GetMapping("/{artistId}")

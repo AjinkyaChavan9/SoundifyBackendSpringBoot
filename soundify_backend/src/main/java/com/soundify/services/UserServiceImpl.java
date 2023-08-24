@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
 	public ApiResponse deleteUserById(Long userId) {
 		User user = userDao.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not found"));
 		userDao.delete(user);
-		return new ApiResponse("user deleted successfully");
+		return new ApiResponse("success","user deleted successfully");
 	}
 
 	@Override

@@ -33,21 +33,21 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> addUser(@RequestBody @Valid UserSignUpRequestDTO user) {
 		UserSignupResponseDTO response = userService.addUser(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseWithBody("success", response));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponseWithBody("success", "User Sign Up Successfull",response));
 	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> signInUser(@RequestBody UserSignInRequestDTO request) {
 		System.out.println("auth req " + request);
 		UserSignInResponseDTO response = userService.signInUser(request);
-		return ResponseEntity.ok(new ApiResponseWithBody("success", response));
+		return ResponseEntity.ok(new ApiResponseWithBody("success", "User Signed in Successfully!",response));
 	}
 
 	@PutMapping("/{userId}")
 	public ResponseEntity<?> updateUser(@PathVariable Long userId,
 			@RequestBody UserSignupResponseDTO updatedUser) {
 		UserSignInResponseDTO updatedResponse = userService.updateUser(updatedUser, userId);
-		return ResponseEntity.ok(new ApiResponseWithBody("success", updatedResponse));
+		return ResponseEntity.ok(new ApiResponseWithBody("success","user profile updated successfully",  updatedResponse));
 	}
 
 	@PostMapping("/{userId}")
@@ -56,7 +56,7 @@ public class UserController {
 		System.out.println("new password" + dto.getNewPassword());
 		userService.updateUserPassword(userId, dto.getOldPassword(), dto.getNewPassword());// UserSignInResponseDTO
 																							// updatedResponse =
-		return ResponseEntity.ok(new ApiResponse("Password Updated Successfully"));
+		return ResponseEntity.ok(new ApiResponse("success","Password Updated Successfully"));
 	}
 
 	@PostMapping("/{userId}/liked-songs/{songId}")

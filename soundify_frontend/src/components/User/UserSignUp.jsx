@@ -37,10 +37,10 @@ export const SignUp = () => {
       .then((response) => {
         const result = response.data;
 
-        if (result.message == 'success') {
+        if (result.status == 'success') {
           ShowMessage('Signup successful');
           setTimeout(() => {
-            navigate('/login');
+            navigate('/userlogin');
           }, 3000);
         } else {
           ShowMessage('Error, please register again');

@@ -199,7 +199,7 @@ public class ArtistServiceImpl implements ArtistService {
 				songFileHandlingService.deleteSongOnServer(song.getId());
 		});
 		artDao.delete(artist);
-		return new ApiResponse("Artist deleted successfully");
+		return new ApiResponse("success","Artist deleted successfully");
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class ArtistServiceImpl implements ArtistService {
 		artist.setArtistImagePath(path);
 		// In case of storing the uploaded file contents in DB :
 		// song.setImage(file.getBytes());
-		return new ApiResponse("artist Image File uploaded n stored in server side folder");
+		return new ApiResponse("success","artist Image File uploaded n stored in server side folder");
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class ArtistServiceImpl implements ArtistService {
 
 		artist.setArtistImagePath(path);
 
-		return new ApiResponse("artist Image File edited n stored in server side folder");
+		return new ApiResponse("success","artist Image File edited n stored in server side folder");
 	}
 
 	public static void deleteFile(String filePath) {
