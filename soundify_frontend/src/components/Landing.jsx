@@ -21,7 +21,7 @@ function Landing() {
 	}
 
 
-	
+
 	return (
 
 		<div className='container'>
@@ -41,12 +41,20 @@ function Landing() {
                 >
                     Artist
                 </button>
+				|
+                <button
+                    className='btn waves-effect waves-light'
+                    onClick={() => setSelectedRole("admin")}
+                >
+                    Admin
+                </button>
             </div>
 
             <hr></hr>
             <div>
                 {selectedRole === "user" && <UserLandingComponent />}
                 {selectedRole === "artist" && <ArtistLandingComponent />}
+				{selectedRole === "admin" && <ArtistLandingComponent />}
             </div>
 
 			<hr></hr>
