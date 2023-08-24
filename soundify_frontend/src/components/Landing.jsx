@@ -20,8 +20,8 @@ function Landing() {
 		navigate("/artist");
 	}
 
-	
 
+	
 	return (
 
 		<div className='container'>
