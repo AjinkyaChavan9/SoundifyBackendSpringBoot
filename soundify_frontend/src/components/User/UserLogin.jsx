@@ -68,6 +68,7 @@ function Login(props) {
             if (result.message == "success") {
               window.sessionStorage.setItem("userIsLoggedIn", "true");
               props.changeUserIsLoggedInLanding();
+              console.log(props.changeUserIsLoggedInLanding);
               window.sessionStorage.setItem("email", credentials.email);
               window.sessionStorage.setItem("id", result.responseObj.id);
               console.log(result.responseObj.id);
