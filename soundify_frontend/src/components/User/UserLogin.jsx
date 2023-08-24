@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../node_modules/materialize-css/dist/css/materialize.min.css"
+import "../../../node_modules/materialize-css/dist/css/materialize.min.css"
 import "materialize-css"
 //import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios';

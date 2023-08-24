@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import React from 'react';
 
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 // const http = require('http');
 
-function Dashboard() {
+function UserDashboard() {
 
     //  const[stateVariableName, setStateVariableFunction] = useState(stateVariableValue) 
     var userIsLoggedIn = window.sessionStorage.getItem("userIsLoggedIn");
@@ -24,4 +24,4 @@ function Dashboard() {
 
 }
 
-export default Dashboard;
+export default UserDashboard;
