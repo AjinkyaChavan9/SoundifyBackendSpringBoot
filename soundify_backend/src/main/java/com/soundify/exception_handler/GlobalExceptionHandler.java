@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception e) {
 		System.out.println("in catch-all");
-		e.printStackTrace();// added only for debugging
+		//e.printStackTrace();// added only for debugging
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage()));
 	}
 

@@ -33,7 +33,9 @@ export const SignUp = () => {
             if (helper.readyState == 4 && helper.status == 200) {
                 debugger;
                 var result = JSON.parse(helper.responseText);
-                if ( result.message == 'success' && result.data.affectedRows > 0) {
+
+                if ( result.message == 'success' ) {
+
                     ShowMessage("Login successfully");
                     console.log("success");
                     setTimeout(()=>{navigate('/login')}, 3000)
@@ -47,6 +49,7 @@ export const SignUp = () => {
         }
        console.log(credentials)
         helper.open("POST", "http://127.0.0.1:8080/api/users/signup");
+
         helper.setRequestHeader("content-type", "application/json")
         helper.send(JSON.stringify(credentials));
 
