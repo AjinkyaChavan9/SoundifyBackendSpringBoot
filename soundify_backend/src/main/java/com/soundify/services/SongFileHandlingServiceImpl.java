@@ -96,7 +96,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		// set image path in db
 		song.setSongPath(path);
 
-		return new ApiResponse("SongFile uploaded n stored in server side folder");
+		return new ApiResponse("success","SongFile uploaded n stored in server side folder");
 
 	}
 
@@ -119,7 +119,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	public ApiResponse uploadSongOnS3(SongMetadataUploadDTO songmetadata) throws IOException {
 		Song song = songDao.save(mapper.map(songmetadata, Song.class));
 
-		return new ApiResponse("SongFile uploaded n stored on AWS S3 ");
+		return new ApiResponse("success","SongFile uploaded n stored on AWS S3 ");
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		Song song = songDao.save(mapper.map(songmetadata, Song.class));
 		song.setArtist(
 				artistdao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist Not Found!!")));
-		return new ApiResponse("SongFile uploaded n stored on AWS S3 ");
+		return new ApiResponse("success","SongFile uploaded n stored on AWS S3 ");
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		song.setSongImagePath(path);
 		// In case of storing the uploaded file contents in DB :
 		// song.setImage(file.getBytes());
-		return new ApiResponse("Song Image File uploaded n stored in server side folder");
+		return new ApiResponse("success","Song Image File uploaded n stored in server side folder");
 	}// update
 
 	@Override
@@ -180,7 +180,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
 
 		if (songToDelete == null) {
-			return new ApiResponse("Song not found");
+			return new ApiResponse("error","Song not found");
 		}
 
 		String key = songToDelete.getSongPath();
@@ -207,7 +207,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 
 		songDao.deleteById(songId);
 
-		return new ApiResponse("Song deleted successfully");
+		return new ApiResponse("success","Song deleted successfully");
 
 	}
 
@@ -218,7 +218,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		Song songToDelete = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Song Not Found"));
 
 		if (songToDelete == null) {
-			return new ApiResponse("Song not found");
+			return new ApiResponse("error","Song not found");
 		}
 
 		deleteFile(songToDelete.getSongImagePath());
@@ -242,7 +242,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 
 		songDao.deleteById(songId);
 
-		return new ApiResponse("Song deleted successfully");
+		return new ApiResponse("success","Song deleted successfully");
 
 	}
 
