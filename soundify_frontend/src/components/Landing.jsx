@@ -12,13 +12,13 @@ function Landing() {
   // Click handler for the User button
   const handleUserButtonClick = () => {
     setSelectedRole('user'); // Set selectedRole to 'user'
-    navigate('/useradmindashboard'); // Navigate to the "/user" route
+    navigate('/userdashboard'); // Navigate to the "/user" route
   };
 
   // Click handler for the Artist button
   const handleArtistButtonClick = () => {
     setSelectedRole('artist'); // Set selectedRole to 'artist'
-    navigate('/artistadmindashboard'); // Navigate to the "/artist" route
+    navigate('/artistdashboard'); // Navigate to the "/artist" route
   };
 
   const handleAdminButtonClick = () => {
