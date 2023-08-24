@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ArtistLandingComponent from './Artist/ArtistLanding';
 import UserLandingComponent from './User/UserLanding';
+import AdminLandingComponent from './Admin/AdminLanding';
 
 function Landing() {
   const navigate = useNavigate();
@@ -11,13 +12,18 @@ function Landing() {
   // Click handler for the User button
   const handleUserButtonClick = () => {
     setSelectedRole('user'); // Set selectedRole to 'user'
-    navigate('/user'); // Navigate to the "/user" route
+    navigate('/userlogin'); // Navigate to the "/user" route
   };
 
   // Click handler for the Artist button
   const handleArtistButtonClick = () => {
     setSelectedRole('artist'); // Set selectedRole to 'artist'
-    navigate('/artist'); // Navigate to the "/artist" route
+    navigate('/artistlogin'); // Navigate to the "/artist" route
+  };
+
+  const handleAdminButtonClick = () => {
+    setSelectedRole('admin'); // Set selectedRole to 'artist'
+    navigate('/adminlogin'); // Navigate to the "/artist" route
   };
 
   return (
@@ -39,12 +45,20 @@ function Landing() {
           >
             Artist
           </button>
+		  |
+          <button
+            className='btn waves-effect waves-light'
+            onClick={handleAdminButtonClick} // Call the Admin button click handler
+          >
+            Admin
+          </button>
         </div>
       )}
       <hr></hr>
       {/* Render UserLandingComponent or ArtistLandingComponent based on selectedRole */}
       {selectedRole === 'user' && <UserLandingComponent />}
       {selectedRole === 'artist' && <ArtistLandingComponent />}
+	  {selectedRole === 'admin' && <AdminLandingComponent />}
       <hr></hr>
     </div>
   );

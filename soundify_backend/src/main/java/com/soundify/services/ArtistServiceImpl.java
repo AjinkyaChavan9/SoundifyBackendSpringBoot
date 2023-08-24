@@ -182,9 +182,9 @@ public class ArtistServiceImpl implements ArtistService {
 		return mapper.map(artist, ArtistResponseDTO.class);
 	}
 
-	public List<ArtistSignupResponseDTO> getArtists() {
+	public List<ArtistResponseDTO> getArtists() {
 		List<Artist> artists = artDao.findAll();
-		return artists.stream().map(artist -> mapper.map(artist, ArtistSignupResponseDTO.class))
+		return artists.stream().map(artist -> mapper.map(artist, ArtistResponseDTO.class))
 				.collect(Collectors.toList());
 	}
 
