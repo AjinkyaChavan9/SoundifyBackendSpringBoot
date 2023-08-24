@@ -31,7 +31,7 @@ public interface ArtistService {
 
 	ArtistResponseDTO getArtistDetails(Long artistId);
 
-	List<ArtistSignupResponseDTO> getArtists();
+	List<ArtistResponseDTO> getArtists();
 
 	ApiResponse deleteArtistById(Long artistId);
 

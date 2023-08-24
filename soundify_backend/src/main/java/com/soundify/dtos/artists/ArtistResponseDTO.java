@@ -11,8 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ArtistResponseDTO {
-	private String firstName;
 	private Long id;
+	private String firstName;
+	
 	private String name;
 	private String lastName;
 

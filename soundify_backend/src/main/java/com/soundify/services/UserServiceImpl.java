@@ -185,9 +185,9 @@ public class UserServiceImpl implements UserService {
 		return mapper.map(user, UserResponseDTO.class);
 	}
 
-	public List<UserSignupResponseDTO> getUsers() {
+	public List<UserResponseDTO> getUsers() {
 		List<User> users = userDao.findAll();
-		return users.stream().map(user -> mapper.map(user, UserSignupResponseDTO.class)).collect(Collectors.toList());
+		return users.stream().map(user -> mapper.map(user, UserResponseDTO.class)).collect(Collectors.toList());
 	}
 
 	@Override

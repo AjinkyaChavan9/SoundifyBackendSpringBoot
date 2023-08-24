@@ -14,6 +14,7 @@ function AllUsers() {
     axios.get('http://127.0.0.1:8080/api/admin/users')
       .then(response => {
         setUsers(response.data);
+        console.log(response.data);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
