@@ -51,7 +51,7 @@ function Landing() {
 
         changeUserIsLoggedInLanding();
 
-        navigate("/dashboard");
+        navigate("/login");
 
 
     }
@@ -69,7 +69,7 @@ function Landing() {
                             onClick={LogIn}>Login</button> </>)
                     : (
                         <><Link to="/" >Home</Link>|
-                            <Link to="/dashboard">My Quotes</Link>|
+                            <Link to="/dashboard">All Songs</Link>|
                             <Link to="/profile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
