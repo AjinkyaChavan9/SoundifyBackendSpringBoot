@@ -1,97 +1,81 @@
-import React, { Component, useEffect, useState } from 'react';
-import Header from '../Header';
-// import Footer from './Footer';
-import { Link, Outlet, Route, Routes } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import About from '../About';
+import React, { useEffect, useState } from 'react';
+import { Link, Outlet, Route, Routes, useParams, useNavigate } from 'react-router-dom';
 import Home from '../Home';
-// import Contact from './Contact';
 import Dashboard from './ArtistDashboard';
 import NotFound from '../NotFound';
-import ProtectedRoute from '../ProtectedRoute';
-
 import { SignUp } from './ArtistSignUp';
 import { UpdateProfile } from './ArtistProfile';
 import Login from './ArtistLogin';
+import ArtistUploadSong from './ArtistUploadSong';
 
 function ArtistLanding() {
-    //debugger;
+    // Get the artistId from route parameters
+    const artistId = window.sessionStorage.getItem("id");
+
+    console.log('artistId:', artistId); // Check the value of artistId
+
     const [artistIsLoggedInLanding, setArtistIsLoggedInLanding] = useState("false");
-    // useState(window.sessionStorage.getItem("userIsLoggedIn"))
+    const navigate = useNavigate();
 
-
-    var navigate = useNavigate();
-
-    var Signup = () => {
-        // debugger;
+    const Signup = () => {
         navigate("/artistregister");
-    }
+    };
 
-    var LogIn = () => {
-        // debugger;  
+    const LogIn = () => {
         navigate("/artistlogin");
-    }
-    var changeArtistIsLoggedInLanding = () => {
-        setArtistIsLoggedInLanding(window.sessionStorage.getItem("artistIsLoggedIn"))
+    };
 
-    }
+    const changeArtistIsLoggedInLanding = () => {
+        setArtistIsLoggedInLanding(window.sessionStorage.getItem("artistIsLoggedIn"));
+    };
 
     useEffect(() => {
         changeArtistIsLoggedInLanding();
-    }, [artistIsLoggedInLanding])
+    }, [artistIsLoggedInLanding]);
 
-    var LogOut = () => {
-        // debugger;
-
+    const LogOut = () => {
         window.sessionStorage.setItem("artistIsLoggedIn", "false");
-        // var isLogged =  window.sessionStorage.getItem("userIsLoggedIn")
-        window.sessionStorage.setItem("firstName", "")
+        window.sessionStorage.setItem("firstName", "");
         window.sessionStorage.setItem("id", "");
         window.sessionStorage.setItem("email", "");
 
         changeArtistIsLoggedInLanding();
+        navigate("/landing");
+    };
 
-        navigate("/artistlogin");
-
-
-    }
     return (
         <div className='container'>
-            {/* <Header></Header> */}
-            <hr></hr>
+            <hr />
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
-
-
-                {artistIsLoggedInLanding == "false" ?
-                    (<><button className='btn waves-effect waves-light #e53935 light-blue darken-1 '
-                        onClick={Signup}>Register</button>|
-                        <button className='btn waves-effect waves-light '
-                            onClick={LogIn}>Login</button> </>)
+                {artistIsLoggedInLanding === "false" ?
+                    (<>
+                        <button className='btn waves-effect waves-light #e53935 light-blue darken-1' onClick={Signup}>Register</button>|
+                        <button className='btn waves-effect waves-light' onClick={LogIn}>Login</button>
+                    </>)
                     : (
-                        <><Link to="/" >Home</Link>|
-                            <Link to="/artistdashboard">All Songs</Link>|
+                        <>
+                            <Link to="/">Home</Link>|
+                            <Link to="/artistdashboard">My Songs</Link>|
+                            <Link to={`/upload/${artistId}`}>Upload a Song</Link>|
                             <Link to="/artistprofile">Profile</Link>|
-                            <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
-                                onClick={LogOut}>Logout</button></>)}
+                            <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger' onClick={LogOut}>Logout</button>
+                        </>
+                    )}
             </div>
-
-            <hr></hr>
+            <hr />
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
                     <Route path="artistdashboard" element={<Dashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistprofile" element={<UpdateProfile />} />
+                    <Route path="/upload/:artistId" element={<ArtistUploadSong />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
-
-            {/* <Footer/> */}
         </div>
     );
-
 }
 
 export default ArtistLanding;
