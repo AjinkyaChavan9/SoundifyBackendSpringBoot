@@ -3,6 +3,7 @@ package com.soundify.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,14 +45,17 @@ public class ArtistServiceImpl implements ArtistService {
 	private ArtistDao artDao;
 
 	@Autowired
+	private UserDao userDao;
+
+	@Autowired
 	private SongDao songDao;
-	
+
 	@PersistenceContext
-    private EntityManager entityManager;
+	private EntityManager entityManager;
 
 	@Autowired
 	private RoleDao roleDao;
-	
+
 	@Autowired
 	private SongFileHandlingService songFileHandlingService;
 
@@ -83,9 +87,7 @@ public class ArtistServiceImpl implements ArtistService {
 		System.out.println("request  " + artDTO);
 		// Since we need entity for persistence , map , dto ----> Entity --> then invoke
 		// save
-		
 
-		
 		Artist persistentArt = artDao.save(mapper.map(artDTO, Artist.class));
 		Role artistRole = roleDao.findById((long) 2)
 				.orElseThrow(() -> new ResourceNotFoundException("Role with id 3 not found"));
@@ -191,24 +193,37 @@ public class ArtistServiceImpl implements ArtistService {
 
 	public List<ArtistResponseDTO> getArtists() {
 		List<Artist> artists = artDao.findAll();
-		return artists.stream().map(artist -> mapper.map(artist, ArtistResponseDTO.class))
-				.collect(Collectors.toList());
+		return artists.stream().map(artist -> mapper.map(artist, ArtistResponseDTO.class)).collect(Collectors.toList());
 	}
 
 	@Override
 	public ApiResponse deleteArtistById(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
-		
+
 		// Remove the artist from each follower's artistsFollowed set
-		Set<User> followersCopy = new HashSet<>(artist.getFollowers());	
+//		Set<User> followersCopy = new HashSet<>(artist.getFollowers());	
+//		for (User follower : followersCopy) {
+//			 follower.removeFollowedArtist(artist); // Calling a method to remove artist from followers
+//			 //to avoid [java.util.ConcurrentModificationException]
+//			 entityManager.persist(follower);
+//	    }
+//		Set<User> followers = artist.getFollowers();
+//	    Iterator<User> followerIterator = followers.iterator();
+//	    while (followerIterator.hasNext()) {
+//	        User follower = followerIterator.next();
+//	        //follower.removeArtistAssociations();
+//	        entityManager.persist(follower);
+//	        followerIterator.remove(); // Use iterator's remove method
+//	    }
+	    Set<User> followersCopy = new HashSet<>(artist.getFollowers());
+
+
 		for (User follower : followersCopy) {
-			 follower.removeFollowedArtist(artist); // Calling a method to remove artist from followers
-			 //to avoid [java.util.ConcurrentModificationException]
-			 entityManager.persist(follower);
-	    }
+			follower.removeFollowedArtist(artist);
+			userDao.save(follower); // Save the changes to the follower
+		}
 		artist.getFollowers().clear(); // Clear the followers set in the artist
-		
-		
+
 		List<Song> songs = artist.getSongs();
 		songs.forEach((song) -> {
 			if (song.getSongPath().contains(songFolderLocationS3))
@@ -217,7 +232,7 @@ public class ArtistServiceImpl implements ArtistService {
 				songFileHandlingService.deleteSongOnServer(song.getId());
 		});
 		artDao.delete(artist);
-		return new ApiResponse("success","Artist deleted successfully");
+		return new ApiResponse("success", "Artist deleted successfully");
 	}
 
 	@Override
@@ -239,7 +254,7 @@ public class ArtistServiceImpl implements ArtistService {
 		artist.setArtistImagePath(path);
 		// In case of storing the uploaded file contents in DB :
 		// song.setImage(file.getBytes());
-		return new ApiResponse("success","artist Image File uploaded n stored in server side folder");
+		return new ApiResponse("success", "artist Image File uploaded n stored in server side folder");
 	}
 
 	@Override
@@ -257,7 +272,7 @@ public class ArtistServiceImpl implements ArtistService {
 
 		artist.setArtistImagePath(path);
 
-		return new ApiResponse("success","artist Image File edited n stored in server side folder");
+		return new ApiResponse("success", "artist Image File edited n stored in server side folder");
 	}
 
 	public static void deleteFile(String filePath) {

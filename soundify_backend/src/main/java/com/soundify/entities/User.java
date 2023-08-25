@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -43,7 +44,8 @@ public class User extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
-
+	
+	//mappedBy: Inverse Side(Not Owner)
 	@ManyToMany(mappedBy = "followers")
 	private Set<Artist> artistsFollowed = new HashSet<>();
 
@@ -66,18 +68,24 @@ public class User extends BaseEntity {
 		song.getUsers().remove(this);
 	}
 
-	public void followArtist(Artist artist, Set<Artist> artistsFollowed, Set<User> followers) {
-
-		artistsFollowed.add(artist);
-		this.setArtistsFollowed(artistsFollowed);
-		followers.add(this);
-		artist.setFollowers(followers);
-	}
+//	public void followArtist(Artist artist, Set<Artist> artistsFollowed, Set<User> followers) {
+//
+//		artistsFollowed.add(artist);
+//		this.setArtistsFollowed(artistsFollowed);
+//		followers.add(this);
+//		artist.setFollowers(followers);
+//	}
 	
 	public void removeFollowedArtist(Artist artist) {
 	    this.getArtistsFollowed().remove(artist);
 	    artist.getFollowers().remove(this);
 	}
+	 @PreRemove
+	    private void removeArtistAssociations() {
+	        for (Artist artist : this.artistsFollowed) {
+	            artist.getFollowers().remove(this);
+	        }
+	    }
 
 	public void createPlaylist(Playlist newPlaylist) {
 		playlists.add(newPlaylist);

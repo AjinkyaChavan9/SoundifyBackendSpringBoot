@@ -133,8 +133,9 @@ public class UserServiceImpl implements UserService {
 
 		Artist artist = artistDao.findById(artistId)
 				.orElseThrow(() -> new ResourceNotFoundException("Artist Not Found!"));
-		Set<User> followers = artist.getFollowers();
-		user.followArtist(artist, artistsFollowed, followers);
+//		Set<User> followers = artist.getFollowers();
+//		user.followArtist(artist, artistsFollowed, followers);
+		artist.addFollower(user);
 
 	}
 
