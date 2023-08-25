@@ -73,6 +73,11 @@ public class User extends BaseEntity {
 		followers.add(this);
 		artist.setFollowers(followers);
 	}
+	
+	public void removeFollowedArtist(Artist artist) {
+	    this.getArtistsFollowed().remove(artist);
+	    artist.getFollowers().remove(this);
+	}
 
 	public void createPlaylist(Playlist newPlaylist) {
 		playlists.add(newPlaylist);

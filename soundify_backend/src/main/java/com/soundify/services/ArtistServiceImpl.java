@@ -2,11 +2,14 @@ package com.soundify.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
@@ -20,7 +23,7 @@ import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
 import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
-
+import com.soundify.daos.UserDao;
 import com.soundify.dtos.artists.ArtistResponseDTO;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.artists.ArtistSigninRequestDTO;
@@ -32,6 +35,7 @@ import com.soundify.dtos.song.SongUpdateMetadataDTO;
 import com.soundify.entities.Artist;
 import com.soundify.entities.Role;
 import com.soundify.entities.Song;
+import com.soundify.entities.User;
 
 @Service
 @Transactional
@@ -41,6 +45,9 @@ public class ArtistServiceImpl implements ArtistService {
 
 	@Autowired
 	private SongDao songDao;
+	
+	@PersistenceContext
+    private EntityManager entityManager;
 
 	@Autowired
 	private RoleDao roleDao;
@@ -191,6 +198,17 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public ApiResponse deleteArtistById(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		
+		// Remove the artist from each follower's artistsFollowed set
+		Set<User> followersCopy = new HashSet<>(artist.getFollowers());	
+		for (User follower : followersCopy) {
+			 follower.removeFollowedArtist(artist); // Calling a method to remove artist from followers
+			 //to avoid [java.util.ConcurrentModificationException]
+			 entityManager.persist(follower);
+	    }
+		artist.getFollowers().clear(); // Clear the followers set in the artist
+		
+		
 		List<Song> songs = artist.getSongs();
 		songs.forEach((song) -> {
 			if (song.getSongPath().contains(songFolderLocationS3))
