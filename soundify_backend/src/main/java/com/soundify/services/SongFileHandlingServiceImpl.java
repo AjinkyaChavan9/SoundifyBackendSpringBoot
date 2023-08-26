@@ -162,7 +162,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	@Override
 	public byte[] downloadSongImage(Long songId) throws IOException {
 		// get song from DB
-		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid emp id !!!!!"));
+		Song song = songDao.findById(songId).orElseThrow(() -> new ResourceNotFoundException("Invalid artist id !!!!!"));
 
 		// => song exists !
 		// chk if song image path exists

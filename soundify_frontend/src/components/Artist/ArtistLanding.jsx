@@ -6,15 +6,25 @@ import { SignUp } from './ArtistSignUp';
 import { UpdateProfile } from './ArtistProfile';
 import Login from './ArtistLogin';
 import ArtistUploadSong from './ArtistUploadSong';
+
+import ArtistUploadProfilePic from './ArtistUploadProfilePic';
+import axios from 'axios';
+import defaultProfileImage from './assets/singer-avatar.webp'
+
 import ArtistDashboard from './ArtistDashboard';
+
 
 function ArtistLanding() {
     // Get the artistId from route parameters
     const artistId = window.sessionStorage.getItem("id");
-
     console.log('artistId:', artistId); // Check the value of artistId
 
     const [artistIsLoggedInLanding, setArtistIsLoggedInLanding] = useState("false");
+
+    const [profileImage, setProfileImage] = useState(null); // State for profile image
+
+
+
     const navigate = useNavigate();
 
     const Signup = () => {
@@ -33,6 +43,33 @@ function ArtistLanding() {
         changeArtistIsLoggedInLanding();
     }, [artistIsLoggedInLanding]);
 
+    useEffect(() => {
+        changeArtistIsLoggedInLanding();
+
+        // Fetch the artist's profile image using the artistId
+        const fetchProfileImage = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8080/api/artists/${artistId}/image`, {
+                    responseType: 'arraybuffer', // Specify responseType as 'arraybuffer' to handle image data
+                });
+
+                if (response.status === 200) {
+                    // Create a blob from the image data and set it in the state
+                    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+                    const imageUrl = URL.createObjectURL(blob);
+                    setProfileImage(imageUrl);
+                }
+            } catch (error) {
+                console.error('Error fetching profile image', error);
+                // Set the default profile image if fetching fails
+                setProfileImage('path-to-default-image.jpg'); // Replace with the actual path
+            }
+        };
+
+        fetchProfileImage();
+    }, [artistId, artistIsLoggedInLanding]);
+
+
     const LogOut = () => {
         window.sessionStorage.setItem("artistIsLoggedIn", "false");
         window.sessionStorage.setItem("firstName", "");
@@ -44,7 +81,7 @@ function ArtistLanding() {
     };
 
     return (
-        <div className='container'>
+        <div className='container-fluid'>
             <hr />
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
                 {artistIsLoggedInLanding === "false" ?
@@ -54,11 +91,40 @@ function ArtistLanding() {
                     </>)
                     : (
                         <>
-                            <Link to="/">Home</Link>|
-                            <Link to="/artistdashboard">My Songs</Link>|
-                            <Link to={`/upload/${artistId}`}>Upload a Song</Link>|
-                            <Link to="/artistprofile">Profile</Link>|
-                            <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger' onClick={LogOut}>Logout</button>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {/* Display the profile image if available, or the default image */}
+                                <>
+                                    {profileImage ? (
+                                        <img src={profileImage} alt='Profile' style={{
+                                            maxWidth: '100px', maxHeight: '100px', borderRadius: '50%',
+                                            border: '2px solid #ccc',
+                                        }} />
+                                    ) : (
+                                        // Display the default image if profileImage is not available
+                                        <>
+                                            <img
+                                                src={defaultProfileImage}
+                                                alt='Default Profile'
+                                                style={{
+                                                    maxWidth: '100px',
+                                                    maxHeight: '100px',
+                                                    borderRadius: '50%',
+                                                    border: '2px solid #ccc',
+                                                }}
+                                            />
+                                        </>
+                                    )} b
+                                </>
+
+                                <Link to="/">Home</Link>|
+                                <Link to="/artistdashboard">My Songs</Link>|
+                                <Link to={`/upload/${artistId}`}>Upload Song</Link>|
+                                <Link to={`/uploadpic/${artistId}`}>Upload Profile Pic</Link>|
+                                <Link to="/artistprofile">Profile</Link>|
+                                <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger' onClick={LogOut}>Logout</button>
+                            </div>
+
+
                         </>
                     )}
             </div>
@@ -69,6 +135,7 @@ function ArtistLanding() {
                     <Route path="artistdashboard" element={<ArtistDashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistprofile" element={<UpdateProfile />} />
                     <Route path="/upload/:artistId" element={<ArtistUploadSong />} />
+                    <Route path="/uploadpic/:artistId" element={<ArtistUploadProfilePic />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />

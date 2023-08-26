@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 function ArtistUploadSong() {
     const artistId = window.sessionStorage.getItem("id");
@@ -10,6 +11,7 @@ function ArtistUploadSong() {
     const [duration, setDuration] = useState('00:00:00');
     const [file, setFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
+    var navigate = useNavigate();
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -32,6 +34,11 @@ function ArtistUploadSong() {
             if (response.status === 201) {
                 setUploadStatus('success');
                 console.log('Song upload successful', response.data);
+                setUploadStatus('success');
+                setTimeout(() => {
+                    setUploadStatus('');
+                    navigate('/artistdashboard')
+                }, 3000); // Display success status for 3 seconds
             } else {
                 setUploadStatus('error');
                 console.error('Error uploading song', response.data);
@@ -64,8 +71,10 @@ function ArtistUploadSong() {
                 </div>
                 <button type="button" className="btn btn-primary" onClick={handleUpload}>Upload Song</button>
             </form>
-            {uploadStatus === 'success' && <p>Upload successful! Do something here.</p>}
-            {uploadStatus === 'error' && <p>Upload failed. Please try again later.</p>}
+
+            {uploadStatus === 'success' && <p className='card-panel teal lighten-2'>Upload successful! </p>}
+            {uploadStatus === 'error' && <p className='card-panel red lighten-2'>Upload failed. Please try again later.</p>}
+
         </div>
     );
 }
