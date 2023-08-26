@@ -113,7 +113,7 @@ function ArtistLanding() {
                                                 }}
                                             />
                                         </>
-                                    )} b
+                                    )} 
                                 </>
 
                                 <Link to="/">Home</Link>|
