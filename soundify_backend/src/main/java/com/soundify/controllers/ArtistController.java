@@ -1,5 +1,9 @@
 package com.soundify.controllers;
 
+import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
+
 import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -164,7 +168,8 @@ public class ArtistController {
 	@PostMapping(value = "/{artistId}/image", consumes = "multipart/form-data")
 	public ResponseEntity<?> uploadArtistProfileImage(@PathVariable Long artistId, @RequestBody MultipartFile imageFile)
 			throws IOException {
-		System.out.println("in img upload " + artistId);
+		System.out.println("in img upload " + artistId+"image:"+imageFile);
+		
 		// invoke image service method
 		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.uploadArtistImage(artistId, imageFile));
 	}
@@ -175,6 +180,11 @@ public class ArtistController {
 		System.out.println("in img upload " + artistId);
 		// invoke image service method
 		return ResponseEntity.status(HttpStatus.CREATED).body(artistService.editArtistImage(artistId, imageFile));
+	}
+	@GetMapping(value = "/{artistId}/image", produces = { IMAGE_GIF_VALUE, IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE })
+	public ResponseEntity<?> getArtistImage(@PathVariable Long artistId) throws IOException {
+		System.out.println("in artist img download " + artistId);
+		return ResponseEntity.ok(artistService.getArtistImage(artistId));
 	}
 
 }

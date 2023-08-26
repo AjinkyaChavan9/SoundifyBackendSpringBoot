@@ -215,14 +215,15 @@ public class ArtistServiceImpl implements ArtistService {
 //	        entityManager.persist(follower);
 //	        followerIterator.remove(); // Use iterator's remove method
 //	    }
+		
+	    entityManager.detach(artist);
 	    Set<User> followersCopy = new HashSet<>(artist.getFollowers());
-
-
 		for (User follower : followersCopy) {
 			follower.removeFollowedArtist(artist);
 			userDao.save(follower); // Save the changes to the follower
 		}
 		artist.getFollowers().clear(); // Clear the followers set in the artist
+	    artist = artDao.save(artist);
 
 		List<Song> songs = artist.getSongs();
 		songs.forEach((song) -> {
@@ -238,6 +239,7 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public ApiResponse uploadArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
 		// chk if song exists by id
+		System.out.println(imageFile);
 		Artist artist = artDao.findById(artistId)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid song id !!!!!"));
 		// song : persistent
@@ -257,6 +259,21 @@ public class ArtistServiceImpl implements ArtistService {
 		return new ApiResponse("success", "artist Image File uploaded n stored in server side folder");
 	}
 
+	@Override
+	public byte[] getArtistImage(Long artistId) throws IOException {
+		// TODO Auto-generated method stub
+		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Invalid artist id !!!!!"));
+
+		// => artist exists !
+		// chk if artist image path exists
+		if (artist.getArtistImagePath() != null) {
+			// song img exists , read file contents in to byte[]
+			return FileUtils.readFileToByteArray(new File(artist.getArtistImagePath()));
+		}
+		throw new ResourceNotFoundException("Image not yet assigned!!!!");
+		
+	}
+	
 	@Override
 	public ApiResponse editArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
 
