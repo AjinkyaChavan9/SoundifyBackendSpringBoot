@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, Route, Routes, useParams, useNavigate } from 'react-router-dom';
+import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import Home from '../Home';
-import Dashboard from './ArtistDashboard';
 import NotFound from '../NotFound';
 import { SignUp } from './ArtistSignUp';
 import { UpdateProfile } from './ArtistProfile';
 import Login from './ArtistLogin';
 import ArtistUploadSong from './ArtistUploadSong';
+import ArtistDashboard from './ArtistDashboard';
 
 function ArtistLanding() {
     // Get the artistId from route parameters
@@ -66,7 +66,7 @@ function ArtistLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="artistdashboard" element={<Dashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
+                    <Route path="artistdashboard" element={<ArtistDashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistprofile" element={<UpdateProfile />} />
                     <Route path="/upload/:artistId" element={<ArtistUploadSong />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
