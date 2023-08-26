@@ -64,8 +64,8 @@ function ArtistUploadSong() {
                 </div>
                 <button type="button" className="btn btn-primary" onClick={handleUpload}>Upload Song</button>
             </form>
-            {uploadStatus === 'success' && <p className='card-panel teal lighten-2'>Upload successful! Clear upload Page and navigate to artist dashboard</p>}
-            {uploadStatus === 'error' && <p className='card-panel red lighten-2'>Upload failed. Please try again later.</p>}
+            {uploadStatus === 'success' && <p>Upload successful! Do something here.</p>}
+            {uploadStatus === 'error' && <p>Upload failed. Please try again later.</p>}
         </div>
     );
 }
