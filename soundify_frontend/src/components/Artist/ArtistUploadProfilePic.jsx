@@ -49,6 +49,7 @@ function ArtistUploadProfilePic() {
             if (response.status === 201) {
                 console.log('Profile Pic upload successful', response.data);
                 setUploadStatus('success');
+                localStorage.setItem('profilePicUploaded', 'true'); // Set the flag
                 setTimeout(() => {
                     setUploadStatus('');
                     navigate('/artistdashboard')
