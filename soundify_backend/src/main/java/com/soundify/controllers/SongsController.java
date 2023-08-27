@@ -102,19 +102,20 @@ public class SongsController {
 
 	@GetMapping(value = "/{songId}/aws", produces = "audio/mpeg")
 	public ResponseEntity<?> downloadSongFileFromS3(@PathVariable Long songId) {
-		System.out.println("in SONG download " + songId);
-		Song song = songService.getSongById(songId);
-		String key = song.getSongPath();
+	
+			System.out.println("in SONG download " + songId);
+			Song song = songService.getSongById(songId);
+			String key = song.getSongPath();
 
-		S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
+			S3Object s3Object = awsS3.getAmazonS3Client().getObject(s3BucketName, key);
 
-		S3ObjectInputStream inputStream = s3Object.getObjectContent();
+			S3ObjectInputStream inputStream = s3Object.getObjectContent();
 
-		return ResponseEntity.ok().header("Content-Type", "audio/mpeg") // Set the appropriate content type
-				.header("Content-Disposition", "inline; filename=" + song.getSongName())
-				.body(new InputStreamResource(inputStream));
-
-	}
+			return ResponseEntity.ok().header("Content-Type", "audio/mpeg") // Set the appropriate content type
+					.header("Content-Disposition", "inline; filename=" + song.getSongName())
+					.body(new InputStreamResource(inputStream));
+		} 
+	
 
 	@DeleteMapping("/{songId}/aws")
 	public ResponseEntity<?> deleteSongFromS3(@PathVariable Long songId) {
@@ -122,26 +123,26 @@ public class SongsController {
 		return ResponseEntity.ok(songService.deleteSongOnS3(songId));
 	}
 
-	private String getDuration(MultipartFile file) throws Exception {
-		File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
-		file.transferTo(tempFile);
-
-		AudioFile audioFile = AudioFileIO.read(tempFile);
-
-		AudioHeader audioHeader = audioFile.getAudioHeader();
-
-		int durationInSeconds = audioHeader.getTrackLength();
-		int hours = durationInSeconds / 3600;
-		int minutes = (durationInSeconds % 3600) / 60;
-		int seconds = durationInSeconds % 60;
-
-		String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-		tempFile.delete();
-		audioFile.delete();
-
-		return duration;
-	}
+//	private String getDuration(MultipartFile file) throws Exception {
+//		File tempFile = File.createTempFile("temp1", file.getOriginalFilename());
+//		file.transferTo(tempFile);
+//
+//		AudioFile audioFile = AudioFileIO.read(tempFile);
+//
+//		AudioHeader audioHeader = audioFile.getAudioHeader();
+//
+//		int durationInSeconds = audioHeader.getTrackLength();
+//		int hours = durationInSeconds / 3600;
+//		int minutes = (durationInSeconds % 3600) / 60;
+//		int seconds = durationInSeconds % 60;
+//
+//		String duration = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+//
+//		tempFile.delete();
+//		audioFile.delete();
+//
+//		return duration;
+//	}
 
 	@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> uploadSongFileOnServer(@RequestBody MultipartFile songFile, @RequestParam String songName,
@@ -182,7 +183,9 @@ public class SongsController {
 	@GetMapping(value = "/{songId}/image", produces = { IMAGE_GIF_VALUE, IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE })
 	public ResponseEntity<?> downloadSongImage(@PathVariable Long songId) throws IOException {
 		System.out.println("in song img download " + songId);
-		return ResponseEntity.ok(songService.downloadSongImage(songId));
+		return ResponseEntity.ok().header("Content-Type", "image/*")
+		        .body(songService.downloadSongImage(songId));
+
 	}
 
 	@GetMapping("/genre")

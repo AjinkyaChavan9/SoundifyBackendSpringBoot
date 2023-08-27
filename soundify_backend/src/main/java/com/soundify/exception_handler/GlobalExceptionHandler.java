@@ -3,10 +3,10 @@ package com.soundify.exception_handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.ValidationException;
-
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException e) {
 		System.out.println("method arg invalid " + e);
 
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(e.getMessage()));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("error",e.getMessage()));
 	}
 
 	// As a project tip: handle important exceptions separately
@@ -48,7 +48,34 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleException(Exception e) {
 		System.out.println("in catch-all");
 		//e.printStackTrace();// added only for debugging
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage()));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("Content-Type", "audio/mpeg").body(new ErrorResponse("error",e.getMessage()));
 	}
+	
+	static class ErrorResponse {
+        private String status;
+        private String message;
+
+        public ErrorResponse(String status, String message) {
+            this.status = status;
+            this.message = message;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+	
 
 }
