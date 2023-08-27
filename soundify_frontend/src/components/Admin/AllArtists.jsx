@@ -19,7 +19,7 @@ function AllArtists() {
   };
 
   const handleDelete = (artistId) => {
-    axios.delete(`http://127.0.0.1:8080/api/admin/artists/${artistId}`)
+    axios.delete(`http://127.0.0.1:8080/api/admin/artist/${artistId}`)
       .then(response => {
         console.log('Artist deleted:', response.data);
         fetchArtists(); // Refresh the user list after deletion

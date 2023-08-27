@@ -45,7 +45,6 @@ public class User extends BaseEntity {
 	@JoinColumn(name = "role_id")
 	private Role role;
 	
-	//mappedBy: Inverse Side(Not Owner)
 	@ManyToMany(mappedBy = "followers")
 	private Set<Artist> artistsFollowed = new HashSet<>();
 

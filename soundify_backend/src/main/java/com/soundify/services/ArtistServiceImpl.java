@@ -2,6 +2,7 @@ package com.soundify.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -199,6 +200,7 @@ public class ArtistServiceImpl implements ArtistService {
 	@Override
 	public ApiResponse deleteArtistById(Long artistId) {
 		Artist artist = artDao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist not found"));
+		artDao.removeFollowersFromArtist(artistId); //custom nativeQuery(sql query) to remove mappings
 
 		// Remove the artist from each follower's artistsFollowed set
 //		Set<User> followersCopy = new HashSet<>(artist.getFollowers());	
@@ -216,22 +218,39 @@ public class ArtistServiceImpl implements ArtistService {
 //	        followerIterator.remove(); // Use iterator's remove method
 //	    }
 		
-	    entityManager.detach(artist);
-	    Set<User> followersCopy = new HashSet<>(artist.getFollowers());
-		for (User follower : followersCopy) {
-			follower.removeFollowedArtist(artist);
-			userDao.save(follower); // Save the changes to the follower
-		}
-		artist.getFollowers().clear(); // Clear the followers set in the artist
-	    artist = artDao.save(artist);
+	
+//	    Set<User> followers = artist.getFollowers();
+//		for (User follower : followers) {
+//			artist.removeFollower(follower); //ConcurrentModificationException
+//			//follower.removeFollowedArtist(artist);
+//			//userDao.save(follower); // Save the changes to the follower
+//		}
+//		artist.getFollowers().clear(); // Clear the followers set in the artist
+//	    artist = artDao.save(artist);
 
+		
+//		while (iterator.hasNext()) {
+//		    Song song = iterator.next();
+//		    if (song.getSongPath().contains(songFolderLocationS3))
+//		        songFileHandlingService.deleteSongOnS3(song.getId());
+//		    else
+//		        songFileHandlingService.deleteSongOnServer(song.getId());
+//		    iterator.remove(); // Remove the current song from the list
+//		}
+		
 		List<Song> songs = artist.getSongs();
-		songs.forEach((song) -> {
+		List<Song> songsToRemove = new ArrayList<>();
+		songs.forEach((song) -> {//java.util.ConcurrentModificationException
 			if (song.getSongPath().contains(songFolderLocationS3))
 				songFileHandlingService.deleteSongOnS3(song.getId());
 			else
 				songFileHandlingService.deleteSongOnServer(song.getId());
+			
 		});
+		
+
+
+//		
 		artDao.delete(artist);
 		return new ApiResponse("success", "Artist deleted successfully");
 	}

@@ -16,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.soundify.aws_S3.AWSS3Config;
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
+import com.soundify.daos.GenreDao;
+import com.soundify.daos.PlaylistDao;
 import com.soundify.daos.SongDao;
+import com.soundify.daos.UserDao;
 import com.soundify.dtos.ApiResponse;
 import com.soundify.dtos.SongMetadataUploadDTO;
 import com.soundify.entities.Artist;
@@ -34,6 +37,16 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 
 	@Autowired
 	private ArtistDao artistdao;
+	
+	@Autowired
+	private PlaylistDao playlistDao;
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private GenreDao genreDao;
+	
 	@Autowired
 	private ModelMapper mapper;
 	// to inject the value of a property : "upload.location" , from app property
@@ -193,19 +206,25 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		Artist artist = songToDelete.getArtist();
 		artist.removeSong(songToDelete);
 
-		for (Playlist playlist : songToDelete.getPlaylists()) {
-			playlist.removeSong(songToDelete);
-		}
+//		for (Playlist playlist : songToDelete.getPlaylists()) {
+//			playlist.removeSong(songToDelete);
+//		}		
+		playlistDao.removeSongsFromPlaylist(songId);
+		
 
-		for (Genre genre : songToDelete.getGenres()) {
-			genre.removeSong(songToDelete);
-		}
+//		for (Genre genre : songToDelete.getGenres()) {
+//			genre.removeSong(songToDelete);
+//		}
+		genreDao.removeSongsFromGenre(songId);
 
-		for (User user : songToDelete.getUsers()) {
-			user.removeLikedSong(songToDelete);
-		}
+//		
+		userDao.removeLikedSongsFromUser(songId);
 
-		songDao.deleteById(songId);
+		
+		if(songDao.existsById(songId))
+		{
+			songDao.deleteById(songId);
+		}
 
 		return new ApiResponse("success","Song deleted successfully");
 
@@ -228,9 +247,11 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		Artist artist = songToDelete.getArtist();
 		artist.removeSong(songToDelete);
 
-		for (Playlist playlist : songToDelete.getPlaylists()) {
-			playlist.removeSong(songToDelete);
-		}
+//		for (Playlist playlist : songToDelete.getPlaylists()) {
+//			playlist.removeSong(songToDelete);
+//		}
+		
+
 
 		for (Genre genre : songToDelete.getGenres()) {
 			genre.removeSong(songToDelete);

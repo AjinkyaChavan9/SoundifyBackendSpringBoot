@@ -53,7 +53,7 @@ public class AdminController {
 
 	@DeleteMapping("/artist/{artistId}")
 	public ResponseEntity<?> deleteArtist(@PathVariable Long artistId) {
-
+		System.out.println("IN ADMIN's artist delete controller method");
 		return ResponseEntity.ok(artistService.deleteArtistById(artistId));
 	}
 
