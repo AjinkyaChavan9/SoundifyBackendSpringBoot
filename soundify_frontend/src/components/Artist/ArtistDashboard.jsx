@@ -128,7 +128,7 @@ function ArtistDashboard() {
                                         </>
                                     ) : (
                                         <>
-                                            <button className="btn  waves-effect waves-dark  #ffff00 yellow accent-2 black-text text-darken-2" onClick={() => handleEdit(song.id)}>
+                                            <button className="btn  waves-effect waves-dark  #f0ad4e yellow accent-4 black-text text-darken-2" onClick={() => handleEdit(song.id)}>
                                                 Edit
                                             </button>
                                             <button className="btn waves-effect waves-light #e53935 red darken-1 btn-danger mx-2" onClick={() => handleDelete(song.id)}>

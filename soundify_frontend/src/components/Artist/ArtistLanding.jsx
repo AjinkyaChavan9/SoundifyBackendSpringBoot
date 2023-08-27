@@ -6,6 +6,7 @@ import { SignUp } from './ArtistSignUp';
 import { UpdateProfile } from './ArtistProfile';
 import Login from './ArtistLogin';
 import ArtistUploadSong from './ArtistUploadSong';
+import Landing from '../Landing';
 
 import ArtistUploadProfilePic from './ArtistUploadProfilePic';
 import axios from 'axios';
@@ -22,6 +23,8 @@ function ArtistLanding() {
     const [artistIsLoggedInLanding, setArtistIsLoggedInLanding] = useState("false");
 
     const [profileImage, setProfileImage] = useState(null); // State for profile image
+    const [forceRerender, setForceRerender] = useState(false);
+
 
 
 
@@ -58,16 +61,21 @@ function ArtistLanding() {
                     const blob = new Blob([response.data], { type: response.headers['content-type'] });
                     const imageUrl = URL.createObjectURL(blob);
                     setProfileImage(imageUrl);
+                    
                 }
             } catch (error) {
                 console.error('Error fetching profile image', error);
                 // Set the default profile image if fetching fails
-                setProfileImage('path-to-default-image.jpg'); // Replace with the actual path
+                setProfileImage(defaultProfileImage); // Replace with the actual path
             }
         };
 
+       
         fetchProfileImage();
+        
     }, [artistId, artistIsLoggedInLanding]);
+
+   
 
 
     const LogOut = () => {
@@ -138,6 +146,7 @@ function ArtistLanding() {
                     <Route path="/uploadpic/:artistId" element={<ArtistUploadProfilePic />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
+                    <Route path="landing" element={< Landing/>} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
