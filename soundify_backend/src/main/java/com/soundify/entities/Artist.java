@@ -52,7 +52,8 @@ public class Artist extends BaseEntity {
 	@OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Song> songs = new ArrayList<>();
 
-	@ManyToMany
+	//Owning Side
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "artist_follower", joinColumns = @JoinColumn(name = "artist_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> followers = new HashSet<>();
 
@@ -64,4 +65,14 @@ public class Artist extends BaseEntity {
 	public void removeSong(Song song) {
 		songs.remove(song);
 	}
+	
+	public void addFollower(User follower) {
+        followers.add(follower);
+        follower.getArtistsFollowed().add(this);
+    }
+
+    public void removeFollower(User follower) {
+        followers.remove(follower);
+        follower.getArtistsFollowed().remove(this);
+    }
 }

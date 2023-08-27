@@ -8,7 +8,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
+//import com.amazonaws.services.s3.model.ListObjectsV2Result;
 
 @Configuration
 public class AWSS3Config {

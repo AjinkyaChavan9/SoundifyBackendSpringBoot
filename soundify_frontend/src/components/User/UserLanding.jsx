@@ -53,7 +53,7 @@ function UserLanding() {
 
         changeUserIsLoggedInLanding();
 
-        navigate("/userlogin");
+        navigate("/landing");
 
 
     }
