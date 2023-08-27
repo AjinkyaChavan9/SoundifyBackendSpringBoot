@@ -15,7 +15,7 @@ import Login from './AdminLogin';
 import { AdminProfile } from './AdminProfile';
 import AllUsers from './AllUsers';
 import AllArtists from './AllArtists';
-
+import AllGenres from './AllGenres';
 function AdminLanding() {
     //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
@@ -79,6 +79,7 @@ function AdminLanding() {
                     <Route path="adminlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="admindashboard/users" element={<AllUsers />} />
                     <Route path="admindashboard/artists" element={<AllArtists />} />
+                    <Route path="admindashboard/genres" element={<AllGenres />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
