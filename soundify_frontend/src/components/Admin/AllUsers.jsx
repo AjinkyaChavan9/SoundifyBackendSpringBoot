@@ -5,6 +5,8 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 function AllUsers() {
   const [users, setUsers] = useState([]);
+  const userId = sessionStorage.getItem('id');
+
 
   useEffect(() => {
     fetchUsers();
@@ -48,8 +50,10 @@ function AllUsers() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
+            {users.map((user, index) => {
+                if(user.id != userId)
+                {
+                return <tr key={index}>
                 <td>{user.id}</td>
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
@@ -61,7 +65,9 @@ function AllUsers() {
                   </button>
                 </td>
               </tr>
-            ))}
+                }
+            }
+            )}
           </tbody>
         </table>
       </div>
