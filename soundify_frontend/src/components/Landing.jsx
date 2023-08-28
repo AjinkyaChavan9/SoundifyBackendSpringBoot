@@ -23,47 +23,47 @@ function Landing() {
   };
 
   const handleAdminButtonClick = () => {
-    setSelectedRole('admin'); // Set selectedRole to 'artist'
-    navigate('/adminlogin'); // Navigate to the "/artist" route
+    setSelectedRole('admin'); // Set selectedRole to 'admin'
+    navigate('/adminlogin'); // Navigate to the "/admin" route
   };
 
   return (
     <>
-    <Header/>
-    <div className='container'>
-      <hr></hr>
-      {/* Show buttons only if a role is not selected */}
-      {selectedRole === null && (
-        <div style={{ fontSize: 'x-large', textAlign: 'center' }}>
-          <button
-            className='btn waves-effect waves-light #e53935 light-blue darken-1'
-            onClick={handleUserButtonClick} // Call the User button click handler
-          >
-            User
-          </button>
-          |
-          <button
-            className='btn waves-effect waves-light'
-            onClick={handleArtistButtonClick} // Call the Artist button click handler
-          >
-            Artist
-          </button>
-		  |
-          <button
-            className='btn waves-effect waves-light'
-            onClick={handleAdminButtonClick} // Call the Admin button click handler
-          >
-            Admin
-          </button>
-        </div>
-      )}
-      <hr></hr>
-      {/* Render UserLandingComponent or ArtistLandingComponent based on selectedRole */}
-      {selectedRole === 'user' && <UserLandingComponent />}
-      {selectedRole === 'artist' && <ArtistLandingComponent />}
-	  {selectedRole === 'admin' && <AdminLandingComponent />}
-      <hr></hr>
-    </div>
+      <Header />
+      <div className='container'>
+        <hr></hr>
+        {/* Show buttons only if a role is not selected */}
+        {selectedRole === null && (
+          <div style={{ fontSize: 'x-large', textAlign: 'center' }}>
+            <button
+              className='btn waves-effect waves-light #e53935 light-blue darken-1'
+              onClick={handleUserButtonClick} // Call the User button click handler
+            >
+              User
+            </button>
+            |
+            <button
+              className='btn waves-effect waves-light'
+              onClick={handleArtistButtonClick} // Call the Artist button click handler
+            >
+              Artist
+            </button>
+            |
+            <button
+              className='btn waves-effect waves-light'
+              onClick={handleAdminButtonClick} // Call the Admin button click handler
+            >
+              Admin
+            </button>
+          </div>
+        )}
+        <hr></hr>
+        {/* Render UserLandingComponent or ArtistLandingComponent based on selectedRole */}
+        {selectedRole === 'user' && <UserLandingComponent />}
+        {selectedRole === 'artist' && <ArtistLandingComponent />}
+        {selectedRole === 'admin' && <AdminLandingComponent />}
+        <hr></hr>
+      </div>
     </>
   );
 }

@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function GenreDashboard() {
- // const genreId = window.sessionStorage.getItem("id");
+    // const genreId = window.sessionStorage.getItem("id");
 
     const [genres, setGenres] = useState([]);
     const [editedGenre, setEditedGenre] = useState(null);
+    const [updatedGenreName, setUpdatedGenreName] = useState('');
+    const [newGenreName, setNewGenreName] = useState('');
+
 
     useEffect(() => {
         fetchGenres();
     }, []);
 
     const fetchGenres = () => {
-      //console.log("genre id", genreId);
+        //console.log("genre id", genreId);
         axios.get('http://127.0.0.1:8080/api/genre') // Adjust the API endpoint
             .then(response => {
                 setGenres(response.data);
@@ -21,24 +24,47 @@ function GenreDashboard() {
                 console.error('Error fetching genres:', error);
             });
     };
+    const handleAdd = () => {
+        axios.post('http://localhost:8080/api/admin/genre', null, {
+            params: {
+                genreName: newGenreName
+            }
+        })
+            .then(response => {
+                console.log('Genre added:', response.data);
+                fetchGenres();
+                setNewGenreName('');
+            })
+            .catch(error => {
+                console.error('Error adding genre:', error);
+            });
+    };
 
     const handleEdit = (genreId) => {
+        const editedGenreData = genres.find(genre => genre.id === genreId);
+
+        setUpdatedGenreName(editedGenreData.genreName);
         setEditedGenre(genreId);
     };
 
     const handleSave = (genreId) => {
-        const editedGenreData = genres.find(genre => genre.id === genreId);
-
-        axios.put(`http://127.0.0.1:8080/api/admin/genre/${genreId}`, editedGenreData) // Adjust the API endpoint
+        axios.put(`http://localhost:8080/api/admin/genre/${genreId}`, null, {
+            params: {
+                updatedGenreName: updatedGenreName
+            }
+        })
             .then(response => {
                 console.log('Genre metadata updated:', response.data);
-                fetchGenres(); // Refresh the genre list after editing
-                setEditedGenre(null); // Clear the edited genre state
+                fetchGenres();
+                setEditedGenre(null);
             })
             .catch(error => {
                 console.error('Error updating genre metadata:', error);
             });
     };
+
+
+
 
     const handleDelete = (genreId) => {
         axios.delete(`http://127.0.0.1:8080/api/admin/genre/${genreId}`) // Adjust the API endpoint
@@ -52,7 +78,7 @@ function GenreDashboard() {
     };
 
     return (
-        <div className="container">
+        <div className="container-fluid">
             <h2 className="my-4">All Genres</h2>
             <div className="table-responsive">
                 <table className="table table-striped">
@@ -71,13 +97,8 @@ function GenreDashboard() {
                                     {editedGenre === genre.id ? (
                                         <input
                                             type="text"
-                                            value={genre.genreName}
-                                            onChange={e => {
-                                                const updatedGenres = genres.map(g =>
-                                                    g.id === genre.id ? { ...g, genreName: e.target.value } : g
-                                                );
-                                                setGenres(updatedGenres);
-                                            }}
+                                            value={updatedGenreName}
+                                            onChange={e => setUpdatedGenreName(e.target.value)}
                                         />
                                     ) : (
                                         genre.genreName
@@ -89,16 +110,16 @@ function GenreDashboard() {
                                             <button className="btn btn-success" onClick={() => handleSave(genre.id)}>
                                                 Save
                                             </button>
-                                            <button className="btn btn-secondary mx-2" onClick={() => setEditedGenre(null)}>
+                                            <button className="btn waves-effect waves-light #e53935 red darken-1 mx-2" onClick={() => setEditedGenre(null)}>
                                                 Cancel
                                             </button>
                                         </>
                                     ) : (
                                         <>
-                                            <button className="btn btn-primary" onClick={() => handleEdit(genre.id)}>
+                                            <button className="btn waves-effect waves-light #f57f17 yellow darken-4 btn-warning" onClick={() => handleEdit(genre.id)}>
                                                 Edit
                                             </button>
-                                            <button className="btn btn-danger mx-2" onClick={() => handleDelete(genre.id)}>
+                                            <button className=" btn waves-effect waves-light #e53935 red darken-1 mx-2" onClick={() => handleDelete(genre.id)}>
                                                 Delete
                                             </button>
                                         </>
@@ -106,11 +127,28 @@ function GenreDashboard() {
                                 </td>
                             </tr>
                         ))}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="Enter new genre name"
+                                    value={newGenreName}
+                                    onChange={e => setNewGenreName(e.target.value)}
+                                />
+                            </td>
+                            <td>
+                                <button className="btn btn-success" onClick={handleAdd}>
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     );
+
 }
 
 export default GenreDashboard;

@@ -1,23 +1,9 @@
-// import Dashboard from "./FunctionalDashboardCRUDandXHR";
-import { Route } from "react-router-dom";
-import Login from "./User/UserLogin";
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+// ProtectedRoute.js
+import React from "react";
+import { Route, Navigate } from "react-router-dom";
 
-
-function ProtectedRoute(props) {
-
-    var userIsLoggedIn = window.sessionStorage.getItem("userIsLoggedIn");
-    if(userIsLoggedIn!=null && userIsLoggedIn!="undefined" && userIsLoggedIn=="true")
-    {
-        return(<Route exact path={props.path} component={props.component} 
-            userIsLoggedInLanding={props.userIsLoggedInLanding} 
-            changeUserIsLoggedInLanding={props.changeUserIsLoggedInLanding}></Route>)
-    }
-    else
-    {
-        return(<Login userIsLoggedInLanding={props.userIsLoggedInLanding}
-            changeUserIsLoggedInLanding={props.changeUserIsLoggedInLanding}/>)
-    }
+function ProtectedRoute({ element, condition, redirectTo }) {
+    return condition ? element : <Navigate to={redirectTo} />;
 }
 
 export default ProtectedRoute;
