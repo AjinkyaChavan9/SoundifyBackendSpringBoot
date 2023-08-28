@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.soundify.custom_exceptions.ResourceNotFoundException;
 import com.soundify.daos.ArtistDao;
+import com.soundify.daos.PlaylistDao;
 import com.soundify.daos.RoleDao;
 import com.soundify.daos.SongDao;
 import com.soundify.daos.UserDao;
@@ -35,6 +36,7 @@ import com.soundify.dtos.artists.ArtistSignupResponseDTO;
 import com.soundify.dtos.song.SongDTO;
 import com.soundify.dtos.song.SongUpdateMetadataDTO;
 import com.soundify.entities.Artist;
+import com.soundify.entities.Playlist;
 import com.soundify.entities.Role;
 import com.soundify.entities.Song;
 import com.soundify.entities.User;
@@ -44,7 +46,8 @@ import com.soundify.entities.User;
 public class ArtistServiceImpl implements ArtistService {
 	@Autowired
 	private ArtistDao artDao;
-
+	@Autowired
+	private PlaylistDao playlistDao;
 	@Autowired
 	private UserDao userDao;
 
@@ -238,22 +241,64 @@ public class ArtistServiceImpl implements ArtistService {
 //		    iterator.remove(); // Remove the current song from the list
 //		}
 		
-		List<Song> songs = artist.getSongs();
-		List<Song> songsToRemove = new ArrayList<>();
-		songs.forEach((song) -> {//java.util.ConcurrentModificationException
-			if (song.getSongPath().contains(songFolderLocationS3))
-				songFileHandlingService.deleteSongOnS3(song.getId());
-			else
-				songFileHandlingService.deleteSongOnServer(song.getId());
-			
-		});
+//		List<Song> songs = artist.getSongs();
+//		List<Song> songsToRemove = new ArrayList<>();
+//		songs.forEach((song) -> {//java.util.ConcurrentModificationException
+//			if (song.getSongPath().contains(songFolderLocationS3))
+//				songFileHandlingService.deleteSongOnS3(song.getId());
+//			else
+//				songFileHandlingService.deleteSongOnServer(song.getId());
+//			
+//		});
+		
+//		List<Song> songs = new ArrayList<>(artist.getSongs());
+//	    for (Song song : songs) {
+//	        if (song.getSongPath().contains(songFolderLocationS3)) {
+//	            songFileHandlingService.deleteSongOnS3(song.getId());
+//	        } else {
+//	            songFileHandlingService.deleteSongOnServer(song.getId());
+//	        }
+//	        songDao.delete(song);
+//	    }
+//
+//
+//
+////		
+//		artDao.delete(artist);
+//		return new ApiResponse("success", "Artist deleted successfully");
+//	}
 		
 
+		    // Handle liked songs, songs in playlists, and delete artist and associated entities
+		 for (Song song : artist.getSongs()) {
+		        for (User user : song.getUsers()) {
+		            user.removeLikedSong(song);
+		        }
+		        for (Playlist playlist : song.getPlaylists()) {
+		            playlist.removeSong(song);
+		        }
+		    }
 
-//		
-		artDao.delete(artist);
-		return new ApiResponse("success", "Artist deleted successfully");
-	}
+		    // Delete the songs and clear the artist's songs list
+		    List<Song> songsToRemove = new ArrayList<>(artist.getSongs());
+		    for (Song song : songsToRemove) {
+		        if (song.getSongPath().contains(songFolderLocationS3)) {
+		            songFileHandlingService.deleteSongOnS3(song.getId());
+		        } else {
+		            songFileHandlingService.deleteSongOnServer(song.getId());
+		        }
+		        songDao.delete(song);
+		    }
+		    artist.getSongs().clear();
+
+		    
+
+		    // Delete the artist
+		    artDao.delete(artist);
+
+		    return new ApiResponse("success", "Artist and associated entities deleted successfully");
+		}
+
 
 	@Override
 	public ApiResponse uploadArtistImage(Long artistId, MultipartFile imageFile) throws IOException {
