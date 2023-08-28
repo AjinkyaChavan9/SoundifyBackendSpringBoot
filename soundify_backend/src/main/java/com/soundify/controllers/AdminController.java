@@ -71,12 +71,12 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success", "Genre Added Successfully"));
 	}
 
-//	@PutMapping("/genre/{genreId}")
+	@PutMapping("/genre/{genreId}")
 //	public ResponseEntity<?> updateGenreName(@PathVariable Long genreId, @RequestParam String updatedGenreName) {
 //		genreService.updateGenreName(genreId, updatedGenreName);
 //		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","GenreName Updated Successfully"));
 //	
-	public ResponseEntity<?> updateGenreName(@PathVariable Long genreId, @RequestBody String updatedGenreName) {
+	public ResponseEntity<?> updateGenreName(@PathVariable Long genreId, @RequestParam String updatedGenreName) {
 	    genreService.updateGenreName(genreId, updatedGenreName);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success","GenreName Updated Successfully"));
 	}
