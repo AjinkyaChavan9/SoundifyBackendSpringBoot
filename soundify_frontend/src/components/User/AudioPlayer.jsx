@@ -4,17 +4,12 @@ import React, { useEffect, useState } from 'react';
 import 'react-h5-audio-player/lib/styles.css';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'materialize-css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 
 const AudioPlayer = ReactH5AudioPlayer;
-
-const playlist = [
-    { src: "http://localhost:8080/api/songs/7/aws" },
-    { src: "http://localhost:8080/api/songs/10/aws" },
-    { src: "https://hanzluo.s3-us-west-1.amazonaws.com/music/suipian.mp3" }
-];
 
 const PlayerApp = () => {
     const [songs, setSongs] = useState([]);
@@ -86,7 +81,7 @@ const PlayerApp = () => {
                             <td>{song.duration}</td>
                             <td >
                                 <button
-                                    className='btn btn-primary mr-2'
+                                    className={`btn ${isPlaying && currentTrack === index ? 'red' : 'green'}`}
                                     onClick={() => {
                                         setTrackIndex(index);
                                         handlePlayPauseToggle(index);
@@ -110,12 +105,13 @@ const PlayerApp = () => {
             </table>
             <AudioPlayer
                 volume="0.5"
+                preload="auto" //enable preloading
                 src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${songs[currentTrack]?.id}/aws` : ''}
                 showSkipControls
                 onClickPrevious={handleClickPrevious}
                 onClickNext={handleClickNext}
                 onEnded={handleEnd}
-                onPlay={handlePlay}    
+                onPlay={handlePlay}
                 onPause={handlePause}
             />
         </div>
