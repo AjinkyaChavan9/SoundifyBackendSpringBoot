@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ArtistLandingComponent from './Artist/ArtistLanding';
 import UserLandingComponent from './User/UserLanding';
 import AdminLandingComponent from './Admin/AdminLanding';
+import Header from './Header';
 
 function Landing() {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ function Landing() {
   };
 
   return (
+    <>
+    <Header/>
     <div className='container'>
       <hr></hr>
       {/* Show buttons only if a role is not selected */}
@@ -61,6 +64,7 @@ function Landing() {
 	  {selectedRole === 'admin' && <AdminLandingComponent />}
       <hr></hr>
     </div>
+    </>
   );
 }
 

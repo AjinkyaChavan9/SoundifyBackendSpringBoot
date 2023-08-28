@@ -14,7 +14,9 @@ public class SongDTO {
 
 	private long Id;
 	private String songName;
-
+	
+	private String artistName;
+	
 	private Time duration;
 
 	private LocalDate releaseDate;
