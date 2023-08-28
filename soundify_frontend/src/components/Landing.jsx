@@ -5,6 +5,8 @@ import ArtistLandingComponent from './Artist/ArtistLanding';
 import UserLandingComponent from './User/UserLanding';
 import AdminLandingComponent from './Admin/AdminLanding';
 import Header from './Header';
+//import backgroundImage from '../assets/logo/svg/logo-white.svg'; // Import your background image
+
 
 function Landing() {
   const navigate = useNavigate();
@@ -30,7 +32,14 @@ function Landing() {
   return (
     <>
       <Header />
-      <div className='container'>
+      <div className='container'  
+      // style={{
+      //     backgroundImage: `url(${backgroundImage})`,
+      //     backgroundColor: 'rgba(0, 0, 0, 0.9)', // Adjust alpha value (0.5 for 50% opacity)
+      //     backgroundSize: 'cover',
+      //     backgroundRepeat: 'no-repeat',
+      //     backgroundPosition: 'center center'}}
+          >
         <hr></hr>
         {/* Show buttons only if a role is not selected */}
         {selectedRole === null && (

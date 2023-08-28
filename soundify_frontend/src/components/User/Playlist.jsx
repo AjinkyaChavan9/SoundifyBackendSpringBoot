@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EditPlaylist from './EditPlaylist';
 import axios from 'axios';
 import "../../../node_modules/materialize-css/dist/css/materialize.min.css"
@@ -10,13 +10,13 @@ import { faPlay, faPause, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 const AudioPlayer = ReactH5AudioPlayer;
 
-function Playlist(){
+function Playlist() {
     const [playlistName, setPlaylistName] = useState("");
-    const [playlists,setPlaylists] = useState([]);
-    const [playlist,setPlaylist] = useState([]);
+    const [playlists, setPlaylists] = useState([]);
+    const [playlist, setPlaylist] = useState([]);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
-    const [playlistId,setplaylistId] = useState('');
+    const [playlistId, setplaylistId] = useState('');
     const [currentTrack, setTrackIndex] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const player = useRef();
@@ -29,14 +29,17 @@ function Playlist(){
     const [currentPlaylistPage, setCurrentPlaylistPage] = useState(1);
     const playlistsPerPage = 3;
 
+    const [currentSongId, setCurrentSongId] = useState(null); // Use this to track the current song ID
+
+
     const startIndexPlaylists = (currentPlaylistPage - 1) * playlistsPerPage;
-const endIndexPlaylists = startIndexPlaylists + playlistsPerPage;
-const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
+    const endIndexPlaylists = startIndexPlaylists + playlistsPerPage;
+    const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
 
 
-    
+
     const userId = window.sessionStorage.getItem("id");
-   
+
     const createPlaylist = () => {
         axios.post(`http://localhost:8080/api/users/${userId}/playlist/${playlistName}`, {
             headers: { "content-type": "application/json" },
@@ -45,8 +48,8 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
 
             if (result.playlistName === playlistName) {
                 console.log("playlist created successfully");
-                showMessage("playlist "+result.playlistName+" created successfully");
-                navigate('/EditPlaylist', { state: { playlistId: result.id ,pName: playlistName } });
+                showMessage("playlist " + result.playlistName + " created successfully");
+                navigate('/EditPlaylist', { state: { playlistId: result.id, pName: playlistName } });
             }
         }).catch((error) => {
             console.log(error);
@@ -58,33 +61,33 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
     useEffect(() => {
         // Fetch playlist from the API
         fetch(`http://localhost:8080/api/playlists/user/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-         setPlaylists(data);
-         console.log(data); // Check if data is received properly
-        })
-         .catch(error => console.error('Error fetching songs:', error));
-       }, []);
+            .then(response => response.json())
+            .then(data => {
+                setPlaylists(data);
+                console.log(data); // Check if data is received properly
+            })
+            .catch(error => console.error('Error fetching songs:', error));
+    }, []);
 
-    const refresh = ()=>{
+    const refresh = () => {
         fetch(`http://localhost:8080/api/playlists/user/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-         setPlaylists(data);
-         console.log(data); // Check if data is received properly
-        })
-         .catch(error => console.error('Error fetching songs:', error));
+            .then(response => response.json())
+            .then(data => {
+                setPlaylists(data);
+                console.log(data); // Check if data is received properly
+            })
+            .catch(error => console.error('Error fetching songs:', error));
     }
 
     const playPlaylist = (playlistId) => {
         fetch(`http://localhost:8080/api/playlists/songs/${playlistId}`)
-        .then(response => response.json())
-        .then(data => {
-         setPlaylist(data);
-         console.log(data); // Check if data is received properly
-        })
-         .catch(error => console.error('Error fetching songs:', error));
-    } 
+            .then(response => response.json())
+            .then(data => {
+                setPlaylist(data);
+                console.log(data); // Check if data is received properly
+            })
+            .catch(error => console.error('Error fetching songs:', error));
+    }
 
     const removePlaylist = (playlistId) => {
         axios.delete(`http://localhost:8080/api/users/${userId}/playlist/${playlistId}`, {
@@ -96,43 +99,50 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
                 refresh();
                 console.log("playlist removed successfully");
                 showMessage("playlist removed successfully");
-                
+
             }
         }).catch((error) => {
             console.log(error);
             console.error("An error occurred:", error);
             showMessage("An error occurred while logging in");
         });
-    } 
+    }
 
-    const editPlaylist = (playlistId,playlistName) =>{
-        navigate('/EditPlaylist', { state: { playlistId: playlistId ,pName: playlistName } });
+    const editPlaylist = (playlistId, playlistName) => {
+        navigate('/EditPlaylist', { state: { playlistId: playlistId, pName: playlistName } });
     }
 
     const onTextChange = (event) => {
         setPlaylistName(event.target.value);
     }
-  
+
     const showMessage = (message) => {
         setMessage(message);
         setTimeout(() => { setMessage("") }, 3000);
     }
 
     const handleClickPrevious = () => {
-        console.log("click previous");
-        setTrackIndex(currentTrack => (currentTrack > 0 ? currentTrack - 1 : songs.length - 1));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const previousIndex = (currentIndex - 1 + filteredSongs.length) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[previousIndex].id);
+        }
     };
-
+    
     const handleClickNext = () => {
-        console.log("click next");
-
-        setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const nextIndex = (currentIndex + 1) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[nextIndex].id);
+        }
     };
 
     const handleEnd = () => {
-        console.log("end");
-
-        setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const nextIndex = (currentIndex + 1) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[nextIndex].id);
+        }
     };
 
     const handlePlay = () => {
@@ -144,7 +154,7 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
     };
 
     const handlePlayPauseToggle = (index) => {
-        if (currentTrack === index) {
+        if (currentSongId === index) {
             setIsPlaying(!isPlaying); // Toggle play/pause
             if (!isPlaying) {
                 player.current.audio.current.play(); // Resume playback if toggling to play
@@ -152,7 +162,7 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
                 player.current.audio.current.pause(); // Pause if toggling to pause
             }
         } else {
-            setTrackIndex(index);
+            setCurrentSongId(index);
             setIsPlaying(true); // Play the clicked track
             player.current.audio.current.play(); // Start playing the new track
 
@@ -164,8 +174,8 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
         console.log('Liked song with ID:', songId);
     };
 
-   
-    return (  
+
+    return (
         <div className='container-fluid'>
             <h5>Create Playlist</h5>
             <div className="row" >
@@ -187,144 +197,139 @@ const playlistsToShow = playlists.slice(startIndexPlaylists, endIndexPlaylists);
                 </div>
             </div>
             <div className='container-fluid' style={{ display: 'flex', flexDirection: 'row' }}>
-            <div style={{ flex: '0 0 40%', paddingRight: '10px' }}>
-              <table className='table-striped'>
-                <thead>
-                    <tr>
-                        <th>Playlist</th>
-                        <th>Play</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {playlistsToShow.map((playlist,index) => (
-                        <tr key={playlist.id}>
-                            <td>{playlist.playlistName}</td>
-                            <td>
-                               <button
-                                    className={`btn green`}
-                                    onClick={() => {
-                                        playPlaylist(playlist.id);
-                                    }}
+                <div style={{ flex: '0 0 40%', paddingRight: '10px' }}>
+                    <table className='table-striped'>
+                        <thead>
+                            <tr>
+                                <th>Playlist</th>
+                                <th>Play</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {playlistsToShow.map((playlist, index) => (
+                                <tr key={playlist.id}>
+                                    <td>{playlist.playlistName}</td>
+                                    <td>
+                                        <button
+                                            className={`btn green`}
+                                            onClick={() => {
+                                                playPlaylist(playlist.id);
+                                            }}
+                                        >
+                                            {isPlaying === index ? (
+                                                <FontAwesomeIcon icon={faPause} />
+                                            ) : (
+                                                <FontAwesomeIcon icon={faPlay} />
+                                            )}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button className="btn waves-effect waves-light blue"
+                                            onClick={() => {
+                                                editPlaylist(playlist.id, playlist.playlistName);
+                                            }}>
+                                            Edit
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button className="btn waves-effect waves-light red"
+                                            onClick={() => {
+                                                removePlaylist(playlist.id);
+                                            }}>
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {/* Pagination for playlists */}
+                    <ul className='pagination'>
+                        {Array.from({ length: Math.ceil(playlists.length / playlistsPerPage) }, (_, index) => index + 1).map(
+                            (pageNumber) => (
+                                <li
+                                    key={pageNumber}
+                                    className={`waves-effect ${currentPlaylistPage === pageNumber ? 'active' : ''}`}
                                 >
-                                    {isPlaying === index ? (
-                                        <FontAwesomeIcon icon={faPause} />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faPlay} />
-                                    )}
-                                </button>
-                            </td>
-                            <td>
-                            <button className="btn waves-effect waves-light blue"
-                                   onClick={()=>{
-                                                 editPlaylist(playlist.id,playlist.playlistName);
-                                   }}>
-                                      Edit
-                                </button>
-                            </td>    
-                            <td>
-                            <button className="btn waves-effect waves-light red"
-                                onClick={()=>{
-                                removePlaylist(playlist.id);
-                                }}>
-                                  X
+                                    <a href='#!' onClick={() => setCurrentPlaylistPage(pageNumber)}>
+                                        {pageNumber}
+                                    </a>
+                                </li>
+                            )
+                        )}
+                    </ul>
+                </div>
+                <div style={{ flex: '1' }}>
+                    <table className='table-striped'>
+                        <thead>
+                            <tr>
+                                <th>Song Name</th>
+                                <th>Artist</th>
+                                <th>Duration</th>
+                                <th>Play/Pause</th>
+                                {/* <th>Like</th> */}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {songsToShow.map((song, index) => (
+                                <tr key={song.id}>
+                                    <td>{song.songName}</td>
+                                    <td>{song.artistName}</td>
+                                    <td>{song.duration}</td>
+                                    <td >
+                                    <button
+                                        className={`btn ${isPlaying && currentSongId === song.id ? 'red' : 'green'}`}
+                                        onClick={() => handlePlayPauseToggle(song.id)}
+                                    >
+                                        <i className='material-icons'>
+                                            {isPlaying && currentSongId === song.id ? 'pause' : 'play_arrow'}
+                                        </i>
                             </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-              </table>
-               {/* Pagination for playlists */}
-            <ul className='pagination'>
-                {Array.from({ length: Math.ceil(playlists.length / playlistsPerPage) }, (_, index) => index + 1).map(
-                    (pageNumber) => (
-                        <li
-                            key={pageNumber}
-                            className={`waves-effect ${currentPlaylistPage === pageNumber ? 'active' : ''}`}
-                        >
-                            <a href='#!' onClick={() => setCurrentPlaylistPage(pageNumber)}>
-                                {pageNumber}
-                            </a>
-                        </li>
-                    )
-                )}
-            </ul>
-            </div>
-            <div style={{ flex: '1' }}>
-            <table className='table-striped'>
-                <thead>
-                    <tr>
-                        <th>Song Name</th>
-                        <th>Artist</th>
-                        <th>Duration</th>
-                        <th>Play/Pause</th>
-                        {/* <th>Like</th> */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {songsToShow.map((song, index) => (
-                        <tr key={song.id}>
-                            <td>{song.songName}</td>
-                            <td>{song.artistName}</td>
-                            <td>{song.duration}</td>
-                            <td >
-                                <button
-                                    className={`btn ${isPlaying && currentTrack === index ? 'red' : 'green'}`}
-                                    onClick={() => {
-                                        setTrackIndex(index);
-                                        handlePlayPauseToggle(index);
-                                    }}
-                                >
-                                    {isPlaying && currentTrack === index ? (
-                                        <FontAwesomeIcon icon={faPause} />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faPlay} />
-                                    )}
-                                </button>
-                            </td>
-                            {/* <td>
+                                    </td>
+                                    {/* <td>
                                 <button className='btn btn-secondary' onClick={() => handleLike(song.id)}>
                                     <FontAwesomeIcon icon={faThumbsUp} /> Like
                                 </button>
                             </td> */}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-             {/* Pagination for songs */}
-             <ul className='pagination'>
-                {Array.from({ length: Math.ceil(playlist.length / songsPerPage) }, (_, index) => index + 1).map(
-                    (pageNumber) => (
-                        <li
-                            key={pageNumber}
-                            className={`waves-effect ${currentSongPage === pageNumber ? 'active' : ''}`}
-                        >
-                            <a href='#!' onClick={() => setCurrentSongPage(pageNumber)}>
-                                {pageNumber}
-                            </a>
-                        </li>
-                    )
-                )}
-            </ul>
-            <AudioPlayer
-                volume="0.5"
-                preload="off" //enable preloading
-                src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${playlist[currentTrack]?.id}/aws` : ''}
-                showSkipControls
-                onClickPrevious={handleClickPrevious}
-                onClickNext={handleClickNext}
-                onEnded={handleEnd}
-                onPlay={handlePlay}
-                onPause={handlePause}
-                showFilledVolume={true}
-                ref={player}
-            />
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {/* Pagination for songs */}
+                    <ul className='pagination'>
+                        {Array.from({ length: Math.ceil(playlist.length / songsPerPage) }, (_, index) => index + 1).map(
+                            (pageNumber) => (
+                                <li
+                                    key={pageNumber}
+                                    className={`waves-effect ${currentSongPage === pageNumber ? 'active' : ''}`}
+                                >
+                                    <a href='#!' onClick={() => setCurrentSongPage(pageNumber)}>
+                                        {pageNumber}
+                                    </a>
+                                </li>
+                            )
+                        )}
+                    </ul>
+                    <AudioPlayer
+                        volume="0.5"
+                        preload="off" //enable preloading
+                        src={currentSongId != null ? `http://localhost:8080/api/songs/${currentSongId}/aws` : ''}
+                        showSkipControls
+                        onClickPrevious={handleClickPrevious}
+                        onClickNext={handleClickNext}
+                        onEnded={handleEnd}
+                        onPlay={handlePlay}
+                        onPause={handlePause}
+                        showFilledVolume={true}
+                        ref={player}
+                    />
+                </div>
             </div>
-         </div>
-      </div>
+        </div>
     );
-    
+
 }
 
 export default Playlist;
