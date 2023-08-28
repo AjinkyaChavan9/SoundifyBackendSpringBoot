@@ -22,7 +22,8 @@ const PlayerApp = () => {
     const [displayFavorites, setDisplayFavorites] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const songsPerPage = 5;
+    const songsPerPage = 4;
+    const [currentSongId, setCurrentSongId] = useState(null); // Use this to track the current song ID
 
 
     useEffect(() => {
@@ -82,22 +83,47 @@ const PlayerApp = () => {
 
 
 
+    // const handleClickPrevious = () => {
+    //     console.log("click previous");
+    //     setTrackIndex(currentTrack => (currentTrack > 0 ? currentTrack - 1 : songs.length - 1));
+    // };
+
+    // const handleClickNext = () => {
+    //     console.log("click next");
+
+    //     setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+    // };
+
+    // const handleEnd = () => {
+    //     console.log("end");
+
+    //     setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+    // };
+
     const handleClickPrevious = () => {
-        console.log("click previous");
-        setTrackIndex(currentTrack => (currentTrack > 0 ? currentTrack - 1 : songs.length - 1));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const previousIndex = (currentIndex - 1 + filteredSongs.length) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[previousIndex].id);
+        }
     };
-
+    
     const handleClickNext = () => {
-        console.log("click next");
-
-        setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const nextIndex = (currentIndex + 1) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[nextIndex].id);
+        }
     };
 
     const handleEnd = () => {
-        console.log("end");
-
-        setTrackIndex(currentTrack => (currentTrack < songs.length - 1 ? currentTrack + 1 : 0));
+        if (currentSongId !== null) {
+            const currentIndex = filteredSongs.findIndex(song => song.id === currentSongId);
+            const nextIndex = (currentIndex + 1) % filteredSongs.length;
+            setCurrentSongId(filteredSongs[nextIndex].id);
+        }
     };
+    
 
     const handlePlay = () => {
         setIsPlaying(true);
@@ -107,21 +133,37 @@ const PlayerApp = () => {
         setIsPlaying(false);
     };
 
-    const handlePlayPauseToggle = (index) => {
-        if (currentTrack === index) {
-            setIsPlaying(!isPlaying); // Toggle play/pause
+    // const handlePlayPauseToggle = (index) => {
+    //     if (currentTrack === index) {
+    //         setIsPlaying(!isPlaying); // Toggle play/pause
+    //         if (!isPlaying) {
+    //             player.current.audio.current.play(); // Resume playback if toggling to play
+    //         } else {
+    //             player.current.audio.current.pause(); // Pause if toggling to pause
+    //         }
+    //     } else {
+    //         setTrackIndex(index);
+    //         setIsPlaying(true); // Play the clicked track
+    //         player.current.audio.current.play(); // Start playing the new track
+
+    //     }
+    // };
+    const handlePlayPauseToggle = (songId) => {
+        if (currentSongId === songId) {
+            setIsPlaying(!isPlaying); // Toggle play/pause state
+    
             if (!isPlaying) {
                 player.current.audio.current.play(); // Resume playback if toggling to play
             } else {
                 player.current.audio.current.pause(); // Pause if toggling to pause
             }
         } else {
-            setTrackIndex(index);
+            setCurrentSongId(songId); // Update the current song ID
             setIsPlaying(true); // Play the clicked track
             player.current.audio.current.play(); // Start playing the new track
-
         }
     };
+    
 
     const player = useRef();
 
@@ -161,7 +203,7 @@ const PlayerApp = () => {
 
 
     return (
-        <div className={'container-fluid'}>
+        <div className={'container'}>
             <div className="col s6 right-align">
                 <button
                     className={`btn waves-effect waves-light ${displayFavorites ? '' : 'red'}`}
@@ -204,20 +246,12 @@ const PlayerApp = () => {
                             <td>{song.duration}</td>
                             <td >
                                 <button
-                                    className={`btn ${isPlaying && currentTrack === index ? 'red' : 'green'}`}
-                                    onClick={() => {
-                                        setTrackIndex(index);
-                                        handlePlayPauseToggle(index);
-                                    }}
-                                >
-                                    <i className='material-icons'>
-                                        {isPlaying && currentTrack === index ? 'pause' : 'play_arrow'}
-                                    </i>
-                                    {/* {isPlaying && currentTrack === index ? (
-                                        <FontAwesomeIcon icon={faPause} />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faPlay} />
-                                    )} */}
+                                        className={`btn ${isPlaying && currentSongId === song.id ? 'red' : 'green'}`}
+                                        onClick={() => handlePlayPauseToggle(song.id)}
+                                    >
+                                        <i className='material-icons'>
+                                            {isPlaying && currentSongId === song.id ? 'pause' : 'play_arrow'}
+                                        </i>
                                 </button>
                             </td>
                             <td>
@@ -259,7 +293,7 @@ const PlayerApp = () => {
                 preload="off" //enable preloading
                 autoPlay={false} // Set autoPlay to false
                 //preload="auto" //enable preloading
-                src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${songs[currentTrack]?.id}/aws` : ''}
+                src={currentSongId  !== null ? `http://localhost:8080/api/songs/${currentSongId}/aws` : ''}
                 showSkipControls
                 showFilledVolume={true}
                 onClickPrevious={handleClickPrevious}
