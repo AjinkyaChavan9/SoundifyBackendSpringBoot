@@ -10,10 +10,12 @@ import Home from '../Home';
 import Dashboard from './UserDashboard';
 import NotFound from '../NotFound';
 import ProtectedRoute from '../ProtectedRoute';
-
+import Playlist from './Playlist';
 import { SignUp } from './UserSignUp';
 import { UpdateProfile } from './UserProfile';
 import Login from './UserLogin';
+import EditPlaylist from './EditPlaylist';
+
 
 function UserLanding() {
     //debugger;
@@ -58,7 +60,7 @@ function UserLanding() {
 
     }
     return (
-        <div className='container'>
+        <div className='container-fluid'>
             {/* <Header></Header> */}
             <hr></hr>
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
@@ -73,6 +75,7 @@ function UserLanding() {
                         <><Link to="/" >Home</Link>|
                             <Link to="/userdashboard">All Songs</Link>|
                             <Link to="/userprofile">Profile</Link>|
+                            <Link to="/playlist">Playlist</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
             </div>
@@ -85,6 +88,8 @@ function UserLanding() {
                     <Route path="userprofile" element={<UpdateProfile />} />
                     <Route path="userlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="userregister" element={<SignUp />} />
+                    <Route path="playlist" element={<Playlist/>}></Route>
+                    <Route path="/EditPlaylist" element={<EditPlaylist />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

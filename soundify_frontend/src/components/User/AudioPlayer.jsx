@@ -105,7 +105,7 @@ const PlayerApp = () => {
             </table>
             <AudioPlayer
                 volume="0.5"
-                preload="auto" //enable preloading
+                preload="off" //enable preloading
                 src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${songs[currentTrack]?.id}/aws` : ''}
                 showSkipControls
                 onClickPrevious={handleClickPrevious}
