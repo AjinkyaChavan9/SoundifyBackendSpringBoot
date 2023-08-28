@@ -61,7 +61,7 @@ function ArtistLanding() {
                     const blob = new Blob([response.data], { type: response.headers['content-type'] });
                     const imageUrl = URL.createObjectURL(blob);
                     setProfileImage(imageUrl);
-                    
+
                 }
             } catch (error) {
                 console.error('Error fetching profile image', error);
@@ -70,15 +70,16 @@ function ArtistLanding() {
             }
         };
 
-       
+
         fetchProfileImage();
-        
+
     }, [artistId, artistIsLoggedInLanding]);
 
-   
+
 
 
     const LogOut = () => {
+        window.sessionStorage.clear();
         window.sessionStorage.setItem("artistIsLoggedIn", "false");
         window.sessionStorage.setItem("firstName", "");
         window.sessionStorage.setItem("id", "");
@@ -121,7 +122,7 @@ function ArtistLanding() {
                                                 }}
                                             />
                                         </>
-                                    )} 
+                                    )}
                                 </>
 
                                 <Link to="/">Home</Link>|
@@ -146,7 +147,7 @@ function ArtistLanding() {
                     <Route path="/uploadpic/:artistId" element={<ArtistUploadProfilePic />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
-                    <Route path="landing" element={< Landing/>} />
+                    <Route path="landing" element={< Landing />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

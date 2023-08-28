@@ -39,7 +39,7 @@ function AdminLanding() {
     }, [userIsLoggedInLanding])
 
     var LogOut = () => {
-       // debugger;
+        // debugger;
 
         window.sessionStorage.setItem("userIsLoggedIn", "false");
         // var isLogged =  window.sessionStorage.getItem("userIsLoggedIn")
@@ -53,7 +53,7 @@ function AdminLanding() {
 
     }
     return (
-        <div className='container'>
+        <div className='container-fluid'>
             {/* <Header></Header> */}
             <hr></hr>
             <div style={{ fontSize: "x-large", textAlign: "center" }}>
@@ -61,7 +61,7 @@ function AdminLanding() {
 
                 {userIsLoggedInLanding == "false" ?
                     (<> <button className='btn waves-effect waves-light '
-                            onClick={LogIn}>Login</button> </>)
+                        onClick={LogIn}>Login</button> </>)
                     : (
                         <><Link to="/" >Home</Link>|
                             <Link to="/admindashboard">Admin DashBoard</Link>|
