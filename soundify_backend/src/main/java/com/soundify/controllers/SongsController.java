@@ -143,8 +143,8 @@ public class SongsController {
 		return duration;
 	}
 
-	@PostMapping(value = "/songfile", consumes = MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> uploadSongFileOnServer(@RequestBody MultipartFile songFile, @RequestParam String songName,
+	@PostMapping(value = "/songfile/{artistId}", consumes = MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> uploadSongFileOnServer(@PathVariable Long artistId, @RequestBody MultipartFile songFile, @RequestParam String songName,
 			@RequestParam String releaseDate, @RequestParam String duration) throws IOException, Exception {
 		// String duration = getDuration(songFile);
 
@@ -154,7 +154,7 @@ public class SongsController {
 		songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
 		System.out.println("in song upload " + songmetadata);
 		// invoke image service method
-		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile));
+		return ResponseEntity.status(HttpStatus.CREATED).body(songService.uploadSongOnServer(songmetadata, songFile, artistId));
 	}
 
 	@DeleteMapping(value = "/songfile")

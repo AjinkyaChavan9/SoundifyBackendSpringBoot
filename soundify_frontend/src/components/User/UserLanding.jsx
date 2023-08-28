@@ -70,8 +70,9 @@ function UserLanding() {
                         <button className='btn waves-effect waves-light '
                             onClick={LogIn}>Login</button> </>)
                     : (
-                        <><Link to="/" >Home</Link>|
-                            <Link to="/userdashboard">All Songs</Link>|
+                        <>
+                        {/* <Link to="/" >Home</Link>| */}
+                            <Link to="/userdashboard">Home</Link>|
                             <Link to="/userprofile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
                                 onClick={LogOut}>Logout</button></>)}
@@ -80,7 +81,7 @@ function UserLanding() {
             <hr></hr>
             <Routes>
                 <Route path="/" element={<Outlet />}>
-                    <Route index element={<Home />} />
+                    <Route index element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="userdashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="userprofile" element={<UpdateProfile />} />
                     <Route path="userlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
