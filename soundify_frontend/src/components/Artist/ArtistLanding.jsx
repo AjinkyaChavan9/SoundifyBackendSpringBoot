@@ -141,10 +141,10 @@ function ArtistLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="artistdashboard" element={<ArtistDashboard artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
-                    <Route path="artistprofile" element={<UpdateProfile />} />
-                    <Route path="/upload/:artistId" element={<ArtistUploadSong />} />
-                    <Route path="/uploadpic/:artistId" element={<ArtistUploadProfilePic />} />
+                    <Route path="artistdashboard" element={<ProtectedArtist Component={ArtistDashboard}/>} />
+                    <Route path="artistprofile" element={<ProtectedArtist Component={UpdateProfile}/>} />
+                    <Route path="/upload/:artistId" element={<ProtectedArtist Component={ArtistUploadSong}/>} />
+                    <Route path="/uploadpic/:artistId" element={<ProtectedArtist Component={ArtistUploadProfilePic}/>} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
                     <Route path="landing" element={< Landing />} />

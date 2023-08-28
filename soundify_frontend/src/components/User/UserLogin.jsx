@@ -26,36 +26,6 @@ function Login(props) {
 
     }
 
-    // var SignIn = () => {
-    //     // debugger;
-    //     var helper = new XMLHttpRequest();
-    //     helper.onreadystatechange = () => {
-
-    //         if (helper.readyState == 4 && helper.status == 200) {
-    //             debugger;
-    //             var result = JSON.parse(helper.responseText)
-    //             console.log(result);
-
-    //             if (result.status == 'success') {
-    //                 window.sessionStorage.setItem("userIsLoggedIn", "true");
-    //                 props.changeUserIsLoggedInLanding();
-    //                 window.sessionStorage.setItem("email", credentials.email);
-    //                 window.sessionStorage.setItem("id", result.data[0].id);
-
-    //                 history.push("/dashboard");
-
-    //             }
-    //             else {
-    //                 ShowMessage("Credentials Invalid")
-    //             }
-    //         }
-    //     }
-    //     helper.open("POST", "http://127.0.0.1:8080/api/user/login");
-    //     helper.setRequestHeader("content-type", "application/json")
-    //     helper.send(JSON.stringify(credentials))
-
-
-    // }
     const SignIn = () => {
         axios
             .post("http://localhost:8080/api/users/signin", credentials, {
@@ -66,7 +36,7 @@ function Login(props) {
                 console.log(result);
 
                 if (result.status == "success") {
-                    window.sessionStorage.setItem("userIsLoggedIn", "true");
+                    window.sessionStorage.setItem("userIsLoggedIn","true");
                     props.changeUserIsLoggedInLanding();
                     window.sessionStorage.setItem("email", credentials.email);
                     window.sessionStorage.setItem("id", result.responseObj.id);

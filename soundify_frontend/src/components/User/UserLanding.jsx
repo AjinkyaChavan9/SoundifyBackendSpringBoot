@@ -9,19 +9,21 @@ import Home from '../Home';
 // import Contact from './Contact';
 import Dashboard from './UserDashboard';
 import NotFound from '../NotFound';
-import ProtectedRoute from '../ProtectedRoute';
+
 import Playlist from './Playlist';
 import { SignUp } from './UserSignUp';
 import { UpdateProfile } from './UserProfile';
 import Login from './UserLogin';
 import EditPlaylist from './EditPlaylist';
+import ProtectedUser from './ProtectedUser';
+import Landing from '../Landing';
 
 
 function UserLanding() {
     //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
     // useState(window.sessionStorage.getItem("userIsLoggedIn"))
-
+   // window.sessionStorage.setItem("userIsLoggedIn", "false");
 
     var navigate = useNavigate();
 
@@ -84,13 +86,14 @@ function UserLanding() {
             <hr></hr>
             <Routes>
                 <Route path="/" element={<Outlet />}>
-                    <Route index element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="userdashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="userprofile" element={<UpdateProfile />} />
+                    <Route index element={<Dashboard />} />
+                    <Route path="userdashboard" element={<ProtectedUser Component={Dashboard}/>} />
+                    <Route path="userprofile" element={<ProtectedUser Component={UpdateProfile} />} />
                     <Route path="userlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="userregister" element={<SignUp />} />
-                    <Route path="playlist" element={<Playlist/>}></Route>
-                    <Route path="/EditPlaylist" element={<EditPlaylist />} />
+                    <Route path="userregister" element={<SignUp />}/>
+                    <Route path="playlist" element={<ProtectedUser Component={Playlist} />}/>
+                    <Route path="editPlaylist" element={<ProtectedUser Component={EditPlaylist}/>}/>
+                    <Route path="landing" element={<Landing/>}/>
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
