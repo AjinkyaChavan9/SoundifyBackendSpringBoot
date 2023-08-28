@@ -83,8 +83,8 @@ public class UserController {
 		return ResponseEntity.ok("Artist Unfollowed successfully");
 	}
 
-	@PostMapping("/{userId}/playlist/")
-	public ResponseEntity<?> createPlaylist(@PathVariable Long userId, @RequestBody String playlistName) {
+	@PostMapping("/{userId}/playlist/{playlistName}")
+	public ResponseEntity<?> createPlaylist(@PathVariable Long userId, @PathVariable String playlistName) {
 		PlaylistResponseDTO response = userService.createPlaylist(userId, playlistName);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
@@ -92,7 +92,7 @@ public class UserController {
 	@DeleteMapping("/{userId}/playlist/{playlistId}")
 	public ResponseEntity<?> deletePlaylist(@PathVariable Long userId, @PathVariable Long playlistId) {
 		userService.deletePlaylist(userId, playlistId);
-		return ResponseEntity.ok("Playlist Deleted successfully");
+		return ResponseEntity.ok(new ApiResponse("success","playlist Deleted Successfully"));
 	}
 
 	@GetMapping("/{userId}")

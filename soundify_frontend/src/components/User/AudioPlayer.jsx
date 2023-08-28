@@ -256,6 +256,7 @@ const PlayerApp = () => {
 
             <AudioPlayer
                 volume="0.5"
+                preload="off" //enable preloading
                 autoPlay={false} // Set autoPlay to false
                 //preload="auto" //enable preloading
                 src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${songs[currentTrack]?.id}/aws` : ''}
