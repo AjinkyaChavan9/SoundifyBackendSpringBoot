@@ -12,7 +12,7 @@ public interface SongFileHandlingService {
 	// add a method to upload bin content to server side folder
 	// 1st arg : song id
 	// 2nd arg : represents uploaded file contents received in multipart request
-	ApiResponse uploadSongOnServer(SongMetadataUploadDTO songmetadata, MultipartFile file) throws IOException;
+	ApiResponse uploadSongOnServer(SongMetadataUploadDTO songmetadata, MultipartFile file, Long artistId) throws IOException;
 
 	byte[] downloadSong(Long songId) throws IOException;
 

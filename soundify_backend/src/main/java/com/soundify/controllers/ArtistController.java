@@ -3,6 +3,7 @@ package com.soundify.controllers;
 import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 import java.io.IOException;
 import java.sql.Time;
@@ -132,6 +133,21 @@ public class ArtistController {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry coudn't upload your file");
 	}
+	
+	@PostMapping(value = "/songfile/{artistId}", consumes = MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> uploadSongFileOnServer(@PathVariable Long artistId, @RequestBody MultipartFile songFile, @RequestParam String songName,
+			@RequestParam String releaseDate, @RequestParam String duration) throws IOException, Exception {
+		// String duration = getDuration(songFile);
+
+		SongMetadataUploadDTO songmetadata = new SongMetadataUploadDTO();
+		songmetadata.setSongName(songName);
+		songmetadata.setDuration(Time.valueOf(duration));
+		songmetadata.setReleaseDate(LocalDate.parse(releaseDate));
+		System.out.println("in song upload " + songmetadata);
+		// invoke image service method
+		return ResponseEntity.status(HttpStatus.CREATED).body(songFileService.uploadSongOnServer(songmetadata, songFile, artistId));
+	}
+
 
 	@GetMapping("/{artistId}/song")
 	public ResponseEntity<?> getAllSongsOfArtist(@PathVariable Long artistId) {

@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.1",
+    "material-icons": "^1.13.10",
     "materialize-css": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

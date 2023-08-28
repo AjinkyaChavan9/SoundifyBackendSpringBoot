@@ -27,10 +27,8 @@ function UserDashboard() {
     return (
 
         <>
-        <div className='container'>
-            Dashboard Component
-        </div>
-        <div className="container">
+        
+        <div className="container-fluid">
     
       
         <div>
