@@ -34,7 +34,7 @@ public class AdminController {
 	GenreService genreService;
 
 	@GetMapping("/artists")
-	public ResponseEntity<?> getAllAtrists() {
+	public ResponseEntity<?> getAllArtists() {
 
 		return ResponseEntity.ok(artistService.getArtists());
 	}
