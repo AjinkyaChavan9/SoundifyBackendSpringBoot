@@ -228,25 +228,26 @@ public class ArtistServiceImpl implements ArtistService {
 //		artist.getFollowers().clear(); // Clear the followers set in the artist
 //	    artist = artDao.save(artist);
 
-		
-//		while (iterator.hasNext()) {
-//		    Song song = iterator.next();
-//		    if (song.getSongPath().contains(songFolderLocationS3))
-//		        songFileHandlingService.deleteSongOnS3(song.getId());
-//		    else
-//		        songFileHandlingService.deleteSongOnServer(song.getId());
-//		    iterator.remove(); // Remove the current song from the list
-//		}
-		
 		List<Song> songs = artist.getSongs();
-		List<Song> songsToRemove = new ArrayList<>();
-		songs.forEach((song) -> {//java.util.ConcurrentModificationException
-			if (song.getSongPath().contains(songFolderLocationS3))
-				songFileHandlingService.deleteSongOnS3(song.getId());
-			else
-				songFileHandlingService.deleteSongOnServer(song.getId());
-			
-		});
+		Iterator<Song> iterator = songs.iterator() ;
+		while (iterator.hasNext()) {
+		    Song song = iterator.next();
+		    if (song.getSongPath().contains(songFolderLocationS3))
+		        songFileHandlingService.deleteSongOnS3(song.getId());
+		    else
+		        songFileHandlingService.deleteSongOnServer(song.getId());
+		    iterator.remove(); // Remove the current song from the list
+		}
+		
+//		List<Song> songs = artist.getSongs();
+//		List<Song> songsToRemove = new ArrayList<>();
+//		songs.forEach((song) -> {//java.util.ConcurrentModificationException
+//			if (song.getSongPath().contains(songFolderLocationS3))
+//				songFileHandlingService.deleteSongOnS3(song.getId());
+//			else
+//				songFileHandlingService.deleteSongOnServer(song.getId());
+//			
+//		});
 		
 
 
