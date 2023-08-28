@@ -214,8 +214,12 @@ public class UserServiceImpl implements UserService {
 		if (likedSongs.isEmpty()) {
 			throw new ResourceNotFoundException("No liked songs found for given user.");
 		}
-		return likedSongs.stream().map(song -> mapper.map(song, SongDTO.class)).collect(Collectors.toSet());
-
+		//return likedSongs.stream().map(song -> mapper.map(song, SongDTO.class)).collect(Collectors.toSet());
+		return likedSongs.stream().map((song) -> {
+			SongDTO songDTO = mapper.map(song, SongDTO.class);
+			songDTO.setArtistName(song.getArtist().getName());
+			return songDTO;
+		}).collect(Collectors.toSet());
 	}
 
 }

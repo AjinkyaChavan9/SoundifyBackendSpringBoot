@@ -90,7 +90,7 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 	}
 
 	@Override
-	public ApiResponse uploadSongOnServer(SongMetadataUploadDTO songMetadata, MultipartFile file) throws IOException {
+	public ApiResponse uploadSongOnServer(SongMetadataUploadDTO songMetadata, MultipartFile file, Long artistId) throws IOException {
 		// chk if song exists by id
 
 		Song song = songDao.save(mapper.map(songMetadata, Song.class));
@@ -108,6 +108,9 @@ public class SongFileHandlingServiceImpl implements SongFileHandlingService {
 		// file saved successfully !
 		// set image path in db
 		song.setSongPath(path);
+		song.setArtist(
+				artistdao.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("Artist Not Found!!")));
+		
 
 		return new ApiResponse("success","SongFile uploaded n stored in server side folder");
 
