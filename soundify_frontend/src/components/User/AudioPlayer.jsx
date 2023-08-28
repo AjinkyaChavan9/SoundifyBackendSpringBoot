@@ -1,6 +1,6 @@
 //import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import ReactH5AudioPlayer from 'react-h5-audio-player';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'react-h5-audio-player/lib/styles.css';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +20,9 @@ const PlayerApp = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [likedSongs, setLikedSongs] = useState([]);
     const [displayFavorites, setDisplayFavorites] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const songsPerPage = 5;
 
 
     useEffect(() => {
@@ -107,11 +110,20 @@ const PlayerApp = () => {
     const handlePlayPauseToggle = (index) => {
         if (currentTrack === index) {
             setIsPlaying(!isPlaying); // Toggle play/pause
+            if (!isPlaying) {
+                player.current.audio.current.play(); // Resume playback if toggling to play
+            } else {
+                player.current.audio.current.pause(); // Pause if toggling to pause
+            }
         } else {
             setTrackIndex(index);
             setIsPlaying(true); // Play the clicked track
+            player.current.audio.current.play(); // Start playing the new track
+
         }
     };
+
+    const player = useRef();
 
     // const handleTablePause = () => {
     //     setIsPlaying(false); // Pause when the pause button in the table is clicked
@@ -119,6 +131,32 @@ const PlayerApp = () => {
     const handleToggleFavorites = () => {
         setDisplayFavorites(!displayFavorites);
     };
+
+
+    //Search/Pagination Logic
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+        setCurrentPage(1); // Reset page when search query changes
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const filteredSongs = songs.filter(song => {
+        const normalizedSearch = searchQuery.toLowerCase();
+        return (
+            song.songName.toLowerCase().includes(normalizedSearch) ||
+            song.artistName.toLowerCase().includes(normalizedSearch)
+        );
+    });
+
+    const startIndex = (currentPage - 1) * songsPerPage;
+    const endIndex = startIndex + songsPerPage;
+    const songsToShow = filteredSongs.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
 
 
 
@@ -133,6 +171,17 @@ const PlayerApp = () => {
                 </button>
             </div>
 
+            {/* Search input */}
+            <div className="input-field col s6">
+                <input
+                    id="search"
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+                <label htmlFor="search">Search</label>
+            </div>
+
             <table className='table-striped'>
                 <thead>
                     <tr>
@@ -144,7 +193,7 @@ const PlayerApp = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {songs.map((song, index) => {
+                    {songsToShow.map((song, index) => {
                         const isLiked = likedSongs.includes(song.id);
                         if (displayFavorites && !isLiked) {
                             return null; // Skip rendering if not a favorite
@@ -194,17 +243,30 @@ const PlayerApp = () => {
                 </tbody>
             </table>
 
+             {/* Pagination */}
+             <ul className="pagination">
+                {pageNumbers.map((page) => (
+                    <li key={page} className={`waves-effect ${currentPage === page ? 'active' : ''}`}>
+                        <a href="#!" onClick={() => handlePageChange(page)}>
+                            {page}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+
             <AudioPlayer
                 volume="0.5"
                 autoPlay={false} // Set autoPlay to false
                 //preload="auto" //enable preloading
                 src={currentTrack >= 0 ? `http://localhost:8080/api/songs/${songs[currentTrack]?.id}/aws` : ''}
                 showSkipControls
+                showFilledVolume={true}
                 onClickPrevious={handleClickPrevious}
                 onClickNext={handleClickNext}
                 onEnded={handleEnd}
                 onPlay={handlePlay}
                 onPause={handlePause}
+                ref={player}
             />
         </div>
     );
