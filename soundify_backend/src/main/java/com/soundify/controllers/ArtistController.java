@@ -50,7 +50,7 @@ import com.soundify.dtos.song.SongUpdateMetadataDTO;
 
 @RestController
 @RequestMapping("/api/artists")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 
 public class ArtistController {
 

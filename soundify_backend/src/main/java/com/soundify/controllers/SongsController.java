@@ -49,7 +49,7 @@ import com.soundify.services.SongService;
 
 @RestController // =@Controller at cls level + @ResponseBody added over ret
 @RequestMapping("/api/songs")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class SongsController {
 	@Value("${cloud.aws.credentials.access-key}")
 	private String accessKeyId;
