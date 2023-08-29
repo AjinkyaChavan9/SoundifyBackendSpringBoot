@@ -17,6 +17,7 @@ import AllUsers from './AllUsers';
 import AllArtists from './AllArtists';
 import AllGenres from './AllGenres';
 import ProtectedAdmin from './ProtectedAdmin';
+import UserDashboard from '../User/UserDashboard';
 function AdminLanding() {
     //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
@@ -65,7 +66,7 @@ function AdminLanding() {
                     (<> <button className='btn waves-effect waves-light '
                         onClick={LogIn}>Login</button> </>)
                     : (
-                        <><Link to="/" >Home</Link>|
+                        <><Link to="/userdashboard" >Home</Link>|
                             <Link to="/admindashboard">Admin DashBoard</Link>|
                             <Link to="/adminprofile">Profile</Link>|
                             <button className='btn waves-effect waves-light #e53935 red darken-1 btn-danger'
@@ -77,6 +78,7 @@ function AdminLanding() {
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
                     <Route path="admindashboard" element={<ProtectedAdmin Component={Dashboard}/>} />
+                    <Route path="userdashboard" element={<ProtectedAdmin Component={UserDashboard} />} />
                     <Route path="adminprofile" element={<ProtectedAdmin Component={AdminProfile}/>} />
                     <Route path="adminlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="admindashboard/users" element={<ProtectedAdmin Component={AllUsers}/>} />
