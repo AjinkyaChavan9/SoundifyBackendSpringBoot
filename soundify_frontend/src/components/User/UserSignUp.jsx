@@ -97,7 +97,7 @@ export const SignUp = () => {
           <input id="lastName" name="lastName" type="text" className="validate"
             value={credentials.lastName}
             onChange={OnTextChange} />
-          <label htmlForfor="lastName">Last Name</label>
+          <label htmlFor="lastName">Last Name</label>
         </div>
 
       </div>
@@ -134,7 +134,7 @@ export const SignUp = () => {
           </div>
 
           <div className="input-field col s6">
-            <input id="confirmPassword" name="confirmPassword" type="password" class="validate"
+            <input id="confirmPassword" name="confirmPassword" type="password" className="validate"
               value={credentials.confirmPassword}
               onChange={OnTextChange} />
             <label htmlFor="password">Confirm Password</label>
