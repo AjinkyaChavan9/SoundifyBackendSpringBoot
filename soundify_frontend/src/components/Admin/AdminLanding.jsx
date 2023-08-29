@@ -9,13 +9,14 @@ import Home from '../Home';
 // import Contact from './Contact';
 import Dashboard from './AdminDashboard';
 import NotFound from '../NotFound';
-import ProtectedRoute from '../ProtectedRoute';
+
 
 import Login from './AdminLogin';
 import { AdminProfile } from './AdminProfile';
 import AllUsers from './AllUsers';
 import AllArtists from './AllArtists';
 import AllGenres from './AllGenres';
+import ProtectedAdmin from './ProtectedAdmin';
 function AdminLanding() {
     //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
@@ -74,12 +75,12 @@ function AdminLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="admindashboard" element={<Dashboard userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="adminprofile" element={<AdminProfile />} />
+                    <Route path="admindashboard" element={<ProtectedAdmin Component={Dashboard}/>} />
+                    <Route path="adminprofile" element={<ProtectedAdmin Component={AdminProfile}/>} />
                     <Route path="adminlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="admindashboard/users" element={<AllUsers />} />
-                    <Route path="admindashboard/artists" element={<AllArtists />} />
-                    <Route path="admindashboard/genres" element={<AllGenres />} />
+                    <Route path="admindashboard/users" element={<ProtectedAdmin Component={AllUsers}/>} />
+                    <Route path="admindashboard/artists" element={<ProtectedAdmin Component={AllArtists}/>} />
+                    <Route path="admindashboard/genres" element={AllGenres} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
