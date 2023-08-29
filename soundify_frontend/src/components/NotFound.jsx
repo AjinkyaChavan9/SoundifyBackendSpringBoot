@@ -1,7 +1,7 @@
 function NotFound() {
     //debugger;
     return (<div>
-        <h1>Not Found</h1>
+       <center><h1>Welcome To Soundify</h1></center> 
     </div> );
 }
 
