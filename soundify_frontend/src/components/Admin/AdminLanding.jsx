@@ -49,7 +49,8 @@ function AdminLanding() {
 
         changeUserIsLoggedInLanding();
 
-        navigate("/adminlogin");
+        //navigate("/");
+        window.location.href = "/";
 
 
     }
@@ -80,7 +81,7 @@ function AdminLanding() {
                     <Route path="adminlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
                     <Route path="admindashboard/users" element={<ProtectedAdmin Component={AllUsers}/>} />
                     <Route path="admindashboard/artists" element={<ProtectedAdmin Component={AllArtists}/>} />
-                    <Route path="admindashboard/genres" element={AllGenres} />
+                    <Route path="admindashboard/genres" element={<ProtectedAdmin Component={AllGenres}/>} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

@@ -11,7 +11,7 @@ import Landing from '../Landing';
 import ArtistUploadProfilePic from './ArtistUploadProfilePic';
 import axios from 'axios';
 import defaultProfileImage from './assets/singer-avatar.webp'
-
+import ProtectedArtist from './ProtectedArtist';
 import ArtistDashboard from './ArtistDashboard';
 
 
@@ -86,7 +86,8 @@ function ArtistLanding() {
         window.sessionStorage.setItem("email", "");
 
         changeArtistIsLoggedInLanding();
-        navigate("/landing");
+        //navigate("/");
+        window.location.href = "/";
     };
 
     return (
@@ -141,10 +142,10 @@ function ArtistLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Home />} />
-                    <Route path="artistdashboard" element={<ProtectedArtist Component={ArtistDashboard}/>} />
-                    <Route path="artistprofile" element={<ProtectedArtist Component={UpdateProfile}/>} />
-                    <Route path="/upload/:artistId" element={<ProtectedArtist Component={ArtistUploadSong}/>} />
-                    <Route path="/uploadpic/:artistId" element={<ProtectedArtist Component={ArtistUploadProfilePic}/>} />
+                    <Route path="artistdashboard" element={<ProtectedArtist Component={ArtistDashboard} />} />
+                    <Route path="artistprofile" element={<ProtectedArtist Component={UpdateProfile} />} />
+                    <Route path="/upload/:artistId" element={<ProtectedArtist Component={ArtistUploadSong} />} />
+                    <Route path="/uploadpic/:artistId" element={<ProtectedArtist Component={ArtistUploadProfilePic} />} />
                     <Route path="artistlogin" element={<Login artistIsLoggedInLanding={artistIsLoggedInLanding} changeArtistIsLoggedInLanding={changeArtistIsLoggedInLanding} />} />
                     <Route path="artistregister" element={<SignUp />} />
                     <Route path="landing" element={< Landing />} />

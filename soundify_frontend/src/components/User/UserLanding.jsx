@@ -23,7 +23,7 @@ function UserLanding() {
     //debugger;
     const [userIsLoggedInLanding, setUserIsLoggedInLanding] = useState("false");
     // useState(window.sessionStorage.getItem("userIsLoggedIn"))
-   // window.sessionStorage.setItem("userIsLoggedIn", "false");
+    // window.sessionStorage.setItem("userIsLoggedIn", "false");
 
     var navigate = useNavigate();
 
@@ -57,7 +57,8 @@ function UserLanding() {
 
         changeUserIsLoggedInLanding();
 
-        navigate("/landing");
+        //navigate("/");
+        window.location.href = "/";
 
 
     }
@@ -75,7 +76,7 @@ function UserLanding() {
                             onClick={LogIn}>Login</button> </>)
                     : (
                         <>
-                        {/* <Link to="/" >Home</Link>| */}
+                            {/* <Link to="/" >Home</Link>| */}
                             <Link to="/userdashboard">Home</Link>|
                             <Link to="/userprofile">Profile</Link>|
                             <Link to="/playlist">Playlist</Link>|
@@ -87,13 +88,13 @@ function UserLanding() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<Dashboard />} />
-                    <Route path="userdashboard" element={<ProtectedUser Component={Dashboard}/>} />
+                    <Route path="userdashboard" element={<ProtectedUser Component={Dashboard} />} />
                     <Route path="userprofile" element={<ProtectedUser Component={UpdateProfile} />} />
                     <Route path="userlogin" element={<Login userIsLoggedInLanding={userIsLoggedInLanding} changeUserIsLoggedInLanding={changeUserIsLoggedInLanding} />} />
-                    <Route path="userregister" element={<SignUp />}/>
-                    <Route path="playlist" element={<ProtectedUser Component={Playlist} />}/>
-                    <Route path="editPlaylist" element={<ProtectedUser Component={EditPlaylist}/>}/>
-                    <Route path="landing" element={<Landing/>}/>
+                    <Route path="userregister" element={<SignUp />} />
+                    <Route path="playlist" element={<ProtectedUser Component={Playlist} />} />
+                    <Route path="editPlaylist" element={<ProtectedUser Component={EditPlaylist} />} />
+                    <Route path="landing" element={<Landing />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
