@@ -20,7 +20,7 @@ import com.soundify.services.PlaylistService;
 
 @RestController
 @RequestMapping("/api/playlists")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class PlaylistController {
 
 	@Autowired

@@ -16,7 +16,7 @@ import com.soundify.services.GenreService;
 
 @RestController
 @RequestMapping("/api/genre")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class GenreController {
 
 	@Autowired
