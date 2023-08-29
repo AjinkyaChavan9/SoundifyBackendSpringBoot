@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom'; // Import Routes, Route, and Link from react-router-dom
+import { Routes, Route, Link, useLocation } from 'react-router-dom'; // Import Routes, Route, and Link from react-router-dom
 import AllUsers from './AllUsers'; // Import the AllUsers component
 import ArtistLanding from '../Artist/ArtistLanding';
 //import GenreLanding from '../Genre/GenreLanding'; // Make sure to import GenreLanding if needed
 
 function AdminDashboard({ adminName }) {
-  const [activeSection, setActiveSection] = useState('users');
+  //const [activeSection, setActiveSection] = useState('users');
+  const location = useLocation();
+
+  const getActiveSection = (path) => {
+    if (path.startsWith('/admindashboard/users')) {
+      return 'users';
+    } else if (path.startsWith('/admindashboard/artists')) {
+      return 'artists';
+    } else if (path.startsWith('/admindashboard/genres')) {
+      return 'genres';
+    }
+    return '';
+  };
+
+  const [activeSection, setActiveSection] = useState(getActiveSection(location.pathname));
+
 
   const handleSectionChange = (section) => {
     setActiveSection(section);
@@ -54,6 +69,7 @@ function AdminDashboard({ adminName }) {
               </li>
             </ul>
           </div>
+          
         </div>
       </nav>
       <main className="container mt-4">

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import ArtistLandingComponent from './Artist/ArtistLanding';
 import UserLandingComponent from './User/UserLanding';
@@ -10,7 +10,17 @@ import Header from './Header';
 
 function Landing() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [selectedRole, setSelectedRole] = useState(null);
+  //const [reloadKey, setReloadKey] = useState(0); // Add a reload key
+
+  // useEffect(() => {
+  //   // Check if the route path is '/'
+  //   if (location.pathname == '/landing') {
+  //     setReloadKey(prevKey => prevKey + 1); // Update the reload key
+  //   }
+  // }, [location.pathname]);
 
   // Click handler for the User button
   const handleUserButtonClick = () => {
@@ -30,7 +40,7 @@ function Landing() {
   };
 
   return (
-    <>
+    <div >
       <Header />
       <div className='container'  
       // style={{
@@ -73,7 +83,7 @@ function Landing() {
         {selectedRole === 'admin' && <AdminLandingComponent />}
         <hr></hr>
       </div>
-    </>
+    </div>
   );
 }
 
