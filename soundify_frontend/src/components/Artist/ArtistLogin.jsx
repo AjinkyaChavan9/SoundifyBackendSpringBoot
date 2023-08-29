@@ -29,7 +29,7 @@ function ArtistLogin(props) {
     
     const SignIn = () => {
         axios
-            .post("http://localhost:8080/api/artists/signin", credentials, {
+            .post("/api/artists/signin", credentials, {
                 headers: { "content-type": "application/json" },
             })
             .then((response) => {

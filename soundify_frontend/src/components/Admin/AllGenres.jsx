@@ -16,7 +16,7 @@ function GenreDashboard() {
 
     const fetchGenres = () => {
         //console.log("genre id", genreId);
-        axios.get('http://127.0.0.1:8080/api/genre') // Adjust the API endpoint
+        axios.get('/api/genre') // Adjust the API endpoint
             .then(response => {
                 setGenres(response.data);
             })
@@ -25,7 +25,7 @@ function GenreDashboard() {
             });
     };
     const handleAdd = () => {
-        axios.post('http://localhost:8080/api/admin/genre', null, {
+        axios.post('/api/admin/genre', null, {
             params: {
                 genreName: newGenreName
             }
@@ -48,7 +48,7 @@ function GenreDashboard() {
     };
 
     const handleSave = (genreId) => {
-        axios.put(`http://localhost:8080/api/admin/genre/${genreId}`, null, {
+        axios.put(`/api/admin/genre/${genreId}`, null, {
             params: {
                 updatedGenreName: updatedGenreName
             }

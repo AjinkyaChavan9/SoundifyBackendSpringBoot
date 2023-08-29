@@ -1,0 +1,10 @@
+[dev]
+  command = "npm run dev"  # Change this to your frontend start command
+  functions = "functions"
+  port = 3000
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:8080/api/:splat"
+  status = 200
+  force = true

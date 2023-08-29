@@ -18,7 +18,7 @@ export default function EditPlaylist() {
 
      useEffect(() => {
      // Fetch songs from the API
-     fetch('http://localhost:8080/api/songs/songs')
+     fetch('/api/songs/songs')
      .then(response => response.json())
      .then(data => {
       setSongs(data);
@@ -29,7 +29,7 @@ export default function EditPlaylist() {
 
     useEffect(() => {
         // Fetch playlist from the API
-        fetch(`http://localhost:8080/api/playlists/songs/${playlistId}`)
+        fetch(`/api/playlists/songs/${playlistId}`)
         .then(response => response.json())
         .then(data => {
          setPlaylist(data);
@@ -39,7 +39,7 @@ export default function EditPlaylist() {
        }, []);
 
     const refresh = () => {
-        fetch(`http://localhost:8080/api/playlists/songs/${playlistId}`)
+        fetch(`/api/playlists/songs/${playlistId}`)
         .then(response => response.json())
         .then(data => {
          setPlaylist(data);
@@ -50,7 +50,7 @@ export default function EditPlaylist() {
    
 
     const addToPlaylist = (songId) =>{
-        axios.post(`http://localhost:8080/api/playlists/${playlistId}/song/${songId}`, {
+        axios.post(`/api/playlists/${playlistId}/song/${songId}`, {
             headers: { "content-type": "application/json" },
         }).then((response) => {
             const result = response.data;
@@ -69,7 +69,7 @@ export default function EditPlaylist() {
     }
 
     const removeFromPlaylist = (songId) =>{
-        axios.delete(`http://localhost:8080/api/playlists/${playlistId}/song/${songId}`, {
+        axios.delete(`/api/playlists/${playlistId}/song/${songId}`, {
             headers: { "content-type": "application/json" },
         }).then((response) => {
             const result = response.data;

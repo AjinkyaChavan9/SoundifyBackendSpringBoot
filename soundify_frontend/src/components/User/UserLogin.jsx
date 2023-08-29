@@ -28,7 +28,7 @@ function Login(props) {
 
     const SignIn = () => {
         axios
-            .post("http://localhost:8080/api/users/signin", credentials, {
+            .post("/api/users/signin", credentials, {
                 headers: { "content-type": "application/json" },
             })
             .then((response) => {

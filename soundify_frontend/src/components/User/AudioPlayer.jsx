@@ -28,7 +28,7 @@ const PlayerApp = () => {
 
     useEffect(() => {
         // Fetch songs from the API
-        fetch('http://localhost:8080/api/songs/songs')
+        fetch('/api/songs/songs')
             .then(response => response.json())
             .then(data => {
                 setSongs(data);
@@ -45,7 +45,7 @@ const PlayerApp = () => {
     const fetchLikedSongs = () => {
         const userId = window.sessionStorage.getItem("id");
 
-        axios.get(`http://localhost:8080/api/users/${userId}/liked-songs`)
+        axios.get(`/api/users/${userId}/liked-songs`)
             .then(response => {
                 const likedSongIds = response.data.map(song => song.id);
                 setLikedSongs(likedSongIds);
@@ -58,7 +58,7 @@ const PlayerApp = () => {
     const handleLike = (songId) => {
         const userId = window.sessionStorage.getItem("id");
 
-        axios.post(`http://localhost:8080/api/users/${userId}/liked-songs/${songId}`)
+        axios.post(`/api/users/${userId}/liked-songs/${songId}`)
             .then(response => {
                 // Update the likedSongs state
                 setLikedSongs([...likedSongs, songId]);
@@ -71,7 +71,7 @@ const PlayerApp = () => {
     const handleRemoveLike = songId => {
         const userId = window.sessionStorage.getItem("id");
 
-        axios.delete(`http://localhost:8080/api/users/${userId}/unliked-songs/${songId}`)
+        axios.delete(`/api/users/${userId}/unliked-songs/${songId}`)
             .then(response => {
                 // Update the likedSongs state
                 setLikedSongs(likedSongs.filter(id => id !== songId));
@@ -293,7 +293,7 @@ const PlayerApp = () => {
                 preload="off" //enable preloading
                 autoPlay={false} // Set autoPlay to false
                 //preload="auto" //enable preloading
-                src={currentSongId  !== null ? `http://localhost:8080/api/songs/${currentSongId}/aws` : ''}
+                src={currentSongId  !== null ? `/api/songs/${currentSongId}/aws` : ''}
                 showSkipControls
                 showFilledVolume={true}
                 onClickPrevious={handleClickPrevious}

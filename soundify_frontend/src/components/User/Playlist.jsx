@@ -41,7 +41,7 @@ function Playlist() {
     const userId = window.sessionStorage.getItem("id");
 
     const createPlaylist = () => {
-        axios.post(`http://localhost:8080/api/users/${userId}/playlist/${playlistName}`, {
+        axios.post(`/api/users/${userId}/playlist/${playlistName}`, {
             headers: { "content-type": "application/json" },
         }).then((response) => {
             const result = response.data;
@@ -60,7 +60,7 @@ function Playlist() {
 
     useEffect(() => {
         // Fetch playlist from the API
-        fetch(`http://localhost:8080/api/playlists/user/${userId}`)
+        fetch(`/api/playlists/user/${userId}`)
             .then(response => response.json())
             .then(data => {
                 setPlaylists(data);
@@ -70,7 +70,7 @@ function Playlist() {
     }, []);
 
     const refresh = () => {
-        fetch(`http://localhost:8080/api/playlists/user/${userId}`)
+        fetch(`/api/playlists/user/${userId}`)
             .then(response => response.json())
             .then(data => {
                 setPlaylists(data);
@@ -80,7 +80,7 @@ function Playlist() {
     }
 
     const playPlaylist = (playlistId) => {
-        fetch(`http://localhost:8080/api/playlists/songs/${playlistId}`)
+        fetch(`/api/playlists/songs/${playlistId}`)
             .then(response => response.json())
             .then(data => {
                 setPlaylist(data);
@@ -90,7 +90,7 @@ function Playlist() {
     }
 
     const removePlaylist = (playlistId) => {
-        axios.delete(`http://localhost:8080/api/users/${userId}/playlist/${playlistId}`, {
+        axios.delete(`/api/users/${userId}/playlist/${playlistId}`, {
             headers: { "content-type": "application/json" },
         }).then((response) => {
             const result = response.data;
@@ -315,7 +315,7 @@ function Playlist() {
                     <AudioPlayer
                         volume="0.5"
                         preload="off" //enable preloading
-                        src={currentSongId != null ? `http://localhost:8080/api/songs/${currentSongId}/aws` : ''}
+                        src={currentSongId != null ? `/api/songs/${currentSongId}/aws` : ''}
                         showSkipControls
                         onClickPrevious={handleClickPrevious}
                         onClickNext={handleClickNext}
