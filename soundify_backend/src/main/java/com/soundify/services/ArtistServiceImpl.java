@@ -231,6 +231,7 @@ public class ArtistServiceImpl implements ArtistService {
 //		artist.getFollowers().clear(); // Clear the followers set in the artist
 //	    artist = artDao.save(artist);
 
+
 		
 //		while (iterator.hasNext()) {
 //		    Song song = iterator.next();
@@ -240,6 +241,7 @@ public class ArtistServiceImpl implements ArtistService {
 //		        songFileHandlingService.deleteSongOnServer(song.getId());
 //		    iterator.remove(); // Remove the current song from the list
 //		}
+
 		
 //		List<Song> songs = artist.getSongs();
 //		List<Song> songsToRemove = new ArrayList<>();
@@ -250,6 +252,7 @@ public class ArtistServiceImpl implements ArtistService {
 //				songFileHandlingService.deleteSongOnServer(song.getId());
 //			
 //		});
+
 		
 //		List<Song> songs = new ArrayList<>(artist.getSongs());
 //	    for (Song song : songs) {
@@ -267,6 +270,7 @@ public class ArtistServiceImpl implements ArtistService {
 //		artDao.delete(artist);
 //		return new ApiResponse("success", "Artist deleted successfully");
 //	}
+
 		
 
 		    // Handle liked songs, songs in playlists, and delete artist and associated entities
